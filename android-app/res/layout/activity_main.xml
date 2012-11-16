@@ -4,6 +4,11 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
 
+    <TextView
+        android:id="@+id/lblNavigationList"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" />
+    
     <android.support.v4.view.ViewPager
         android:id="@+id/pager"
         android:layout_width="wrap_content"
