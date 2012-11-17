@@ -1,7 +1,9 @@
 package at.fhj.itm10.mobcomp.drivebyreminder.activities;
 
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockPreferenceActivity;
 
 public class SettingsActivity extends RoboSherlockPreferenceActivity {
@@ -14,5 +16,15 @@ public class SettingsActivity extends RoboSherlockPreferenceActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
 	}
+	
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 	
 }

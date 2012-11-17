@@ -25,10 +25,16 @@
         <activity
             android:name="at.fhj.itm10.mobcomp.drivebyreminder.activities.SettingsActivity"
             android:label="@string/menu_settings" >
+            <meta-data
+            	android:name="android.support.PARENT_ACTIVITY"
+            	android:value="at.fhj.itm10.mobcomp.drivebyreminder.activities.MainActivity" />
         </activity>
         <activity
             android:name="at.fhj.itm10.mobcomp.drivebyreminder.activities.ModifyReminderActivity"
             android:label="@string/menu_add" >
+            <meta-data
+            	android:name="android.support.PARENT_ACTIVITY"
+            	android:value="at.fhj.itm10.mobcomp.drivebyreminder.activities.MainActivity" />
         </activity>
     </application>
 
