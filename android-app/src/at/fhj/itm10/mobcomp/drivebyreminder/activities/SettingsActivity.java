@@ -22,9 +22,7 @@ public class SettingsActivity extends RoboSherlockPreferenceActivity {
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
-        
-        // Deprecated, but THE way to go to support pre
-        // android-3.0 devices
+        // Deprecated, but THE way to go to support pre android-3.0 devices
         addPreferencesFromResource(R.xml.preferences);
 	}
 	
@@ -37,5 +35,17 @@ public class SettingsActivity extends RoboSherlockPreferenceActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+    
+//    @Override
+//    protected void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//
+//    }
+//
+//    @Override
+//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+//        super.onRestoreInstanceState(savedInstanceState);
+//
+//    }
 	
 }

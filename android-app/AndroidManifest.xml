@@ -7,6 +7,10 @@
     <uses-sdk
         android:minSdkVersion="10"
         android:targetSdkVersion="16" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
         android:allowBackup="true"
@@ -36,6 +40,14 @@
             	android:name="android.support.PARENT_ACTIVITY"
             	android:value="at.fhj.itm10.mobcomp.drivebyreminder.activities.MainActivity" />
         </activity>
+        <service
+        	android:name="at.fhj.itm10.mobcomp.drivebyreminder.services.NotificationService" >
+        </service>
+        <receiver android:name="at.fhj.itm10.mobcomp.drivebyreminder.receiver.ServiceBootLoader">  
+		    <intent-filter>  
+		        <action android:name="android.intent.action.BOOT_COMPLETED" />  
+		    </intent-filter>  
+		</receiver>
     </application>
 
 </manifest>
