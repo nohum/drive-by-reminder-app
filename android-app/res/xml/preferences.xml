@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+    <PreferenceCategory 
+        android:title="@string/settings_title_general"
+        android:key="settings_general">
+
+        <ListPreference
+            android:key="defaultProximitry"
+            android:summary="@string/settings_summary_defaultproximitry"
+            android:title="@string/settings_title_defaultproximitry"
+            android:entries="@array/proximitryEntriesHuman"
+            android:entryValues="@array/proximitryEntries"
+            android:defaultValue="500" />
+
+    </PreferenceCategory>
+    
+    <PreferenceCategory 
+        android:title="@string/settings_title_eventcreationedit"
+        android:key="settings_event">
+
+        <CheckBoxPreference
+	    	android:key="confirmDelete"
+	    	android:summaryOn="@string/settings_summaryon_confirmdelete"
+	    	android:summaryOff="@string/settings_summaryoff_confirmdelete"
+	    	android:title="@string/settings_title_confirmdelete"
+	    	android:defaultValue="true" />
+
+    </PreferenceCategory>
+    
+    <PreferenceCategory 
+        android:title="@string/settings_title_notification"
+        android:key="settings_notification">
+
+        <RingtonePreference
+            android:key="notificationRingtone"
+            android:title="@string/settings_title_ringtone"
+            android:ringtoneType="notification"
+            android:showDefault="true"
+            android:showSilent="true" />
+        
+        <CheckBoxPreference
+	    	android:key="notificationVibrate"
+	    	android:title="@string/settings_title_vibrate"
+	    	android:defaultValue="true" />
+
+    </PreferenceCategory>
+    
+    <PreferenceCategory 
+        android:title="@string/settings_title_about"
+        android:key="settings_about">
+	    <Preference
+	        android:title="@string/settings_title_createdby" >
+		</Preference>
+	</PreferenceCategory>
+
+</PreferenceScreen>
