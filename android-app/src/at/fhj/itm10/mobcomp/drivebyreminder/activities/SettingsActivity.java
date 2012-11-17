@@ -12,6 +12,7 @@ public class SettingsActivity extends RoboSherlockPreferenceActivity {
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
+
 	}
 	
 }

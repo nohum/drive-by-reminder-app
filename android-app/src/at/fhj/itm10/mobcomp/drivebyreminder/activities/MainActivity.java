@@ -12,7 +12,6 @@ import at.fhj.itm10.mobcomp.drivebyreminder.R;
 
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 
 /**
@@ -40,28 +39,29 @@ public class MainActivity extends RoboSherlockActivity implements OnNavigationLi
 		super.onCreate(savedInstanceState);
 
         Context context = getSupportActionBar().getThemedContext();
-        ArrayAdapter<CharSequence> list = ArrayAdapter.createFromResource(context, R.array.locations,
-        		R.layout.sherlock_spinner_item);
+        ArrayAdapter<CharSequence> list = ArrayAdapter.createFromResource(context,
+        		R.array.locations, R.layout.sherlock_spinner_item);
         list.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
 
         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         getSupportActionBar().setListNavigationCallbacks(list, this);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-		
+
 	}
-	
-    @Override
+
+	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
-//        menu.add(stringAdd)
-//            .setIcon(isLight ? R.drawable.ic_compose_inverse : R.drawable.ic_compose)
-//            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-        menu.add(stringSettings)
-            .setIcon(R.drawable.ic_action_settings)
-            .setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
+    	getSupportMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
     }
+    
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem menuItem) {
+//    	
+//    	Toast.makeText(getApplicationContext(), menuItem.getTitle(), Toast.LENGTH_LONG).show();
+//    	
+//    	return false;
+//    }
 
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {

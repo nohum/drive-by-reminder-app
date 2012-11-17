@@ -22,6 +22,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="at.fhj.itm10.mobcomp.drivebyreminder.activities.SettingsActivity"
+            android:label="@string/menu_settings" >
+        </activity>
+        <activity
+            android:name="at.fhj.itm10.mobcomp.drivebyreminder.activities.ModifyReminderActivity"
+            android:label="@string/menu_add" >
+        </activity>
     </application>
 
 </manifest>
