@@ -7,15 +7,15 @@ import at.fhj.itm10.mobcomp.drivebyreminder.R;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
 
 /**
- * Fragment for the home view.
+ * Fragment to view all tasks.
  * 
  * @author Wolfgang Gaar
  */
 @ContentView(R.layout.fragment_home)
-public class HomeFragment extends RoboSherlockFragment {
+public class AllTasksFragment extends RoboSherlockFragment {
 
-	public static HomeFragment newInstance() {
-		HomeFragment fragment = new HomeFragment();
+	public static AllTasksFragment newInstance() {
+		AllTasksFragment fragment = new AllTasksFragment();
 
         Bundle args = new Bundle();
         fragment.setArguments(args);

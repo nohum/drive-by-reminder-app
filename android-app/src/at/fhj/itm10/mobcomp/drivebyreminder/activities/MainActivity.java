@@ -13,11 +13,12 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
+import at.fhj.itm10.mobcomp.drivebyreminder.helper.MainFragmentPagerAdapter;
 
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
+import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 
 /**
  * Main view.
@@ -25,7 +26,7 @@ import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivit
  * @author Wolfgang Gaar
  */
 @ContentView(R.layout.activity_main)
-public class MainActivity extends RoboSherlockActivity implements OnNavigationListener {
+public class MainActivity extends RoboSherlockFragmentActivity implements OnNavigationListener {
 	
 	@InjectView(R.id.lblNavigationList)
 	private TextView lblNavigationSelected;
@@ -54,6 +55,9 @@ public class MainActivity extends RoboSherlockActivity implements OnNavigationLi
         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         getSupportActionBar().setListNavigationCallbacks(list, this);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        
+//        pagerMainView.setAdapter(new MainFragmentPagerAdapter(
+//        		getSupportFragmentManager()));
 	}
 
 	@Override
