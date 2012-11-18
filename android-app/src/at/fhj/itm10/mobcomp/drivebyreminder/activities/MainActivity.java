@@ -9,7 +9,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.TabWidget;
 import android.widget.TextView;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
 import at.fhj.itm10.mobcomp.drivebyreminder.helper.MainFragmentPagerAdapter;
@@ -26,19 +29,13 @@ import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmen
  */
 @ContentView(R.layout.activity_main)
 public class MainActivity extends RoboSherlockFragmentActivity
-		implements OnNavigationListener {
+		implements OnNavigationListener, OnPageChangeListener {
 	
 	@InjectView(R.id.lblNavigationList)
 	private TextView lblNavigationSelected;
 	
 	@InjectView(R.id.pgrMainView)
 	private ViewPager pagerMainView;
-    
-	@InjectResource(R.string.menu_add)
-    private String stringAdd;
-    
-	@InjectResource(R.string.menu_settings)
-    private String stringSettings;
 
 	private MainFragmentPagerAdapter pagerAdapter;
 
@@ -60,6 +57,7 @@ public class MainActivity extends RoboSherlockFragmentActivity
         pagerAdapter = new MainFragmentPagerAdapter(
         		getSupportFragmentManager());
         pagerMainView.setAdapter(pagerAdapter);
+        pagerMainView.setOnPageChangeListener(this);
 	}
 	
 	@Override
@@ -72,28 +70,52 @@ public class MainActivity extends RoboSherlockFragmentActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case android.R.id.home:
-                NavUtils.navigateUpFromSameTask(this);
-                return true;
-            case R.id.menu_main_add:
-            	Intent intent = new Intent(this, AddTaskActivity.class);
-            	// There should only be one "Add new" activity open at any time
-            	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        case android.R.id.home:
+            NavUtils.navigateUpFromSameTask(this);
+            return true;
+        case R.id.menu_main_add:
+        	Intent intent = new Intent(this, AddTaskActivity.class);
+        	// There should only be one "Add new" activity open at any time
+        	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-            	this.startActivity(intent);
-            	return true;
-            case R.id.menu_main_settings:
-            	this.startActivity(new Intent(this, SettingsActivity.class));
-            	return true;
+        	this.startActivity(intent);
+        	return true;
+        case R.id.menu_main_settings:
+        	this.startActivity(new Intent(this, SettingsActivity.class));
+        	return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Used for the top-left navigation menu.
+     */
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		return false;
+		// Change the focused fragment of the pager if the navigation list is changed
+		pagerMainView.setCurrentItem(itemPosition, true);
+
+		return true;
 	}
-	
+
+	@Override
+	public void onPageScrollStateChanged(int state) {
+		// Empty by intention
+	}
+
+	@Override
+	public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+		// Empty by intention	
+	}
+
+	/**
+	 * Called after a fragment has been selected ("scrolled to") by the user.
+	 */
+	@Override
+	public void onPageSelected(int position) {
+		// Change the focused navigation list item if the viewed fragment has been changed
+		getSupportActionBar().setSelectedNavigationItem(position);
+	}
 
 }

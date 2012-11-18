@@ -8,6 +8,15 @@
     <string name="menu_add">Add new task</string>
     <string name="menu_modify">Modify task</string>
     
+    <!-- Home fragment -->
+    <string name="fragment_home_intro">Welcome to Drive-by Reminder\n\nSome descriptive text would be inserted here.</string>
+    
+    <!-- All tasks fragment -->
+    <string name="fragment_alltasks_emptylist">There are no tasks at the moment. Add one using the add symbol located in the upper-right corner.</string>
+    
+    <!-- Nearby tasks fragment -->
+    <string name="fragment_nearbytasks_emptylist">There are no nearby tasks at the moment.</string>
+    
     <!-- Preferences -->
     <string name="settings_title_general">General</string>
 
