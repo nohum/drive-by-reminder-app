@@ -34,18 +34,5 @@ public class SettingsActivity extends RoboSherlockPreferenceActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-    
-//    @Override
-//    protected void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//
-//    }
-//
-//    @Override
-//    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-//        super.onRestoreInstanceState(savedInstanceState);
-//
-//    }
-	
+    }	
 }

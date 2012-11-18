@@ -6,7 +6,12 @@ import android.support.v4.app.NavUtils;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 
-public class ModifyReminderActivity extends RoboSherlockActivity {
+/**
+ * Add task activity.
+ * 
+ * @author Wolfgang Gaar
+ */
+public class AddTaskActivity extends RoboSherlockActivity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -16,7 +21,7 @@ public class ModifyReminderActivity extends RoboSherlockActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
 	}
-	
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -26,5 +31,17 @@ public class ModifyReminderActivity extends RoboSherlockActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
 	
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		
+	}
+    
 }

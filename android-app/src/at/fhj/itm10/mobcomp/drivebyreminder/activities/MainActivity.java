@@ -7,9 +7,6 @@ import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -20,12 +17,13 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
+import at.fhj.itm10.mobcomp.drivebyreminder.helper.MainFragmentPagerAdapter;
 
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
-import com.actionbarsherlock.app.SherlockListFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
 
 /**
  * Main view.
@@ -33,16 +31,14 @@ import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmen
  * @author Wolfgang Gaar
  */
 @ContentView(R.layout.activity_main)
-public class MainActivity extends RoboSherlockFragmentActivity implements OnNavigationListener {
+public class MainActivity extends RoboSherlockFragmentActivity
+		implements OnNavigationListener {
 	
 	@InjectView(R.id.lblNavigationList)
 	private TextView lblNavigationSelected;
 	
 	@InjectView(R.id.pgrMainView)
 	private ViewPager pagerMainView;
-
-	@InjectResource(R.array.locations)
-    private String[] mLocations;
     
 	@InjectResource(R.string.menu_add)
     private String stringAdd;
@@ -50,13 +46,14 @@ public class MainActivity extends RoboSherlockFragmentActivity implements OnNavi
 	@InjectResource(R.string.menu_settings)
     private String stringSettings;
 
-	private MyAdapter pagerAdapter;
+	private MainFragmentPagerAdapter pagerAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
         Context context = getSupportActionBar().getThemedContext();
+        // Set content of nav dropdown
         ArrayAdapter<CharSequence> list = ArrayAdapter.createFromResource(context,
         		R.array.locations, R.layout.sherlock_spinner_item);
         list.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
@@ -65,35 +62,19 @@ public class MainActivity extends RoboSherlockFragmentActivity implements OnNavi
         getSupportActionBar().setListNavigationCallbacks(list, this);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         
-        pagerAdapter = new MyAdapter(
+        pagerAdapter = new MainFragmentPagerAdapter(
         		getSupportFragmentManager());
         pagerMainView.setAdapter(pagerAdapter);
 	}
 
-    public static class MyAdapter extends FragmentPagerAdapter {
-        public MyAdapter(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public int getCount() {
-            return 3;
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return ArrayListFragment.newInstance(position);
-        }
-    }
-
-    public static class ArrayListFragment extends SherlockListFragment {
+    public static class ArrayListFragment extends RoboSherlockListFragment {
         int mNum;
 
         /**
          * Create a new instance of CountingFragment, providing "num"
          * as an argument.
          */
-        static ArrayListFragment newInstance(int num) {
+        public static ArrayListFragment newInstance(int num) {
             ArrayListFragment f = new ArrayListFragment();
 
             // Supply num input as an argument.
@@ -122,8 +103,8 @@ public class MainActivity extends RoboSherlockFragmentActivity implements OnNavi
                 Bundle savedInstanceState) {
             View v = inflater.inflate(R.layout.fragment_pager_list, container, false);
             View tv = v.findViewById(R.id.text);
-            ((TextView)tv).setText("Fragment #" + mNum);
-            return v;
+           ((TextView)tv).setText("Fragment #" + mNum);
+           return v;
         }
 
         @Override
@@ -153,7 +134,8 @@ public class MainActivity extends RoboSherlockFragmentActivity implements OnNavi
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
             case R.id.menu_main_add:
-            	this.startActivity(new Intent(this, ModifyReminderActivity.class));
+            	// TODO: switch off activity stacking for this activity
+            	this.startActivity(new Intent(this, AddTaskActivity.class));
             	return true;
             case R.id.menu_main_settings:
             	this.startActivity(new Intent(this, SettingsActivity.class));

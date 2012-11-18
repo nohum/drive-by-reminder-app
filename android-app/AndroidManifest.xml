@@ -34,8 +34,15 @@
             	android:value="at.fhj.itm10.mobcomp.drivebyreminder.activities.MainActivity" />
         </activity>
         <activity
-            android:name="at.fhj.itm10.mobcomp.drivebyreminder.activities.ModifyReminderActivity"
+            android:name="at.fhj.itm10.mobcomp.drivebyreminder.activities.AddTaskActivity"
             android:label="@string/menu_add" >
+            <meta-data
+            	android:name="android.support.PARENT_ACTIVITY"
+            	android:value="at.fhj.itm10.mobcomp.drivebyreminder.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name="at.fhj.itm10.mobcomp.drivebyreminder.activities.ModifyTaskActivity"
+            android:label="@string/menu_modify" >
             <meta-data
             	android:name="android.support.PARENT_ACTIVITY"
             	android:value="at.fhj.itm10.mobcomp.drivebyreminder.activities.MainActivity" />
