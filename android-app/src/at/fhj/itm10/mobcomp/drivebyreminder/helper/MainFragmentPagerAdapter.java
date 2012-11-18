@@ -3,6 +3,7 @@ package at.fhj.itm10.mobcomp.drivebyreminder.helper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.util.Log;
 import at.fhj.itm10.mobcomp.drivebyreminder.fragments.AllTasksFragment;
 import at.fhj.itm10.mobcomp.drivebyreminder.fragments.HomeFragment;
 import at.fhj.itm10.mobcomp.drivebyreminder.fragments.NearbyTasksFragment;
@@ -20,6 +21,7 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public Fragment getItem(int number) {
+		Log.v("MainFragmentPagerAdapter", "getItem number = " + number);
 		Fragment fragment = null;
 		
 		switch(number) {
