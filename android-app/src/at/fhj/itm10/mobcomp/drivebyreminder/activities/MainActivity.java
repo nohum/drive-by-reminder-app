@@ -1,7 +1,6 @@
 package at.fhj.itm10.mobcomp.drivebyreminder.activities;
 
 import roboguice.inject.ContentView;
-import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 import android.app.ActionBar;
 import android.content.Context;
@@ -11,9 +10,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.TabWidget;
 import android.widget.TextView;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
 import at.fhj.itm10.mobcomp.drivebyreminder.helper.MainFragmentPagerAdapter;
@@ -61,12 +58,17 @@ public class MainActivity extends RoboSherlockFragmentActivity
         pagerMainView.setOnPageChangeListener(this);
         
         Log.d("MainActivity", "onCreate: given savedInstanceState = " + savedInstanceState);
+        
+        if (savedInstanceState != null) {
+			restoreState(savedInstanceState);
+		}
 	}
 	
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-	
+		Log.d("MainActivity", "onSaveInstanceState: setting state");
+
 		outState.putInt("currentFragment", pagerMainView.getCurrentItem());
 	}
 
@@ -76,8 +78,18 @@ public class MainActivity extends RoboSherlockFragmentActivity
 		Log.d("MainActivity", "onRestoreInstanceState: given savedInstanceState = "
 				+ savedInstanceState);
 		
+		if (savedInstanceState != null) {
+			restoreState(savedInstanceState);
+		}
 	}
 	
+	private void restoreState(Bundle savedInstanceState) {
+		// Pager and nav menu item number
+		int currentFragment = savedInstanceState.getInt("currentFragment");
+		getSupportActionBar().setSelectedNavigationItem(currentFragment);
+		pagerMainView.setCurrentItem(currentFragment, false);
+	}
+
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.menu_main, menu);

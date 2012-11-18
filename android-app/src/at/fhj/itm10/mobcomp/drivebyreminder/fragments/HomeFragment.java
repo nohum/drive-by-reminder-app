@@ -1,6 +1,7 @@
 package at.fhj.itm10.mobcomp.drivebyreminder.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,8 +33,15 @@ public class HomeFragment extends RoboSherlockFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        mNum = getArguments() != null ? getArguments().getInt("num") : 1;
+        Log.d("HomeFragment", "onCreate: given savedInstanceState = " + savedInstanceState);
     }
+    
+	
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		Log.d("HomeFragment", "onSaveInstanceState: setting state");
+	}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
