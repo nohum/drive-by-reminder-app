@@ -4,7 +4,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
-import at.fhj.itm10.mobcomp.drivebyreminder.activities.MainActivity.ArrayListFragment;
+import at.fhj.itm10.mobcomp.drivebyreminder.fragments.AllTasksFragment;
+import at.fhj.itm10.mobcomp.drivebyreminder.fragments.HomeFragment;
+import at.fhj.itm10.mobcomp.drivebyreminder.fragments.NearbyTasksFragment;
 
 /**
  * Fragment helper adapter for main activity.
@@ -24,13 +26,13 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 		
 		switch(number) {
 		case 0:
-			fragment = ArrayListFragment.newInstance(number);
+			fragment = HomeFragment.newInstance();
 			break;
 		case 1:
-			fragment = ArrayListFragment.newInstance(number);
+			fragment = AllTasksFragment.newInstance();
 			break;
 		case 2:
-			fragment = ArrayListFragment.newInstance(number);
+			fragment = NearbyTasksFragment.newInstance();
 			break;
 		default:
 			throw new IllegalStateException("number higher than 2");
