@@ -1,0 +1,31 @@
+{
+    "name"        : "fhjitm10mobcomp/DBRServer",
+    "type"        : "library",
+    "description" : "Server application for drive-by reminder",
+    "keywords"    : ["drive-by reminder", "server"],
+    "homepage"    : "http://www.fh-joanneum.at/itm",
+    "authors"     : [
+        {
+            "name"  : "Wolfgang Gaar",
+            "email" : "wolfgang.gaar.itm10@fh-joanneum.at"
+        }
+    ],
+    "require": {
+        "php"                   : ">=5.3.3",
+        "silex/silex"           : "dev-master",
+        "monolog/monolog"       : "1.0.*",
+        "symfony/validator"     : "2.1.*",
+        "symfony/yaml"          : "2.1.*",
+        "symfony/config"        : "2.1.*"
+    },
+    "minimum-stability" : "dev",
+    "scripts": {
+        "post-install-cmd": "SKE\\Composer\\Script::postInstall"
+    },
+    "autoload": {
+        "psr-0": {
+            "SKE": "src/",
+			"FHJ": "src/"
+        }
+    }
+}
