@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TabWidget;
@@ -58,6 +59,23 @@ public class MainActivity extends RoboSherlockFragmentActivity
         		getSupportFragmentManager());
         pagerMainView.setAdapter(pagerAdapter);
         pagerMainView.setOnPageChangeListener(this);
+        
+        Log.d("MainActivity", "onCreate: given savedInstanceState = " + savedInstanceState);
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+	
+		outState.putInt("currentFragment", pagerMainView.getCurrentItem());
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		Log.d("MainActivity", "onRestoreInstanceState: given savedInstanceState = "
+				+ savedInstanceState);
+		
 	}
 	
 	@Override
@@ -93,7 +111,8 @@ public class MainActivity extends RoboSherlockFragmentActivity
      */
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
-		// Change the focused fragment of the pager if the navigation list is changed
+		// Change the focused fragment of the pager if the navigation list is changed.
+		// itemPosition = number of fragment, see MainFragmentPagerAdapter for numbering
 		pagerMainView.setCurrentItem(itemPosition, true);
 
 		return true;
@@ -114,7 +133,8 @@ public class MainActivity extends RoboSherlockFragmentActivity
 	 */
 	@Override
 	public void onPageSelected(int position) {
-		// Change the focused navigation list item if the viewed fragment has been changed
+		// Change the focused navigation list item if the viewed fragment has been changed.
+		// position = number of fragment, see MainFragmentPagerAdapter for numbering
 		getSupportActionBar().setSelectedNavigationItem(position);
 	}
 
