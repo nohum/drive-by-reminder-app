@@ -1,10 +1,8 @@
 package at.fhj.itm10.mobcomp.drivebyreminder.helper;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Build;
 
 /**
  * Database storage class.
@@ -48,13 +46,13 @@ public class TaskStorageHelper extends SQLiteOpenHelper {
 		// Empty by now, not needed
 	}
 	
-	/**
-	 * Used to enforce foreign keys. Only honored on android 4.1 and higher.
-	 */
-	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-	@Override
-	public void onConfigure (SQLiteDatabase db) {
-		db.setForeignKeyConstraintsEnabled(true);
-	}
+//	/**
+//	 * Used to enforce foreign keys. Only honored on android 4.1 and higher.
+//	 */
+//	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+//	@Override
+//	public void onConfigure (SQLiteDatabase db) {
+//		db.setForeignKeyConstraintsEnabled(true);
+//	}
 
 }

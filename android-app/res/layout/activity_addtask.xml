@@ -27,7 +27,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:capitalize="sentences"
-                android:contentDescription="@string/what_label"
                 android:hint="@string/activity_addtask_form_what_hint" />
 
         </LinearLayout>
@@ -46,12 +45,11 @@
                 android:text="@string/activity_addtask_form_location_where" />
 
             <EditText
-                android:id="@id/location"
+                android:id="@+id/txtLocation"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:capitalize="sentences"
-                android:contentDescription="@string/where_label"
-                android:hint="@string/hint_where" >
+                android:hint="Hint.." >
 
                 <requestFocus />
             </EditText>
@@ -82,7 +80,6 @@
                     android:id="@+id/chbNoDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/edit_event_all_day_label"
                     android:paddingBottom="15.0dip"
                     android:paddingRight="1.0dip"
                     android:paddingTop="15.0dip" />
@@ -102,16 +99,14 @@
                     android:layout_width="0.0px"
                     android:layout_height="wrap_content"
                     android:layout_weight="7.0"
-                    android:contentDescription="@string/content_description_edit_event_from_date"
                     android:gravity="left|center" />
 
                 <Button
-                    android:id="@id/btnStartTime"
+                    android:id="@+id/btnStartTime"
                     style="?android:attr/textAppearanceMediumInverse"
                     android:layout_width="0.0px"
                     android:layout_height="wrap_content"
                     android:layout_weight="4.0"
-                    android:contentDescription="@string/content_description_edit_event_from_time"
                     android:gravity="left|center" />
 
             </LinearLayout>
@@ -130,7 +125,6 @@
                     android:layout_width="0.0px"
                     android:layout_height="wrap_content"
                     android:layout_weight="7.0"
-                    android:contentDescription="@string/content_description_edit_event_to_date"
                     android:gravity="left|center" />
 
                 <Button
@@ -139,7 +133,6 @@
                     android:layout_width="0.0px"
                     android:layout_height="wrap_content"
                     android:layout_weight="4.0"
-                    android:contentDescription="@string/content_description_edit_event_to_time"
                     android:gravity="left|center" />
 
             </LinearLayout>
