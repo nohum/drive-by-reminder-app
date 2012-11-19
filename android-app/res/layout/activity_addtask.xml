@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="#fffafafa"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/title_container"
+            style="@style/EditEvent_Layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/TextAppearance.EditEvent_Label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activity_addtask_form_what" />
+
+            <EditText
+                android:id="@+id/txtTitle"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:capitalize="sentences"
+                android:contentDescription="@string/what_label"
+                android:hint="@string/activity_addtask_form_what_hint" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/location_container"
+            style="@style/EditEvent_Layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/TextAppearance.EditEvent_Label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activity_addtask_form_location_where" />
+
+            <EditText
+                android:id="@id/location"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:capitalize="sentences"
+                android:contentDescription="@string/where_label"
+                android:hint="@string/hint_where" >
+
+                <requestFocus />
+            </EditText>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/when_container"
+            style="@style/EditEvent_Layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="right|center"
+                android:paddingBottom="5.0dip" >
+
+                <TextView
+                    style="?android:attr/textAppearanceMediumInverse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingRight="7.0dip"
+                    android:paddingTop="1.0dip"
+                    android:text="@string/activity_addtask_form_alert_nodate" />
+
+                <CheckBox
+                    android:id="@+id/chbNoDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/edit_event_all_day_label"
+                    android:paddingBottom="15.0dip"
+                    android:paddingRight="1.0dip"
+                    android:paddingTop="15.0dip" />
+            </LinearLayout>
+
+            <TextView
+                style="@style/TextAppearance.EditEvent_Label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activity_addtask_form_alert_startdate" />
+
+            <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/btnStartDate"
+                    style="?android:attr/textAppearanceMediumInverse"
+                    android:layout_width="0.0px"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="7.0"
+                    android:contentDescription="@string/content_description_edit_event_from_date"
+                    android:gravity="left|center" />
+
+                <Button
+                    android:id="@id/btnStartTime"
+                    style="?android:attr/textAppearanceMediumInverse"
+                    android:layout_width="0.0px"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4.0"
+                    android:contentDescription="@string/content_description_edit_event_from_time"
+                    android:gravity="left|center" />
+
+            </LinearLayout>
+
+            <TextView
+                style="@style/TextAppearance.EditEvent_Label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activity_addtask_form_alert_enddate" />
+
+            <LinearLayout android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/btnEndDate"
+                    style="?android:attr/textAppearanceMediumInverse"
+                    android:layout_width="0.0px"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="7.0"
+                    android:contentDescription="@string/content_description_edit_event_to_date"
+                    android:gravity="left|center" />
+
+                <Button
+                    android:id="@+id/btnEndTime"
+                    style="?android:attr/textAppearanceMediumInverse"
+                    android:layout_width="0.0px"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4.0"
+                    android:contentDescription="@string/content_description_edit_event_to_time"
+                    android:gravity="left|center" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1.0dip"
+            android:background="@android:drawable/divider_horizontal_bright" />
+
+        <LinearLayout
+            android:id="@+id/description_container"
+            style="@style/EditEvent_Layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/TextAppearance.EditEvent_Label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activity_addtask_form_description" />
+
+            <EditText
+                android:id="@+id/txtDescription"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:capitalize="sentences"
+                android:contentDescription="@string/activity_addtask_form_description"
+                android:hint="@string/activity_addtask_form_description_hint" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/proximitry_container"
+            style="@style/EditEvent_Layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                style="@style/TextAppearance.EditEvent_Label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activity_addtask_form_proximitry" />
+
+            <Spinner
+                android:id="@+id/selCustomProximitry"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/activity_addtask_form_proximitry"
+                android:entries="@array/proximitryEntriesHuman"
+                android:prompt="@string/activity_addtask_form_proximitry_spinner" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/button_container"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:drawable/bottom_bar"
+            android:orientation="horizontal"
+            android:paddingBottom="1.0dip"
+            android:paddingLeft="4.0dip"
+            android:paddingRight="4.0dip"
+            android:paddingTop="5.0dip" >
+
+            <Button android:id="@+id/save" android:layout_width="0.0dip" android:layout_height="fill_parent" android:text="@string/menu_save" android:layout_weight="1.0" />
+            <Button android:id="@+id/discard" android:layout_width="0.0dip" android:layout_height="fill_parent" android:text="@string/menu_discard" android:layout_weight="1.0" />
+            <Button android:id="@+id/delete" android:layout_width="0.0dip" android:layout_height="fill_parent" android:text="@string/menu_delete" android:layout_weight="1.0" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

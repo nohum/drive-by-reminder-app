@@ -1,7 +1,9 @@
 package at.fhj.itm10.mobcomp.drivebyreminder.activities;
 
+import roboguice.inject.ContentView;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import at.fhj.itm10.mobcomp.drivebyreminder.R;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
@@ -11,6 +13,7 @@ import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivit
  * 
  * @author Wolfgang Gaar
  */
+@ContentView(R.layout.activity_addtask)
 public class AddTaskActivity extends RoboSherlockActivity {
 
 	@Override
