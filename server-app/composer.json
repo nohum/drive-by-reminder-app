@@ -1,8 +1,8 @@
 {
-    "name"        : "fhjitm10mobcomp/DBRServer",
+    "name"        : "fhjitm10mobcomp/dbr-geocoding-server",
     "type"        : "library",
     "description" : "Server application for drive-by reminder",
-    "keywords"    : ["drive-by reminder", "server"],
+    "keywords"    : ["drive-by reminder", "position", "geocoding", "server"],
     "homepage"    : "http://www.fh-joanneum.at/itm",
     "authors"     : [
         {
@@ -14,9 +14,6 @@
         "php"                   : ">=5.3.3",
         "silex/silex"           : "dev-master",
         "monolog/monolog"       : "1.0.*",
-        "symfony/validator"     : "2.1.*",
-        "symfony/yaml"          : "2.1.*",
-        "symfony/config"        : "2.1.*"
     },
     "minimum-stability" : "dev",
     "scripts": {

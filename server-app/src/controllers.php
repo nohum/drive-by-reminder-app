@@ -1,16 +1,27 @@
 <?php
 
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-$app->get('/page-with-cache', function() use ($app) {
-    $response = new Response($app['twig']->render('page-with-cache.html.twig', array('date' => date('Y-M-d h:i:s'))));
-    $response->setTtl(10);
+// All supplied parameters are GET parameters - because of this we are
+// able to use the http caching provided by the framework reliably.
 
-    return $response;
-})->bind('page_with_cache');
+$app->get('/', function() {
+	return new Response('');
+});
+
+$app->get('/service/one/byname/{name}/inlanguage/{langcode}/inregion/{regioncode}',
+		'positioncoding.controller:oneLocationByNameAction');
+
+$app->get('/service/more/byname/{name}/inlanguage/{langcode}/inregion/{regioncode}',
+		'positioncoding.controller:moreLocationsByNameAction');
+
+$app->get('/service/one/bylocation/{latitude}/{longitude}/inlanguage/{langcode}/inregion/{regioncode}',
+		'positioncoding.controller:oneNameByLocationAction');
 
 $app->error(function (\Exception $e, $code) use ($app) {
+	// If this is debug mode, don't catch the error.
+	// Because of this we'll get an enhanced stracktrace output
+	// by using the Silex built-in error handler.
     if ($app['debug']) {
         return;
     }
@@ -19,6 +30,8 @@ $app->error(function (\Exception $e, $code) use ($app) {
 	$result->code = $code;
 	$result->status = 'ERROR';
 
+	// $app->json() would also be a possibilty, but it would not be
+	// possible to set a response code so easy as with this statement.
     return new Response(json_encode($result), $code);
 });
 
