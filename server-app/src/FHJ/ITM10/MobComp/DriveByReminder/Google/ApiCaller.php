@@ -2,6 +2,8 @@
 
 namespace FHJ\ITM10\MobComp\DriveByReminder\Google;
 
+use Monolog\Logger;
+
 /**
  * API interface for interacting with Google's places and geocoder API.
  *
@@ -15,9 +17,7 @@ class ApiCaller {
 
 	private $region;
 
-	private $biasGeoLocation;
-
-	private $radius;
+	private $logger;
 
 	private $geocoderUrl = 'http://maps.googleapis.com/maps/api/geocode/%s?%s';
 
@@ -28,7 +28,8 @@ class ApiCaller {
 	 *
 	 * @param string $apiKey the Google API key
 	 */
-	public function __construct($apiKey) {
+	public function __construct(Logger $logger, $apiKey) {
+		$this->logger = $logger;
 		$this->apiKey = $apiKey;
 	}
 
@@ -72,6 +73,7 @@ class ApiCaller {
 
 	private function callWebservice($url, array $parameters) {
 		$callUrl = sprintf($url, 'json', http_build_query($parameters, '', '&'));
+		$this->logger->info('Calling url: ' . $callUrl);
 		$data = file_get_contents($callUrl);
 
 		if ($data === false) {
@@ -123,27 +125,6 @@ class ApiCaller {
 
 	public function setRegion($region) {
 		$this->region = $region;
-	}
-
-	public function getBiasGeoLocation() {
-		return $this->biasGeoLocation;
-	}
-
-	/**
-	 * Array with Latitude and Longitude or null.
-	 *
-	 * @param array|null $biasGeoLocation
-	 */
-	public function setBiasGeoLocation($biasGeoLocation) {
-		$this->biasGeoLocation = $biasGeoLocation;
-	}
-
-	public function getRadius() {
-		return $this->radius;
-	}
-
-	public function setRadius($radius) {
-		$this->radius = $radius;
 	}
 }
 

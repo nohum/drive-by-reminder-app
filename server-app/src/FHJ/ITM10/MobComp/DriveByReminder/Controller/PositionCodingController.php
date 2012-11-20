@@ -42,7 +42,8 @@ class PositionCodingController {
 		}
 
 		try {
-			$webservice = new ApiCaller($this->app['google.apikey']);
+			$webservice = new ApiCaller($this->app['monolog'],
+					$this->app['google.apikey']);
 			$webservice->setLanguage($langcode);
 			$webservice->setRegion($regioncode);
 			$result = $webservice->retrieveOnePlaceByName($name);
@@ -76,7 +77,8 @@ class PositionCodingController {
 		}
 
 		try {
-			$webservice = new ApiCaller($this->app['google.apikey']);
+			$webservice = new ApiCaller($this->app['monolog'],
+					$this->app['google.apikey']);
 			$webservice->setLanguage($langcode);
 			$webservice->setRegion($regioncode);
 			$result = $webservice->retrieveOneNameByPlace(array($latitude,
@@ -109,7 +111,8 @@ class PositionCodingController {
 		}
 
 		try {
-			$webservice = new ApiCaller($this->app['google.apikey']);
+			$webservice = new ApiCaller($this->app['monolog'],
+					$this->app['google.apikey']);
 			$webservice->setLanguage($langcode);
 			$webservice->setRegion($regioncode);
 			$resultArray = $webservice->retrieveMorePlacesByName($name);
@@ -124,7 +127,6 @@ class PositionCodingController {
 		$error = new \stdClass();
 		$error->code = 500;
 		$error->status = 'ERROR';
-// 		$error->message = $message;
 
 		$this->app['monolog']->err($message);
 		return new Response(json_encode($error), $error->code);
