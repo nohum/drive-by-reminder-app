@@ -19,9 +19,9 @@ class ApiCaller {
 
 	private $radius;
 
-	private $geocoderUrl = 'https://maps.googleapis.com/maps/api/geocode/%s?%s';
+	private $geocoderUrl = 'http://maps.googleapis.com/maps/api/geocode/%s?%s';
 
-	private $placesUrl = 'https://maps.googleapis.com/maps/api/place/textsearch/%s?%s';
+	private $placesUrl = 'http://maps.googleapis.com/maps/api/place/textsearch/%s?%s';
 
 	/**
 	 * Create a new api caller.
@@ -42,7 +42,7 @@ class ApiCaller {
 			'key' => $this->apiKey
 		));
 
-		return $this->formatPlacesJson($result);
+		return $this->formatJson($result);
 	}
 
 	public function retrieveOnePlaceByName($placeName) {
