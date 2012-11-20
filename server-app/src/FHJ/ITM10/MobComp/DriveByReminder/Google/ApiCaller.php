@@ -19,9 +19,10 @@ class ApiCaller {
 
 	private $logger;
 
-	private $geocoderUrl = 'http://maps.googleapis.com/maps/api/geocode/%s?%s';
+	private $geocoderUrl = 'https://maps.googleapis.com/maps/api/geocode/%s?%s';
 
-	private $placesUrl = 'http://maps.googleapis.com/maps/api/place/textsearch/%s?%s';
+	// This API requires SSL!
+	private $placesUrl = 'https://maps.googleapis.com/maps/api/place/textsearch/%s?%s';
 
 	/**
 	 * Create a new api caller.
