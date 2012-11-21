@@ -25,4 +25,14 @@
         <item>3000</item>
         <item>5000</item>
     </string-array>
+    
+    <string-array name="locationBiasEntriesHuman">
+        <item>Austria</item>
+        <item>Germany</item>
+    </string-array>
+    
+    <string-array name="locationBiasEntries">
+        <item>at</item>
+        <item>de</item>
+    </string-array>
 </resources>

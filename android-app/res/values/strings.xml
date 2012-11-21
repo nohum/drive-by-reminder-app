@@ -26,7 +26,7 @@
    
     <string name="activity_addtask_form_location_where">Location trigger</string>
     
-    <string name="activity_addtask_form_alert_nodate">Don\'t use fixed alert period</string>
+    <string name="activity_addtask_form_alert_nodate">Alert between dates</string>
     <string name="activity_addtask_form_alert_startdate">Earliest alert on</string>
     <string name="activity_addtask_form_alert_enddate">Latest alert on</string>
     
@@ -47,6 +47,9 @@
     <string name="settings_summaryon_confirmdelete">Ask before deleting tasks</string>
     <string name="settings_summaryoff_confirmdelete">Do not ask before deleting tasks</string>
     <string name="settings_title_confirmdelete">Confirm deletion</string>
+
+    <string name="settings_title_locationbias">Region bias</string>
+    <string name="settings_summary_locationbias">Prefer locations from selected region</string>
 
     <string name="settings_title_notification">Notification settings</string>
     

@@ -25,6 +25,14 @@
 	    	android:summaryOff="@string/settings_summaryoff_confirmdelete"
 	    	android:title="@string/settings_title_confirmdelete"
 	    	android:defaultValue="true" />
+        
+        <ListPreference
+            android:key="locationBias"
+            android:summary="@string/settings_summary_locationbias"
+            android:title="@string/settings_title_locationbias"
+            android:entries="@array/locationBiasEntriesHuman"
+            android:entryValues="@array/locationBiasEntries"
+            android:defaultValue="500" />
 
     </PreferenceCategory>
     
