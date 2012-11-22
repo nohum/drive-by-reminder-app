@@ -7,7 +7,6 @@ import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
@@ -18,12 +17,12 @@ import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 
 /**
- * Add task activity.
+ * Location choosing activity.
  * 
  * @author Wolfgang Gaar
  */
 @ContentView(R.layout.activity_addtask)
-public class AddTaskActivity extends RoboSherlockActivity {
+public class EditLocationActivity extends RoboSherlockActivity {
 
 	@InjectView(R.id.txtTitle)
 	private TextView txtTitle;
@@ -84,7 +83,6 @@ public class AddTaskActivity extends RoboSherlockActivity {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		Log.v("AddTaskActivity", "onSaveInstanceState");
 	
 		outState.putString("title", txtTitle.getText().toString());
 		// TODO: Locationdata

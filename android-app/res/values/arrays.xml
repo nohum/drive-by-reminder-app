@@ -16,6 +16,17 @@
         <item>5000 meters</item>
     </string-array>
     
+    <string-array name="proximitryEntriesHumanWithDefault">
+        <item>Default</item>
+        <item>60 meters</item>
+        <item>100 meters</item>
+        <item>200 meters</item>
+        <item>500 meters</item>
+        <item>1000 meters</item>
+        <item>3000 meters</item>
+        <item>5000 meters</item>
+    </string-array>
+    
     <string-array name="proximitryEntries">
         <item>60</item>
         <item>100</item>

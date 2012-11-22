@@ -17,17 +17,11 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
     
-    
-    
-    
-    
-    
-    <style name="EditEventTheme" parent="@android:style/Theme" />
+
 	<style name="TextAppearance" parent="@android:style/TextAppearance" />
     <style name="TextAppearance.EditEvent_Label" parent="@style/TextAppearance">
         <item name="android:textAppearance">?android:textAppearanceSmall</item>
         <item name="android:textStyle">bold</item>
-        <item name="android:textColor">?android:textColorSecondaryInverse</item>
         <item name="android:paddingLeft">2.0dip</item>
     </style>
     <style name="TextAppearance.EventInfo_Label" parent="@style/TextAppearance">
