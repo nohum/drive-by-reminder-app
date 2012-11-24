@@ -3,10 +3,11 @@ package at.fhj.itm10.mobcomp.drivebyreminder.helper;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import roboguice.activity.event.OnDestroyEvent;
@@ -47,13 +48,20 @@ public class DownloadLocationDataTask extends RoboAsyncTask<List<Location>> {
 	private String downloadException;
 
 	public DownloadLocationDataTask(Context context, EditLocationActivity activity,
-			String locationName, String languageCode, String regionBiasCode) {
+			String languageCode, String regionBiasCode) {
 		super(context);
 
 		this.activity = activity;
-		this.locationName = locationName;
 		this.languageCode = languageCode;
 		this.regionBiasCode = regionBiasCode;
+	}
+
+	public String getLocationName() {
+		return locationName;
+	}
+
+	public void setLocationName(String locationName) {
+		this.locationName = locationName;
 	}
 
 	/**
@@ -66,8 +74,20 @@ public class DownloadLocationDataTask extends RoboAsyncTask<List<Location>> {
 				this.regionBiasCode);
 		JSONObject json = retrieveUrlData(url);
 		
-		return null;
-		
+		if (json.getString("status") != "OK") {
+			throw new Exception("Server error, status returned: " + json.getString("status"));
+		}
+
+		JSONArray entries = json.getJSONArray("entries");
+		List<Location> results = new ArrayList<Location>();
+		for(int i = 0; i < entries.length(); i++) {
+			JSONObject entry = entries.getJSONObject(i);
+
+			results.add(new Location(entry.getString("address"), entry.getDouble("latitude"),
+					entry.getDouble("longitude")));
+		}
+
+		return results;
 	}
 	
 	private JSONObject retrieveUrlData(String url) throws Exception {
@@ -103,7 +123,7 @@ public class DownloadLocationDataTask extends RoboAsyncTask<List<Location>> {
 	 */
     @Override 
     protected void onSuccess(List<Location> result) {
-//    	activity.setFoundLocations(result);
+    	activity.setFoundLocations(result);
     }
     
     /**

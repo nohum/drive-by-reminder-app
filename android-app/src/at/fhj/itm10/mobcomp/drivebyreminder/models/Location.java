@@ -16,7 +16,19 @@ public class Location {
 	private double latitude;
 	
 	private double longitude;
+	
+	private boolean locationChooserSelected = false;
 
+	public Location(String name, double latitude, double longitude) {
+		setName(name);
+		setLatitude(latitude);
+		setLongitude(longitude);
+	}
+	
+	public Location() {
+		
+	}
+	
 	public int getId() {
 		return id;
 	}
@@ -55,6 +67,14 @@ public class Location {
 
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
+	}
+
+	public boolean isLocationChooserSelected() {
+		return locationChooserSelected;
+	}
+
+	public void setLocationChooserSelected(boolean locationChooserSelected) {
+		this.locationChooserSelected = locationChooserSelected;
 	}
 
 }
