@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE"/>
+    <!-- android.permission.SYSTEM_ALERT_WINDOW  -->
 
     <application
         android:allowBackup="true"
@@ -47,6 +48,10 @@
             <meta-data
             	android:name="android.support.PARENT_ACTIVITY"
             	android:value="at.fhj.itm10.mobcomp.drivebyreminder.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name="at.fhj.itm10.mobcomp.drivebyreminder.activities.EditLocationActivity"
+            android:label="@string/menu_set_location" >
         </activity>
         <service
         	android:name="at.fhj.itm10.mobcomp.drivebyreminder.services.NotificationService" >

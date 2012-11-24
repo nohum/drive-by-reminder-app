@@ -28,8 +28,8 @@ public class EditLocationActivity extends RoboSherlockActivity {
 	private TextView txtTitle;
 	
 	// Location textbox here...
-	
-	@InjectView(R.id.chbNoDate)
+
+//	@InjectView(R.id.chbNoDate)
 	private CheckBox chbNoDate;
 	
 	@InjectView(R.id.btnStartDate)

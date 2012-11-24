@@ -74,7 +74,7 @@
                     android:text="@string/activity_addtask_form_alert_nodate" />
 
                 <CheckBox
-                    android:id="@+id/chbNoDate"
+                    android:id="@+id/chbDateBoundaries"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingBottom="15.0dip"
@@ -191,9 +191,16 @@
             android:paddingBottom="1.0dip"
             android:paddingLeft="4.0dip"
             android:paddingRight="4.0dip"
-            android:paddingTop="5.0dip" >
+            android:paddingTop="5.0dip"
+            android:visibility="visible" >
 
-            <Button android:id="@+id/save" android:layout_width="0.0dip" android:layout_height="fill_parent" android:text="@string/menu_save" android:layout_weight="1.0" />
+            <Button
+                android:id="@+id/btnSave"
+                android:layout_width="0.0dip"
+                android:layout_height="fill_parent"
+                android:layout_weight="1.0"
+                android:text="@string/menu_save" />
+
             <Button android:id="@+id/discard" android:layout_width="0.0dip" android:layout_height="fill_parent" android:text="@string/menu_discard" android:layout_weight="1.0" />
             <Button android:id="@+id/delete" android:layout_width="0.0dip" android:layout_height="fill_parent" android:text="@string/menu_delete" android:layout_weight="1.0" />
         </LinearLayout>

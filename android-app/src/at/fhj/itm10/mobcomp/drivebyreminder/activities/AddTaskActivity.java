@@ -1,17 +1,27 @@
 package at.fhj.itm10.mobcomp.drivebyreminder.activities;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
+import android.app.DatePickerDialog;
+import android.app.DatePickerDialog.OnDateSetListener;
+import android.app.TimePickerDialog;
+import android.app.TimePickerDialog.OnTimeSetListener;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
 
 import com.actionbarsherlock.view.MenuItem;
@@ -23,15 +33,17 @@ import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivit
  * @author Wolfgang Gaar
  */
 @ContentView(R.layout.activity_addtask)
-public class AddTaskActivity extends RoboSherlockActivity {
+public class AddTaskActivity extends RoboSherlockActivity
+		implements OnCheckedChangeListener, OnClickListener, OnTimeSetListener,
+				OnDateSetListener {
 
 	@InjectView(R.id.txtTitle)
 	private TextView txtTitle;
 	
 	// Location textbox here...
 	
-	@InjectView(R.id.chbNoDate)
-	private CheckBox chbNoDate;
+	@InjectView(R.id.chbDateBoundaries)
+	private CheckBox chbDateBoundaries;
 	
 	@InjectView(R.id.btnStartDate)
 	private Button btnStartDate;
@@ -39,7 +51,7 @@ public class AddTaskActivity extends RoboSherlockActivity {
 	@InjectView(R.id.btnStartTime)
 	private Button btnStartTime;
 	
-	private Date startDateTime;
+	private Calendar startDateTime;
 	
 	@InjectView(R.id.btnEndDate)
 	private Button btnEndDate;
@@ -47,7 +59,7 @@ public class AddTaskActivity extends RoboSherlockActivity {
 	@InjectView(R.id.btnEndTime)
 	private Button btnEndTime;
 	
-	private Date endDateTime;
+	private Calendar endDateTime;
 	
 	@InjectView(R.id.txtDescription)
 	private TextView txtDescription;
@@ -55,6 +67,21 @@ public class AddTaskActivity extends RoboSherlockActivity {
 	@InjectView(R.id.selCustomProximitry)
 	private Spinner selCustomProximitry;
 	
+	private java.text.DateFormat systemDateFormat;
+	
+	private java.text.DateFormat systemTimeFormat;
+	
+	private boolean systemTime24Hours;
+	
+	private DatePickerDialog pickerStartDate;
+	
+	private TimePickerDialog pickerStartTime;
+	
+	private DatePickerDialog pickerEndDate;
+	
+	private TimePickerDialog pickerEndTime;
+	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -67,8 +94,26 @@ public class AddTaskActivity extends RoboSherlockActivity {
         } else {
         	restoreFromState(savedInstanceState);
         }
+
+        initSystemDateTimeFormats();
+        refreshViewsWithValues();
+        initViewEvents();
         
-        initViewFromValues();
+//        startActionMode(new SaveTaskActionMode());
+        
+//        View customNav = LayoutInflater.from(this).inflate(R.layout.custom_view, null);
+//
+//        //Bind to its state change
+//        ((RadioGroup)customNav.findViewById(R.id.radio_nav)).setOnCheckedChangeListener(new OnCheckedChangeListener() {
+//            @Override
+//            public void onCheckedChanged(RadioGroup group, int checkedId) {
+//                Toast.makeText(CustomNavigation.this, "Navigation selection changed.", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
+//        //Attach to the action bar
+//        getSupportActionBar().setCustomView(customNav);
+//        getSupportActionBar().setDisplayShowCustomEnabled(true);
 	}
 
 	@Override
@@ -86,12 +131,14 @@ public class AddTaskActivity extends RoboSherlockActivity {
 		super.onSaveInstanceState(outState);
 		Log.v("AddTaskActivity", "onSaveInstanceState");
 	
-		outState.putString("title", txtTitle.getText().toString());
+//		Log.v("AddTaskActivity", "onSaveInstanceState: title = "
+//				+ txtTitle.getText().toString());
+//		outState.putString("title", txtTitle.getText().toString());
 		// TODO: Locationdata
-		outState.putBoolean("nodate", chbNoDate.isChecked());
-		outState.putLong("startDateTime", startDateTime.getTime());
-		outState.putLong("endDateTime", endDateTime.getTime());
-		outState.putString("description", txtDescription.getText().toString());
+		outState.putBoolean("useDateBoundaries", chbDateBoundaries.isChecked());
+		outState.putLong("startDateTime", startDateTime.getTimeInMillis());
+		outState.putLong("endDateTime", endDateTime.getTimeInMillis());
+//		outState.putString("description", txtDescription.getText().toString());
 		outState.putInt("customProximitry", selCustomProximitry.getSelectedItemPosition());
 	}
 
@@ -101,7 +148,7 @@ public class AddTaskActivity extends RoboSherlockActivity {
 		
 		if (savedInstanceState == null) {
 			restoreFromState(savedInstanceState);
-			initViewFromValues();
+			refreshViewsWithValues();
 		}
 	}
 
@@ -109,26 +156,166 @@ public class AddTaskActivity extends RoboSherlockActivity {
 	 * Set activity default values for views.
 	 */
     private void setDefaultValues() {
-		startDateTime = Calendar.getInstance().getTime();
-		endDateTime = (Date) startDateTime.clone();
+    	startDateTime = Calendar.getInstance();
+		startDateTime.setTime(Calendar.getInstance().getTime());
+		endDateTime = (Calendar) startDateTime.clone();
+		
 		selCustomProximitry.setSelection(0); // 0 = default setting
+		chbDateBoundaries.setChecked(false);
 	}
 
 	private void restoreFromState(Bundle savedInstanceState) {
-		txtTitle.setText(savedInstanceState.getString("title"));
+//		Log.v("AddTaskActivity", "savedInstanceState.getString(title) = "
+//				+ savedInstanceState.getString("title"));
+		
+//		txtTitle.setText(savedInstanceState.getString("title"));
 		// TODO: Locationdata
-		chbNoDate.setChecked(savedInstanceState.getBoolean("nodate"));
-		startDateTime.setTime(savedInstanceState.getLong("startDateTime"));
-		endDateTime.setTime(savedInstanceState.getLong("endDateTime"));
-		txtDescription.setText(savedInstanceState.getString("description"));
+		chbDateBoundaries.setChecked(savedInstanceState.getBoolean("useDateBoundaries"));
+		
+//		Log.v("AddTaskActivity", "startDateTime = " + startDateTime);
+//		Log.v("AddTaskActivity", "savedInstanceState = " + savedInstanceState);
+//		Log.v("AddTaskActivity", "savedInstanceState.getLong(startDateTime) = "
+//				+ savedInstanceState.getLong("startDateTime"));
+		
+		startDateTime = Calendar.getInstance();
+		startDateTime.setTimeInMillis(savedInstanceState.getLong("startDateTime"));
+		endDateTime = Calendar.getInstance();
+		endDateTime.setTimeInMillis(savedInstanceState.getLong("endDateTime"));
+//		txtDescription.setText(savedInstanceState.getString("description"));
 		selCustomProximitry.setSelection(savedInstanceState.getInt("customProximitry"), false);
 	}
 	
 	/**
-	 * Init all views.
+	 * Init all views - show values.
 	 */
-	private void initViewFromValues() {
-		// TODO Auto-generated method stub
+	private void refreshViewsWithValues() {
+		// Disable the date buttons if "no date" has been selected
+		changeDateButtonsEnabledState(chbDateBoundaries.isChecked());
+
+		// ... but also set the date buttons to the value of their date variables
+		btnStartDate.setText(systemDateFormat.format(startDateTime.getTime()));
+		btnStartTime.setText(systemTimeFormat.format(startDateTime.getTime()));
+		btnEndDate.setText(systemDateFormat.format(endDateTime.getTime()));
+		btnEndTime.setText(systemTimeFormat.format(endDateTime.getTime()));
 		
+	}
+	
+	private void changeDateButtonsEnabledState(boolean newState) {
+		btnStartDate.setEnabled(newState);
+		btnStartTime.setEnabled(newState);
+		btnEndDate.setEnabled(newState);
+		btnEndTime.setEnabled(newState);
+	}
+	
+	/**
+	 * Add all necessary events to the views.
+	 */
+	private void initViewEvents() {
+		chbDateBoundaries.setOnCheckedChangeListener(this);
+		
+		btnStartDate.setOnClickListener(this);
+		btnStartTime.setOnClickListener(this);
+		btnEndDate.setOnClickListener(this);
+		btnEndTime.setOnClickListener(this);
+		
+	}
+
+	/**
+	 * Retrieves the date and time format from the system settings.
+	 * @see http://stackoverflow.com/questions/6981505/android-get-user-selected-date-format
+	 */
+	private void initSystemDateTimeFormats() {
+		// Get the format
+		systemDateFormat = DateFormat.getDateFormat(getApplicationContext());
+		systemTimeFormat = DateFormat.getTimeFormat(getApplicationContext());
+		systemTime24Hours = DateFormat.is24HourFormat(getApplicationContext());
+		
+		// Just to look if the variables are not null...
+		Log.d("AddTaskActivity", "systemDateFormat = " + systemDateFormat);
+		Log.d("AddTaskActivity", "systemTimeFormat = " + systemTimeFormat);
+	}
+
+	/**
+	 * Used for the checkbox.
+	 */
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		if (buttonView.equals(chbDateBoundaries)) {
+			changeDateButtonsEnabledState(isChecked);
+		}
+	}
+
+	/**
+	 * Used for the date selection, location buttons.
+	 * 
+	 * @param view
+	 */
+	@Override
+	public void onClick(View view) {
+		if (view.equals(btnStartDate)) {
+			pickerStartDate = retrieveDatePicker(startDateTime);
+			pickerStartDate.show();
+		} else if (view.equals(btnStartTime)) {
+			pickerStartTime = retrieveTimePicker(startDateTime);
+			pickerStartTime.show();
+		} else if (view.equals(btnEndDate)) {
+			pickerEndDate = retrieveDatePicker(endDateTime);
+			pickerEndDate.show();
+		} else if (view.equals(btnEndTime)) {
+			pickerEndTime = retrieveTimePicker(endDateTime);
+			pickerEndTime.show();
+		}
+	}
+	
+	/**
+	 * Retrieves a date picker dialog instance from a calendar.
+	 * 
+	 * @param startDateTime2
+	 * @return
+	 */
+	private DatePickerDialog retrieveDatePicker(Calendar cal) {
+		return new DatePickerDialog(this, this, cal.get(Calendar.YEAR),
+				cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
+	}
+
+	/**
+	 * Retrieves a time picker dialog instance from a calendar.
+	 * 
+	 * @param cal
+	 * @return TimePickerDialog
+	 */
+	private TimePickerDialog retrieveTimePicker(Calendar cal) {
+		return new TimePickerDialog(this, this, cal.get(Calendar.HOUR_OF_DAY),
+				cal.get(Calendar.MINUTE), systemTime24Hours);
+	}
+
+	@Override
+	public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+		if (view.equals(pickerStartTime)) {
+			startDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+			startDateTime.set(Calendar.MINUTE, minute);
+		} else if (view.equals(pickerEndTime)) {
+			endDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
+			endDateTime.set(Calendar.MINUTE, minute);
+		}
+		
+		// Refresh views
+		refreshViewsWithValues();
+	}
+
+	@Override
+	public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+		if (view.equals(pickerStartDate)) {
+			startDateTime.set(Calendar.YEAR, year);
+			startDateTime.set(Calendar.MONTH, monthOfYear);
+			startDateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+		} else if (view.equals(pickerEndDate)) {
+			endDateTime.set(Calendar.YEAR, year);
+			endDateTime.set(Calendar.MONTH, monthOfYear);
+			endDateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+		}
+		
+		// Refresh views
+		refreshViewsWithValues();
 	}
 }
