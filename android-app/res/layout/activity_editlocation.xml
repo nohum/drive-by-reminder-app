@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/search_container"
+        style="@style/activity_addtask_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            style="@style/activity_addtask_layout_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/activity_editlocation_searchfor" />
+
+        <EditText
+            android:id="@+id/txtLocationName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:capitalize="sentences"
+            android:hint="@string/activity_editlocation_searchfor_hint" />
+        <requestFocus />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1.0dip"
+        android:background="@android:drawable/divider_horizontal_dark" />
+
+    <LinearLayout
+        android:id="@+id/locationlist_container"
+        style="@style/activity_addtask_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <TextView
+            style="@style/activity_addtask_layout_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/activity_editlocation_locationlist" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent" >
+
+            <ListView
+                android:id="@+id/lstFoundLocations"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:choiceMode="multipleChoice" >
+
+            </ListView>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/button_container"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@android:drawable/bottom_bar"
+        android:gravity="bottom"
+        android:orientation="horizontal"
+        android:paddingBottom="1.0dip"
+        android:paddingLeft="4.0dip"
+        android:paddingRight="4.0dip"
+        android:paddingTop="5.0dip"
+        android:visibility="visible" >
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="0.0dip"
+            android:layout_height="fill_parent"
+            android:layout_weight="1.0"
+            android:text="@string/menu_save" />
+
+        <Button android:id="@+id/discard" android:layout_width="0.0dip" android:layout_height="fill_parent" android:text="@string/menu_discard" android:layout_weight="1.0" />
+        <Button android:id="@+id/delete" android:layout_width="0.0dip" android:layout_height="fill_parent" android:text="@string/menu_delete" android:layout_weight="1.0" />
+    </LinearLayout>
+</LinearLayout>

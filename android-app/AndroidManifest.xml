@@ -51,7 +51,10 @@
         </activity>
         <activity
             android:name="at.fhj.itm10.mobcomp.drivebyreminder.activities.EditLocationActivity"
-            android:label="@string/menu_set_location" >
+            android:label="@string/menu_set_location" ><!-- 
+            <meta-data
+            	android:name="android.support.PARENT_ACTIVITY"
+            	android:value="at.fhj.itm10.mobcomp.drivebyreminder.activities.AddTaskActivity" />-->
         </activity>
         <service
         	android:name="at.fhj.itm10.mobcomp.drivebyreminder.services.NotificationService" >

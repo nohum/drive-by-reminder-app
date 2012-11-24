@@ -11,13 +11,13 @@
 
         <LinearLayout
             android:id="@+id/title_container"
-            style="@style/EditEvent_Layout"
+            style="@style/activity_addtask_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
             <TextView
-                style="@style/TextAppearance.EditEvent_Label"
+                style="@style/activity_addtask_layout_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/activity_addtask_form_what" />
@@ -33,13 +33,13 @@
 
         <LinearLayout
             android:id="@+id/location_container"
-            style="@style/EditEvent_Layout"
+            style="@style/activity_addtask_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
             <TextView
-                style="@style/TextAppearance.EditEvent_Label"
+                style="@style/activity_addtask_layout_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/activity_addtask_form_location_where" />
@@ -54,7 +54,7 @@
 
         <LinearLayout
             android:id="@+id/when_container"
-            style="@style/EditEvent_Layout"
+            style="@style/activity_addtask_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
@@ -83,7 +83,7 @@
             </LinearLayout>
 
             <TextView
-                style="@style/TextAppearance.EditEvent_Label"
+                style="@style/activity_addtask_layout_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/activity_addtask_form_alert_startdate" />
@@ -107,7 +107,7 @@
             </LinearLayout>
 
             <TextView
-                style="@style/TextAppearance.EditEvent_Label"
+                style="@style/activity_addtask_layout_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/activity_addtask_form_alert_enddate" />
@@ -134,17 +134,17 @@
         <View
             android:layout_width="fill_parent"
             android:layout_height="1.0dip"
-            android:background="@android:drawable/divider_horizontal_bright" />
+            android:background="@android:drawable/divider_horizontal_dark" />
 
         <LinearLayout
             android:id="@+id/description_container"
-            style="@style/EditEvent_Layout"
+            style="@style/activity_addtask_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
             <TextView
-                style="@style/TextAppearance.EditEvent_Label"
+                style="@style/activity_addtask_layout_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/activity_addtask_form_description" />
@@ -161,13 +161,13 @@
 
         <LinearLayout
             android:id="@+id/proximitry_container"
-            style="@style/EditEvent_Layout"
+            style="@style/activity_addtask_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
             <TextView
-                style="@style/TextAppearance.EditEvent_Label"
+                style="@style/activity_addtask_layout_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/activity_addtask_form_proximitry" />

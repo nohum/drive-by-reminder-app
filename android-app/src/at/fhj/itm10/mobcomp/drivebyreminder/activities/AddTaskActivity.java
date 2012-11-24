@@ -216,6 +216,7 @@ public class AddTaskActivity extends RoboSherlockActivity
 		btnStartTime.setOnClickListener(this);
 		btnEndDate.setOnClickListener(this);
 		btnEndTime.setOnClickListener(this);
+		btnLocation.setOnClickListener(this);
 		
 	}
 

@@ -19,23 +19,14 @@
     
 
 	<style name="TextAppearance" parent="@android:style/TextAppearance" />
-    <style name="TextAppearance.EditEvent_Label" parent="@style/TextAppearance">
+    
+    <style name="activity_addtask_layout_label" parent="@style/TextAppearance">
         <item name="android:textAppearance">?android:textAppearanceSmall</item>
         <item name="android:textStyle">bold</item>
         <item name="android:paddingLeft">2.0dip</item>
     </style>
-    <style name="TextAppearance.EventInfo_Label" parent="@style/TextAppearance">
-        <item name="android:textAppearance">?android:textAppearanceSmall</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">?android:textColorSecondary</item>
-        <item name="android:paddingLeft">2.0dip</item>
-    </style>
-    <style name="TextAppearance.EditEvent_homeTime" parent="@style/TextAppearance">
-        <item name="android:textAppearance">?android:textAppearanceSmall</item>
-        <item name="android:textColor">@android:color/darker_gray</item>
-        <item name="android:paddingRight">2.0dip</item>
-    </style>
-    <style name="EditEvent_Layout">
+
+    <style name="activity_addtask_layout">
         <item name="android:paddingLeft">6.0dip</item>
         <item name="android:paddingTop">8.0dip</item>
         <item name="android:paddingRight">7.0dip</item>

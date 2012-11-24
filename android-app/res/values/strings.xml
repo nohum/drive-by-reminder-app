@@ -38,6 +38,14 @@
     <string name="activity_addtask_form_proximitry">Proximitry trigger</string>
     <string name="activity_addtask_form_proximitry_spinner">Set custom proximitry</string>
     
+    <!-- Edit location activity -->
+    <string name="activity_editlocation_searchfor">Search for location</string>
+    <string name="activity_editlocation_searchfor_hint">Location name</string>
+
+    <string name="activity_editlocation_locationlist">Found locations</string>
+    
+    <string name="activity_editlocation_location_downloaderror">An error occurred while retrieving locations. Is your internet connection working?</string>
+    
     <!-- Preferences -->
     <string name="settings_title_general">General</string>
 

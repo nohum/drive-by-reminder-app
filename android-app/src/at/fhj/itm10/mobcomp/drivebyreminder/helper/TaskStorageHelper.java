@@ -12,7 +12,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class TaskStorageHelper extends SQLiteOpenHelper {
 
 	private static final String DATABASE_NAME = "tasks";
-	
+
 	private static final int DATABASE_VERSION = 1;
 	
 	private static final String TABLE_TASKS_SQL = "CREATE TABLE `tasks` (" +
@@ -22,6 +22,7 @@ public class TaskStorageHelper extends SQLiteOpenHelper {
 			"`startDate` DATETIME," +
 			"`endDate` DATETIME," +
 			"`noDate` BOOL NOT NULL  DEFAULT false," +
+			"`done` BOOL NOT NULL  DEFAULT false," +
 			"`sorting` INTEGER NOT NULL )";
 	
 	private static final String TABLE_LOCATIONS_SQL = "CREATE  TABLE `locations` (" +
@@ -45,14 +46,5 @@ public class TaskStorageHelper extends SQLiteOpenHelper {
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// Empty by now, not needed
 	}
-	
-//	/**
-//	 * Used to enforce foreign keys. Only honored on android 4.1 and higher.
-//	 */
-//	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-//	@Override
-//	public void onConfigure (SQLiteDatabase db) {
-//		db.setForeignKeyConstraintsEnabled(true);
-//	}
 
 }
