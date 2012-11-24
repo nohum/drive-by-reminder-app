@@ -8,6 +8,7 @@ import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.text.format.DateFormat;
@@ -40,7 +41,8 @@ public class AddTaskActivity extends RoboSherlockActivity
 	@InjectView(R.id.txtTitle)
 	private TextView txtTitle;
 	
-	// Location textbox here...
+	@InjectView(R.id.btnLocation)
+	private Button btnLocation;
 	
 	@InjectView(R.id.chbDateBoundaries)
 	private CheckBox chbDateBoundaries;
@@ -73,14 +75,19 @@ public class AddTaskActivity extends RoboSherlockActivity
 	
 	private boolean systemTime24Hours;
 	
-	private DatePickerDialog pickerStartDate;
+	private OpenedPickerType openedPicker;
 	
-	private TimePickerDialog pickerStartTime;
-	
-	private DatePickerDialog pickerEndDate;
-	
-	private TimePickerDialog pickerEndTime;
-	
+	/**
+	 * Indicator for opened picker.
+	 * 
+	 * @author Wolfgang Gaar
+	 */
+	private enum OpenedPickerType {
+		STARTDATE,
+		STARTTIME,
+		ENDDATE,
+		ENDTIME
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -131,14 +138,13 @@ public class AddTaskActivity extends RoboSherlockActivity
 		super.onSaveInstanceState(outState);
 		Log.v("AddTaskActivity", "onSaveInstanceState");
 	
-//		Log.v("AddTaskActivity", "onSaveInstanceState: title = "
-//				+ txtTitle.getText().toString());
-//		outState.putString("title", txtTitle.getText().toString());
+		// Title and description field are persisting themselves!
+
 		// TODO: Locationdata
 		outState.putBoolean("useDateBoundaries", chbDateBoundaries.isChecked());
 		outState.putLong("startDateTime", startDateTime.getTimeInMillis());
 		outState.putLong("endDateTime", endDateTime.getTimeInMillis());
-//		outState.putString("description", txtDescription.getText().toString());
+
 		outState.putInt("customProximitry", selCustomProximitry.getSelectedItemPosition());
 	}
 
@@ -165,18 +171,11 @@ public class AddTaskActivity extends RoboSherlockActivity
 	}
 
 	private void restoreFromState(Bundle savedInstanceState) {
-//		Log.v("AddTaskActivity", "savedInstanceState.getString(title) = "
-//				+ savedInstanceState.getString("title"));
-		
-//		txtTitle.setText(savedInstanceState.getString("title"));
+		// Title and description field are restoring themselves!
+
 		// TODO: Locationdata
 		chbDateBoundaries.setChecked(savedInstanceState.getBoolean("useDateBoundaries"));
-		
-//		Log.v("AddTaskActivity", "startDateTime = " + startDateTime);
-//		Log.v("AddTaskActivity", "savedInstanceState = " + savedInstanceState);
-//		Log.v("AddTaskActivity", "savedInstanceState.getLong(startDateTime) = "
-//				+ savedInstanceState.getLong("startDateTime"));
-		
+
 		startDateTime = Calendar.getInstance();
 		startDateTime.setTimeInMillis(savedInstanceState.getLong("startDateTime"));
 		endDateTime = Calendar.getInstance();
@@ -253,25 +252,28 @@ public class AddTaskActivity extends RoboSherlockActivity
 	@Override
 	public void onClick(View view) {
 		if (view.equals(btnStartDate)) {
-			pickerStartDate = retrieveDatePicker(startDateTime);
-			pickerStartDate.show();
+			openedPicker = OpenedPickerType.STARTDATE;
+			retrieveDatePicker(startDateTime).show();
 		} else if (view.equals(btnStartTime)) {
-			pickerStartTime = retrieveTimePicker(startDateTime);
-			pickerStartTime.show();
+			openedPicker = OpenedPickerType.STARTTIME;
+			retrieveTimePicker(startDateTime).show();
 		} else if (view.equals(btnEndDate)) {
-			pickerEndDate = retrieveDatePicker(endDateTime);
-			pickerEndDate.show();
+			openedPicker = OpenedPickerType.ENDDATE;
+			retrieveDatePicker(endDateTime).show();
 		} else if (view.equals(btnEndTime)) {
-			pickerEndTime = retrieveTimePicker(endDateTime);
-			pickerEndTime.show();
+			openedPicker = OpenedPickerType.ENDTIME;
+			retrieveTimePicker(endDateTime).show();
+		} else if (view.equals(btnLocation)) {
+			this.startActivityForResult(new Intent(this,
+					EditLocationActivity.class), 1);
 		}
 	}
 	
 	/**
 	 * Retrieves a date picker dialog instance from a calendar.
 	 * 
-	 * @param startDateTime2
-	 * @return
+	 * @param cal
+	 * @return DatePickerDialog
 	 */
 	private DatePickerDialog retrieveDatePicker(Calendar cal) {
 		return new DatePickerDialog(this, this, cal.get(Calendar.YEAR),
@@ -291,10 +293,12 @@ public class AddTaskActivity extends RoboSherlockActivity
 
 	@Override
 	public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-		if (view.equals(pickerStartTime)) {
+		Log.d("AddTaskActivity", "onTimeSet: view = " + view);
+		
+		if (openedPicker.equals(OpenedPickerType.STARTTIME)) {
 			startDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
 			startDateTime.set(Calendar.MINUTE, minute);
-		} else if (view.equals(pickerEndTime)) {
+		} else if (openedPicker.equals(OpenedPickerType.ENDTIME)) {
 			endDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
 			endDateTime.set(Calendar.MINUTE, minute);
 		}
@@ -305,11 +309,13 @@ public class AddTaskActivity extends RoboSherlockActivity
 
 	@Override
 	public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-		if (view.equals(pickerStartDate)) {
+		Log.d("AddTaskActivity", "onDateSet: view = " + view);
+
+		if (openedPicker.equals(OpenedPickerType.STARTDATE)) {
 			startDateTime.set(Calendar.YEAR, year);
 			startDateTime.set(Calendar.MONTH, monthOfYear);
 			startDateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-		} else if (view.equals(pickerEndDate)) {
+		} else if (openedPicker.equals(OpenedPickerType.ENDDATE)) {
 			endDateTime.set(Calendar.YEAR, year);
 			endDateTime.set(Calendar.MONTH, monthOfYear);
 			endDateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);

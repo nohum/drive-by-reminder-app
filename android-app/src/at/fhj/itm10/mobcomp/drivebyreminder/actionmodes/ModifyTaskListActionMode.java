@@ -13,7 +13,7 @@ import com.actionbarsherlock.view.MenuItem;
  * 
  * @author Wolfgang Gaar
  */
-public class SaveTaskActionMode implements Callback {
+public class ModifyTaskListActionMode implements Callback {
 	
 	@Override
 	public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -35,15 +35,15 @@ public class SaveTaskActionMode implements Callback {
 
 	@Override
 	public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-		Log.v("SaveTaskActionMode", "clicked item = " + item);
-		Log.v("SaveTaskActionMode", "clicked item.itemid = " + item.getItemId());
+		Log.v("ModifyTaskListActionMode", "clicked item = " + item);
+		Log.v("ModifyTaskListActionMode", "clicked item.itemid = " + item.getItemId());
 		
 		return false;
 	}
 
 	@Override
 	public void onDestroyActionMode(ActionMode mode) {
-		Log.v("SaveTaskActionMode", "onDestroyActionMode");
+		Log.v("ModifyTaskListActionMode", "onDestroyActionMode");
 		
 		// TODO Auto-generated method stub
 		
