@@ -96,5 +96,10 @@ public class Location {
 	public void setLocationChooserSelected(boolean locationChooserSelected) {
 		this.locationChooserSelected = locationChooserSelected;
 	}
+	
+	@Deprecated
+	public String toString() {
+		return address;
+	}
 
 }

@@ -1,10 +1,9 @@
 package at.fhj.itm10.mobcomp.drivebyreminder.listadapters;
 
 import java.util.List;
-import java.util.Map;
 
 import android.content.Context;
-import android.widget.SimpleAdapter;
+import android.widget.ArrayAdapter;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.Location;
 
 /**
@@ -12,16 +11,14 @@ import at.fhj.itm10.mobcomp.drivebyreminder.models.Location;
  * 
  * @author Wolfgang Gaar
  */
-public class LocationSearchListAdapter extends SimpleAdapter {
+public class LocationSearchListAdapter extends ArrayAdapter<Location> {
 
-	public LocationSearchListAdapter(List<Location> locations) {
-		super(null, null, (Integer) 0, null, null);
+	public LocationSearchListAdapter(Context context, int textViewResourceId,
+			List<Location> objects) {
+		super(context, textViewResourceId, objects);
+
 	}
 	
-	public LocationSearchListAdapter(Context context,
-			List<? extends Map<String, ?>> data, int resource, String[] from,
-			int[] to) {
-		super(context, data, resource, from, to);
-	}
+	
 
 }

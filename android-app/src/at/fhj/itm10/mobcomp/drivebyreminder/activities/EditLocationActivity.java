@@ -86,6 +86,7 @@ public class EditLocationActivity extends RoboSherlockActivity
 		}
 	};
 	
+	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -100,7 +101,8 @@ public class EditLocationActivity extends RoboSherlockActivity
         // Should use setRetainInstance
         // see: http://developer.android.com/reference/android/app/Fragment.html#setRetainInstance%28boolean%29
         // TODO: herrn krajnc fragen wegen deprecated method
-        List<Location> lastLocations = (List<Location>)
+		@SuppressWarnings("unchecked")
+		List<Location> lastLocations = (List<Location>)
         		getLastNonConfigurationInstance();
         if (lastLocations != null) {
             this.processFoundLocations(ErrorCode.NO_ERROR, lastLocations);
@@ -116,16 +118,18 @@ public class EditLocationActivity extends RoboSherlockActivity
 
         String language = Locale.getDefault().getDisplayLanguage();
         this.currentLanguageCode = languageCodeMap.get(language);
+        this.currentRegionBiasCode = preferences.getString("locationBias", "at");
+
         Log.d("EditLocationActivity", "language = " + language);
         Log.d("EditLocationActivity", "language code = "
         		+ this.currentLanguageCode);
-
-        this.currentRegionBiasCode = preferences.getString("locationBias", "at");
-        Log.d("EditLocationActivity", "location bias pref = " + currentRegionBiasCode);
+        Log.d("EditLocationActivity", "location bias pref = "
+        		+ this.currentRegionBiasCode);
+        
 	}
 
 	/**
-	 * Add view events
+	 * Add view events.
 	 */
 	private void initViewEvents() {
 		btnLocationSearch.setOnClickListener(this);
@@ -152,7 +156,9 @@ public class EditLocationActivity extends RoboSherlockActivity
 	@Override
 	public void onClick(View v) {
 		if (v.equals(btnLocationSearch)) {
-			locations = null;
+			this.locations = null;
+			// Remove focus from location text field
+			this.btnLocationSearch.requestFocus();
 
 			if (TextUtils.isEmpty(txtLocationName.getText().toString())) {
 				lblResult.setText(strResultNoSearch);
@@ -160,21 +166,13 @@ public class EditLocationActivity extends RoboSherlockActivity
 			} else {
 				lblResult.setVisibility(View.GONE);
 				
-				LocationQuery query = new LocationQuery(txtLocationName.getText().toString(),
-						this.currentRegionBiasCode, this.currentLanguageCode);
+				LocationQuery query = new LocationQuery(this.txtLocationName.getText()
+						.toString(), this.currentRegionBiasCode, this.currentLanguageCode);
 
 				// Call the task
 				new DownloadLocationDataAsyncTask(this).execute(query);
 			}
 		}
-	}
-
-	/**
-	 * Shows an error message about the network.
-	 */
-	public void showNetworkErrorMessage() {
-		lblResult.setText(strResultNetworkError);
-		lblResult.setVisibility(View.VISIBLE);
 	}
 
 	public void processFoundLocations(ErrorCode occuredError,
@@ -187,23 +185,30 @@ public class EditLocationActivity extends RoboSherlockActivity
 				// Show a text for the user
 				lblResult.setText(strResultEmptyResult);
 				lblResult.setVisibility(View.VISIBLE);
-	
+				lstFoundLocations.setVisibility(View.GONE);
+
 				return;
 			}
 
-			// Field is used for maintaining state
+			// This field is used for maintaining state
 			this.locations = result;
-			lstFoundLocations.setAdapter(new LocationSearchListAdapter(result));
+			
+			lblResult.setVisibility(View.GONE);
+			lstFoundLocations.setVisibility(View.VISIBLE);
+			lstFoundLocations.setAdapter(new LocationSearchListAdapter(this,
+					android.R.layout.simple_list_item_1, locations));
 			break;
 		case DOWNLOAD_ERROR:
 			lblResult.setText(strResultNetworkError);
 			lblResult.setVisibility(View.VISIBLE);
+			lstFoundLocations.setVisibility(View.GONE);
 			break;
 		case INVALID_NAME:
 		case OTHER_ERROR:
 		case STATUS_ERROR:
 			lblResult.setText(strResultUnknownError);
 			lblResult.setVisibility(View.VISIBLE);
+			lstFoundLocations.setVisibility(View.GONE);
 			break;
 		default:
 			Log.w("EditLocationActivity", "processFoundLocations: switch entered" +

@@ -14,6 +14,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.actionbarsherlock.view.Window;
+
 import android.os.AsyncTask;
 import android.util.Log;
 import at.fhj.itm10.mobcomp.drivebyreminder.activities.EditLocationActivity;
@@ -107,16 +109,17 @@ public class DownloadLocationDataAsyncTask extends
 	}
 
 	protected void onPreExecute() {
+		//Hack to hide the regular progress bar
+		activity.setSupportProgress(Window.PROGRESS_END);
 		// Show the infinite progress meter
 		activity.setSupportProgressBarIndeterminateVisibility(true);
 	}
 	
 	protected void onPostExecute(List<Location> result) {
-		activity.setSupportProgressBarIndeterminateVisibility(false);
-		
 		Log.d("DownloadLocationDataAsyncTask", "result code = " + this.occuredError);
 		Log.d("DownloadLocationDataAsyncTask", "result = " + result);
 		
+		activity.setSupportProgressBarIndeterminateVisibility(false);
 		activity.processFoundLocations(this.occuredError, result);
     }
 	
