@@ -13,17 +13,17 @@ import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
+import at.fhj.itm10.mobcomp.drivebyreminder.helper.DownloadLocationDataAsyncTask;
 import at.fhj.itm10.mobcomp.drivebyreminder.helper.DownloadLocationDataTask;
 import at.fhj.itm10.mobcomp.drivebyreminder.listadapters.LocationSearchListAdapter;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.Location;
+import at.fhj.itm10.mobcomp.drivebyreminder.models.LocationQuery;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
@@ -58,9 +58,9 @@ public class EditLocationActivity extends RoboSherlockActivity
 	@InjectView(R.id.lstFoundLocations)
 	private ListView lstFoundLocations;
 
-	private SharedPreferences preferences;
-
-	private DownloadLocationDataTask downloadTask;
+	private String currentLanguageCode;
+	
+	private String currentRegionBiasCode;
 	
 	/**
 	 * Just used to save the instance state and to avoid calling the webservice.
@@ -94,22 +94,27 @@ public class EditLocationActivity extends RoboSherlockActivity
         	restoreFromState(savedInstanceState);
         }
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(
-        		getApplicationContext());
-
-        String language = Locale.getDefault().getDisplayLanguage();
-        Log.d("EditLocationActivity", "language = " + language);
-        Log.d("EditLocationActivity", "language code = "
-        		+ languageCodeMap.get(language));
-
-        String regionBias = preferences.getString("locationBias", "at");
-        Log.d("EditLocationActivity", "pref = " + regionBias);
-
-        downloadTask = new DownloadLocationDataTask(getApplicationContext(), this,
-        		languageCodeMap.get(language), regionBias);
+        initFromSettings();
 
         initViewFromValues();
         initViewEvents();
+	}
+
+	/**
+	 * Init data from settings.
+	 */
+	private void initFromSettings() {
+		SharedPreferences preferences = PreferenceManager
+        		.getDefaultSharedPreferences(getApplicationContext());
+
+        String language = Locale.getDefault().getDisplayLanguage();
+        this.currentLanguageCode = languageCodeMap.get(language);
+        Log.d("EditLocationActivity", "language = " + language);
+        Log.d("EditLocationActivity", "language code = "
+        		+ this.currentLanguageCode);
+
+        this.currentRegionBiasCode = preferences.getString("locationBias", "at");
+        Log.d("EditLocationActivity", "location bias pref = " + currentRegionBiasCode);
 	}
 
 	/**
@@ -182,11 +187,13 @@ public class EditLocationActivity extends RoboSherlockActivity
 				lblResult.setText(strResultNoSearch);
 				lblResult.setVisibility(View.VISIBLE);
 			} else {
-				downloadTask.setLocationName(txtLocationName.getText().toString());
 				lblResult.setVisibility(View.GONE);
 				
+				LocationQuery query = new LocationQuery(txtLocationName.getText().toString(),
+						this.currentRegionBiasCode, this.currentLanguageCode);
+
 				// Call the task
-				downloadTask.execute();
+				new DownloadLocationDataAsyncTask(this).execute(query);
 			}
 		}
 	}

@@ -13,14 +13,21 @@ public class Location {
 	
 	private String name;
 	
+	/**
+	 * Address is not going to be stored in database.
+	 */
+	private String address;
+	
 	private double latitude;
 	
 	private double longitude;
 	
 	private boolean locationChooserSelected = false;
 
-	public Location(String name, double latitude, double longitude) {
+	public Location(String name, String address, double latitude,
+			double longitude) {
 		setName(name);
+		setAddress(address);
 		setLatitude(latitude);
 		setLongitude(longitude);
 	}
@@ -51,6 +58,19 @@ public class Location {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getAddress() {
+		return address;
+	}
+
+	/**
+	 * This property is not going to be stored in database!
+	 * 
+	 * @param address
+	 */
+	public void setAddress(String address) {
+		this.address = address;
 	}
 
 	public double getLatitude() {
