@@ -3,9 +3,10 @@ package at.fhj.itm10.mobcomp.drivebyreminder.helper;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,10 +28,20 @@ import at.fhj.itm10.mobcomp.drivebyreminder.models.LocationQuery;
 public class DownloadLocationDataAsyncTask extends
 		AsyncTask<LocationQuery, Void, List<Location>> {
 
+	public enum ErrorCode {
+		NO_ERROR,
+		INVALID_NAME,
+		DOWNLOAD_ERROR,
+		STATUS_ERROR,
+		OTHER_ERROR
+	};
+	
 	private final String API_LOCATION_MORE
 			= "http://drivebyreminder.truthfactory.tk/service/more/byname/%s/inlanguage/%s/inregion/%s";
 	
 	private EditLocationActivity activity;
+	
+	private volatile ErrorCode occuredError = ErrorCode.NO_ERROR;
 
 	public DownloadLocationDataAsyncTask(EditLocationActivity activity) {
 		super();
@@ -41,8 +52,19 @@ public class DownloadLocationDataAsyncTask extends
 	protected List<Location> doInBackground(LocationQuery... params) {
 		LocationQuery query = params[0];
 		
-		String url = String.format(API_LOCATION_MORE, query.getLocationName(),
-				query.getLanguageCode(), query.getRegionCode());
+		String url = null;
+		try {
+			url = String.format(API_LOCATION_MORE,
+					URLEncoder.encode(query.getLocationName().trim(), "UTF-8"),
+					query.getLanguageCode(), query.getRegionCode());
+		} catch (UnsupportedEncodingException e1) {
+			Log.d("DownloadLocationDataAsyncTask", "error on encoding url-data!");
+			e1.printStackTrace();
+			
+			occuredError = ErrorCode.INVALID_NAME;
+			return null;
+		}
+
 		JSONObject json;
 		try {
 			json = retrieveUrlData(url);
@@ -50,13 +72,15 @@ public class DownloadLocationDataAsyncTask extends
 			Log.d("DownloadLocationDataAsyncTask", "error on downloading data!");
 			e.printStackTrace();
 			
+			occuredError = ErrorCode.DOWNLOAD_ERROR;
 			return null;
 		}
 		
 		List<Location> results = null;
 		try {
 			if (!json.getString("status").equals("OK")) {
-				throw new Exception("Server error, status returned: " + json.getString("status"));
+				throw new IllegalStateException("Server error, status returned: "
+						+ json.getString("status"));
 			}
 
 			JSONArray entries = json.getJSONArray("entries");
@@ -70,9 +94,13 @@ public class DownloadLocationDataAsyncTask extends
 		} catch (JSONException e) {
 			Log.d("DownloadLocationDataAsyncTask", "error when converting data!");
 			e.printStackTrace();
-		} catch (Exception e) {
+			
+			occuredError = ErrorCode.DOWNLOAD_ERROR;
+		} catch (IllegalStateException e) {
 			Log.d("DownloadLocationDataAsyncTask", "status error!");
 			e.printStackTrace();
+			
+			occuredError = ErrorCode.STATUS_ERROR;
 		} 
 
 		return results;
@@ -85,13 +113,11 @@ public class DownloadLocationDataAsyncTask extends
 	
 	protected void onPostExecute(List<Location> result) {
 		activity.setSupportProgressBarIndeterminateVisibility(false);
+		
+		Log.d("DownloadLocationDataAsyncTask", "result code = " + this.occuredError);
 		Log.d("DownloadLocationDataAsyncTask", "result = " + result);
 		
-		if (result != null) {
-			activity.setFoundLocations(result);
-		}
-
-        //showDialog("Downloaded " + result + " bytes");
+		activity.processFoundLocations(this.occuredError, result);
     }
 	
 	/**
@@ -106,6 +132,7 @@ public class DownloadLocationDataAsyncTask extends
 		StringBuffer sb = new StringBuffer();
 		BufferedReader inreader = null;
 		URL theUrl = new URL(url);
+		Log.d("DownloadLocationDataAsyncTask", "theUrl = " + theUrl);
 		HttpURLConnection conn = (HttpURLConnection) theUrl.openConnection();
 
 		if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
@@ -113,6 +140,7 @@ public class DownloadLocationDataAsyncTask extends
 					conn.getInputStream()));
 			String line;
 			while ((line = inreader.readLine()) != null) {
+				Log.d("DownloadLocationDataAsyncTask", "CONN-LINE: " + line);
 				sb.append(line);
 			}
 			inreader.close();

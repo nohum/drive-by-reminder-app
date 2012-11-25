@@ -20,7 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
 import at.fhj.itm10.mobcomp.drivebyreminder.helper.DownloadLocationDataAsyncTask;
-import at.fhj.itm10.mobcomp.drivebyreminder.helper.DownloadLocationDataTask;
+import at.fhj.itm10.mobcomp.drivebyreminder.helper.DownloadLocationDataAsyncTask.ErrorCode;
 import at.fhj.itm10.mobcomp.drivebyreminder.listadapters.LocationSearchListAdapter;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.Location;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.LocationQuery;
@@ -54,6 +54,9 @@ public class EditLocationActivity extends RoboSherlockActivity
 	
 	@InjectResource(R.string.activity_editlocation_result_nonetwork)
 	private String strResultNetworkError;
+	
+	@InjectResource(R.string.activity_editlocation_result_unknownerror)
+	private String strResultUnknownError;
 
 	@InjectView(R.id.lstFoundLocations)
 	private ListView lstFoundLocations;
@@ -90,14 +93,18 @@ public class EditLocationActivity extends RoboSherlockActivity
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
 
-        if (savedInstanceState != null) {
-        	restoreFromState(savedInstanceState);
-        }
-
         initFromSettings();
-
-        initViewFromValues();
         initViewEvents();
+        
+        // Reload locations after activity restart...
+        // Should use setRetainInstance
+        // see: http://developer.android.com/reference/android/app/Fragment.html#setRetainInstance%28boolean%29
+        // TODO: herrn krajnc fragen wegen deprecated method
+        List<Location> lastLocations = (List<Location>)
+        		getLastNonConfigurationInstance();
+        if (lastLocations != null) {
+            this.processFoundLocations(ErrorCode.NO_ERROR, lastLocations);
+        }
 	}
 
 	/**
@@ -134,48 +141,12 @@ public class EditLocationActivity extends RoboSherlockActivity
         return super.onOptionsItemSelected(item);
     }
 
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-
-//		outState.putSerializable("s", locations);
-//		outState.
-	}
-
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState) {
-		super.onRestoreInstanceState(savedInstanceState);
-		
-		if (savedInstanceState == null) {
-			restoreFromState(savedInstanceState);
-			initViewFromValues();
-		}
-	}
-
-	private void restoreFromState(Bundle savedInstanceState) {
-
-	}
-	
 	/**
-	 * Init all views.
+	 * Used to save the received locations over activity restarts.
 	 */
-	private void initViewFromValues() {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	public void setFoundLocations(List<Location> locations) {
-		if (locations.size() == 0) {
-			// Show a text for the user
-			lblResult.setText(strResultEmptyResult);
-			lblResult.setVisibility(View.VISIBLE);
-
-			return;
-		}
-		
-		// Field is used for maintaining state
-		this.locations = locations;
-		lstFoundLocations.setAdapter(new LocationSearchListAdapter(locations));
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+	    return this.locations;
 	}
 
 	@Override
@@ -204,5 +175,40 @@ public class EditLocationActivity extends RoboSherlockActivity
 	public void showNetworkErrorMessage() {
 		lblResult.setText(strResultNetworkError);
 		lblResult.setVisibility(View.VISIBLE);
+	}
+
+	public void processFoundLocations(ErrorCode occuredError,
+			List<Location> result) {
+		this.locations = null;
+
+		switch (occuredError) {
+		case NO_ERROR:
+			if (result.size() == 0) {
+				// Show a text for the user
+				lblResult.setText(strResultEmptyResult);
+				lblResult.setVisibility(View.VISIBLE);
+	
+				return;
+			}
+
+			// Field is used for maintaining state
+			this.locations = result;
+			lstFoundLocations.setAdapter(new LocationSearchListAdapter(result));
+			break;
+		case DOWNLOAD_ERROR:
+			lblResult.setText(strResultNetworkError);
+			lblResult.setVisibility(View.VISIBLE);
+			break;
+		case INVALID_NAME:
+		case OTHER_ERROR:
+		case STATUS_ERROR:
+			lblResult.setText(strResultUnknownError);
+			lblResult.setVisibility(View.VISIBLE);
+			break;
+		default:
+			Log.w("EditLocationActivity", "processFoundLocations: switch entered" +
+					" default case, this should not happen!");
+			break;
+		}
 	}
 }

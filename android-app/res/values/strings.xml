@@ -48,7 +48,8 @@
     <string name="activity_editlocation_result_nosearch">Please enter a location name and tap the search button.</string>
     <string name="activity_editlocation_result_noresults">No results have been found.</string>
     <string name="activity_editlocation_result_nonetwork">Network error. Do you have a working internet connection?</string>
-   
+    <string name="activity_editlocation_result_unknownerror">An unknown error occured. Please try again later.</string>
+
     <string name="activity_editlocation_location_downloaderror">An error occurred while retrieving locations. Is your internet connection working?</string>
     
     <!-- Preferences -->

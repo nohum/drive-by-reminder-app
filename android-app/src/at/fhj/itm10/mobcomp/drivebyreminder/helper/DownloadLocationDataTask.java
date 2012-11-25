@@ -121,7 +121,7 @@ public class DownloadLocationDataTask extends RoboAsyncTask<List<Location>> {
 	 */
     @Override 
     protected void onSuccess(List<Location> result) {
-    	activity.setFoundLocations(result);
+//    	activity.setFoundLocations(result);
     }
     
     /**
