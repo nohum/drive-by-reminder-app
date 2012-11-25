@@ -195,8 +195,9 @@ public class EditLocationActivity extends RoboSherlockActivity
 			
 			lblResult.setVisibility(View.GONE);
 			lstFoundLocations.setVisibility(View.VISIBLE);
+			lstFoundLocations.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 			lstFoundLocations.setAdapter(new LocationSearchListAdapter(this,
-					android.R.layout.simple_list_item_1, locations));
+					R.layout.listitem_location, locations));
 			break;
 		case DOWNLOAD_ERROR:
 			lblResult.setText(strResultNetworkError);

@@ -60,19 +60,14 @@
             android:text="@string/activity_editlocation_result_nosearch"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="fill_parent" >
+        <ListView
+            android:id="@+id/lstFoundLocations"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:choiceMode="multipleChoice" >
 
-            <ListView
-                android:id="@+id/lstFoundLocations"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:choiceMode="multipleChoice" >
+        </ListView>
 
-            </ListView>
-
-        </ScrollView>
 
     </LinearLayout>
 </LinearLayout>
