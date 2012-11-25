@@ -99,6 +99,7 @@ class ApiCaller {
 		$resultList = array();
 		foreach ($json->results as $result) {
 			$resultList[] = array(
+				'name' => (isset($result->name) ? $result->name : ''),
 				'address' => $result->formatted_address,
 				'latitude' => $result->geometry->location->lat,
 				'longitude' => $result->geometry->location->lng,
