@@ -51,6 +51,9 @@ public class EditLocationActivity extends RoboSherlockActivity
 	
 	@InjectResource(R.string.activity_editlocation_result_nosearch)
 	private String strResultNoSearch;
+	
+	@InjectResource(R.string.activity_editlocation_result_nonetwork)
+	private String strResultNetworkError;
 
 	@InjectView(R.id.lstFoundLocations)
 	private ListView lstFoundLocations;
@@ -165,8 +168,8 @@ public class EditLocationActivity extends RoboSherlockActivity
 			return;
 		}
 		
+		// Field is used for maintaining state
 		this.locations = locations;
-		
 		lstFoundLocations.setAdapter(new LocationSearchListAdapter(locations));
 	}
 
@@ -186,5 +189,13 @@ public class EditLocationActivity extends RoboSherlockActivity
 				downloadTask.execute();
 			}
 		}
+	}
+
+	/**
+	 * Shows an error message about the network.
+	 */
+	public void showNetworkErrorMessage() {
+		lblResult.setText(strResultNetworkError);
+		lblResult.setVisibility(View.VISIBLE);
 	}
 }

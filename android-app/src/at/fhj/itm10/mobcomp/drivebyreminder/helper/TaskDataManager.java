@@ -12,10 +12,9 @@ import roboguice.inject.ContextSingleton;
  * 
  * @author Wolfgang Gaar
  */
-@ContextSingleton
+
 public class TaskDataManager {
 
-	@Inject
 	private TaskStorageHelper db;
 
 	private SQLiteDatabase writableDb;

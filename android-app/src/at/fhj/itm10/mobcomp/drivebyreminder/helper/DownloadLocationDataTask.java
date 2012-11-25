@@ -36,11 +36,7 @@ public class DownloadLocationDataTask extends RoboAsyncTask<List<Location>> {
 	private String regionBiasCode;
 	
 	private EditLocationActivity activity;
-	
-	@SuppressWarnings("unused")
-	private final String API_LOCATION_ONE
-			= "http://drivebyreminder.truthfactory.tk/service/one/byname/%s/inlanguage/%s/inregion/%s";
-	
+
 	private final String API_LOCATION_MORE
 			= "http://drivebyreminder.truthfactory.tk/service/more/byname/%s/inlanguage/%s/inregion/%s";
 	
@@ -74,7 +70,7 @@ public class DownloadLocationDataTask extends RoboAsyncTask<List<Location>> {
 				this.regionBiasCode);
 		JSONObject json = retrieveUrlData(url);
 		
-		if (json.getString("status") != "OK") {
+		if (!json.getString("status").equals("OK")) {
 			throw new Exception("Server error, status returned: " + json.getString("status"));
 		}
 
@@ -107,6 +103,8 @@ public class DownloadLocationDataTask extends RoboAsyncTask<List<Location>> {
 		}
 		conn = null;
 
+		Log.d("DownloadLocationDataTask", "retrieved data: " + sb.toString());
+		
 		return new JSONObject(sb.toString());
 	}
 
@@ -131,7 +129,9 @@ public class DownloadLocationDataTask extends RoboAsyncTask<List<Location>> {
      */
     @Override 
     protected void onException(Exception e) {
-        Toast.makeText(activity, downloadException, Toast.LENGTH_SHORT).show();
+        Toast.makeText(activity, downloadException, Toast.LENGTH_LONG).show();
+        activity.showNetworkErrorMessage();
+
         Log.e("DownloadLocationDataTask", e.getMessage());
     } 
     

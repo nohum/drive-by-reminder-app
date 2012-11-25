@@ -6,8 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
+import at.fhj.itm10.mobcomp.drivebyreminder.helper.TaskStorageHelper;
 
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
+import com.google.inject.Inject;
 
 /**
  * Fragment to view all tasks.
@@ -15,6 +17,9 @@ import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragmen
  * @author Wolfgang Gaar
  */
 public class AllTasksFragment extends RoboSherlockFragment {
+
+//	@Inject
+//	private TaskStorageHelper taskDb;
 
 	/**
 	 * Get an instance of this fragment.

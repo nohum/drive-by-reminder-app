@@ -1,10 +1,13 @@
 package at.fhj.itm10.mobcomp.drivebyreminder.fragments;
 
+import com.google.inject.Inject;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
+import at.fhj.itm10.mobcomp.drivebyreminder.helper.TaskStorageHelper;
 
 /**
  * Fragment for the nearby tasks view.
@@ -12,6 +15,9 @@ import at.fhj.itm10.mobcomp.drivebyreminder.R;
  * @author Wolfgang Gaar
  */
 public class NearbyTasksFragment extends AllTasksFragment {
+
+//	@Inject
+//	private TaskStorageHelper taskDb;
 
 	/**
 	 * Get an instance of this fragment.
