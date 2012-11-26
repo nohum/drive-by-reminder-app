@@ -9,13 +9,17 @@ import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -38,7 +42,7 @@ import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivit
  */
 @ContentView(R.layout.activity_editlocation)
 public class EditLocationActivity extends RoboSherlockActivity
-		implements OnClickListener {
+		implements OnClickListener, OnItemSelectedListener {
 
 	@InjectView(R.id.txtLocationName)
 	private EditText txtLocationName;
@@ -157,6 +161,19 @@ public class EditLocationActivity extends RoboSherlockActivity
 	 */
 	private void initViewEvents() {
 		btnLocationSearch.setOnClickListener(this);
+//		lstFoundLocations.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//
+//            public boolean onItemLongClick(AdapterView<?> arg0, View v,
+//                    int index, long arg3) {
+//                // TODO Auto-generated method stub
+//                 Log.d("EditLocationActivity","in onLongClick");
+//                 String str=lstFoundLocations.getItemAtPosition(index).toString();
+//
+//                 Log.d("EditLocationActivity","long click : " +str);
+//                return true;
+//            }
+//}); 
+		lstFoundLocations.setOnItemSelectedListener(this);
 	}
 
 	/**
@@ -231,4 +248,39 @@ public class EditLocationActivity extends RoboSherlockActivity
 			break;
 		}
 	}
+
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View v, int position,
+			long id) {
+		Location location = (Location) parent.getItemAtPosition(position);
+		Log.d("EditLocationActivity", "onItemLongClick: onItemSelected = " + location);
+		
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> parent) {
+		// TODO Auto-generated method stub
+		
+	}
+
+//	@Override
+//	public boolean onItemLongClick(AdapterView<?> parent, View v, int position,
+//			long id) {
+//
+//		Location location = (Location) parent.getItemAtPosition(position);
+//		Log.d("EditLocationActivity", "onItemLongClick: location = " + location);
+//		
+//		if (location != null) {
+//			Intent intent = new Intent(Intent.ACTION_VIEW);
+//	        intent.setData(Uri.parse("geo:0,0?q=" + location.getLatitude() + ","
+//	        		+ location.getLongitude()));
+//	        startActivity(intent);
+//	        
+//	        return true;
+//		}
+//
+//		return false;
+//	}
 }

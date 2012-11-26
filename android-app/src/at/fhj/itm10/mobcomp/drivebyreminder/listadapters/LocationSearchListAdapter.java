@@ -49,7 +49,7 @@ public class LocationSearchListAdapter extends ArrayAdapter<Location> {
         	CheckBox chbItemSelected = (CheckBox) v.findViewById(R.id.chbItemSelected);
         	TextView locationName = (TextView) v.findViewById(R.id.lblItemLocationName);
         	TextView locationAddress = (TextView) v.findViewById(R.id.lblItemLocationAddress);
-        	
+
         	chbItemSelected.setChecked(location.isLocationChooserSelected());
         	locationName.setText(location.getName());
         	locationAddress.setText(location.getAddress());

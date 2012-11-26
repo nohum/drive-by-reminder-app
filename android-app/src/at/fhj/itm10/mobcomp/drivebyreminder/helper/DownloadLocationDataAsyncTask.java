@@ -117,8 +117,7 @@ public class DownloadLocationDataAsyncTask extends
 	
 	protected void onPostExecute(List<Location> result) {
 		Log.d("DownloadLocationDataAsyncTask", "result code = " + this.occuredError);
-		Log.d("DownloadLocationDataAsyncTask", "result = " + result);
-		
+	
 		activity.setSupportProgressBarIndeterminateVisibility(false);
 		activity.processFoundLocations(this.occuredError, result);
     }
