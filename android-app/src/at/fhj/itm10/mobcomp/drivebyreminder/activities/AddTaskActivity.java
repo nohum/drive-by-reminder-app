@@ -33,6 +33,7 @@ import at.fhj.itm10.mobcomp.drivebyreminder.R;
 import at.fhj.itm10.mobcomp.drivebyreminder.helper.DataSingletonStorage;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.Location;
 
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 import com.google.inject.Inject;
@@ -92,6 +93,8 @@ public class AddTaskActivity extends RoboSherlockActivity
 	
 	private OpenedPickerType openedPicker;
 	
+	private List<Location> associatedLocations = null;
+	
 	@Inject
 	private DataSingletonStorage dataStorage;
 	
@@ -123,22 +126,12 @@ public class AddTaskActivity extends RoboSherlockActivity
         initSystemDateTimeFormats();
         refreshViewsWithValues();
         initViewEvents();
-        
-//        startActionMode(new SaveTaskActionMode());
-        
-//        View customNav = LayoutInflater.from(this).inflate(R.layout.custom_view, null);
-//
-//        //Bind to its state change
-//        ((RadioGroup)customNav.findViewById(R.id.radio_nav)).setOnCheckedChangeListener(new OnCheckedChangeListener() {
-//            @Override
-//            public void onCheckedChanged(RadioGroup group, int checkedId) {
-//                Toast.makeText(CustomNavigation.this, "Navigation selection changed.", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
-//        //Attach to the action bar
-//        getSupportActionBar().setCustomView(customNav);
-//        getSupportActionBar().setDisplayShowCustomEnabled(true);
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getSupportMenuInflater().inflate(R.menu.menu_addtask, menu);
+		return true;
 	}
 
 	@Override
@@ -147,6 +140,8 @@ public class AddTaskActivity extends RoboSherlockActivity
         case android.R.id.home:
             NavUtils.navigateUpFromSameTask(this);
             return true;
+        case R.id.menu_addtask_save:
+        	return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -243,18 +238,14 @@ public class AddTaskActivity extends RoboSherlockActivity
 	 * @see http://stackoverflow.com/questions/6981505/android-get-user-selected-date-format
 	 */
 	private void initSystemDateTimeFormats() {
-		// Get the format
+		// Get the formats
 		systemDateFormat = DateFormat.getDateFormat(getApplicationContext());
 		systemTimeFormat = DateFormat.getTimeFormat(getApplicationContext());
 		systemTime24Hours = DateFormat.is24HourFormat(getApplicationContext());
-		
-		// Just to look if the variables are not null...
-		Log.d("AddTaskActivity", "systemDateFormat = " + systemDateFormat);
-		Log.d("AddTaskActivity", "systemTimeFormat = " + systemTimeFormat);
 	}
 
 	/**
-	 * Used for the checkbox.
+	 * Used for the alert date checkbox.
 	 */
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -283,8 +274,15 @@ public class AddTaskActivity extends RoboSherlockActivity
 			openedPicker = OpenedPickerType.ENDTIME;
 			retrieveTimePicker(endDateTime).show();
 		} else if (view.equals(btnLocation)) {
-			this.startActivityForResult(new Intent(this,
-					EditLocationActivity.class), 1);
+			Intent intent = new Intent(this, EditLocationActivity.class);
+			intent.putExtra("loadFromStorage", false);
+
+			if (this.associatedLocations != null) {
+				dataStorage.setData("locationsToShow", this.associatedLocations);
+				intent.putExtra("loadFromStorage", true);
+			}
+			
+			this.startActivityForResult(intent, 1);
 		}
 	}
 
@@ -295,28 +293,32 @@ public class AddTaskActivity extends RoboSherlockActivity
 		
 		switch(requestCode) {
 		case 1:
+			// Process location chooser activity
 			if (resultCode == Activity.RESULT_OK) {
 				Log.d("AddTaskActivity", "onActivityResult: return code = RESULT_OK");
 				Log.d("AddTaskActivity", "dataStorage = " + dataStorage);
 
-				List<Location> locations = (List<Location>) dataStorage
+				associatedLocations = (List<Location>) dataStorage
 						.getData("locationsToSave");
-				Log.d("AddTaskActivity", "onActivityResult: locationsToSave = " + locations);
-				if (locations == null || locations.size() == 0) {
+
+				Log.d("AddTaskActivity", "onActivityResult: locationsToSave = "
+						+ associatedLocations);
+
+				// Handle different kinds of locations
+				if (associatedLocations == null || associatedLocations.size() == 0) {
 					btnLocation.setText(strButtonSetLocation);
-				} else if (locations.size() == 1) {
-					btnLocation.setText(locations.get(0).getName());
+				} else if (associatedLocations.size() == 1) {
+					btnLocation.setText(associatedLocations.get(0).getName() + ", "
+							+ associatedLocations.get(0).getAddress());
 				} else {
 					Set<String> locList = new LinkedHashSet<String>();
-					for (Location location : locations) {
+					for (Location location : associatedLocations) {
 						locList.add(location.getName());
 					}
 
 					btnLocation.setText(strButtonLocationMultipe + " "
 							+ TextUtils.join(", ", locList));
 				}
-				
-				
 			}
 			break;
 		}
@@ -355,7 +357,7 @@ public class AddTaskActivity extends RoboSherlockActivity
 			endDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
 			endDateTime.set(Calendar.MINUTE, minute);
 		}
-		
+
 		// Refresh views
 		refreshViewsWithValues();
 	}
@@ -373,7 +375,7 @@ public class AddTaskActivity extends RoboSherlockActivity
 			endDateTime.set(Calendar.MONTH, monthOfYear);
 			endDateTime.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 		}
-		
+
 		// Refresh views
 		refreshViewsWithValues();
 	}

@@ -50,6 +50,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
+                android:minLines="1"
                 android:text="@string/activity_addtask_form_location_button" />
 
         </LinearLayout>
@@ -182,29 +183,6 @@
                 android:entries="@array/proximitryEntriesHumanWithDefault"
                 android:prompt="@string/activity_addtask_form_proximitry_spinner" />
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/button_container"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:drawable/bottom_bar"
-            android:orientation="horizontal"
-            android:paddingBottom="1.0dip"
-            android:paddingLeft="4.0dip"
-            android:paddingRight="4.0dip"
-            android:paddingTop="5.0dip"
-            android:visibility="visible" >
-
-            <Button
-                android:id="@+id/btnSave"
-                android:layout_width="0.0dip"
-                android:layout_height="fill_parent"
-                android:layout_weight="1.0"
-                android:text="@string/menu_save" />
-
-            <Button android:id="@+id/discard" android:layout_width="0.0dip" android:layout_height="fill_parent" android:text="@string/menu_discard" android:layout_weight="1.0" />
-            <Button android:id="@+id/delete" android:layout_width="0.0dip" android:layout_height="fill_parent" android:text="@string/menu_delete" android:layout_weight="1.0" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

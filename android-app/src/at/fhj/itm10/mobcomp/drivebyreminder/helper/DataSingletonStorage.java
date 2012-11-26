@@ -3,14 +3,14 @@ package at.fhj.itm10.mobcomp.drivebyreminder.helper;
 import java.util.HashMap;
 import java.util.Map;
 
-import roboguice.inject.ContextSingleton;
+import com.google.inject.Singleton;
 
 /**
  * Used to store data.
  * 
  * @author Wolfgang Gaar
  */
-@ContextSingleton
+@Singleton
 public class DataSingletonStorage {
 
 	private Map<String, Object> data = new HashMap<String, Object>();
