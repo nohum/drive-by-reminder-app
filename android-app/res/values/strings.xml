@@ -52,6 +52,8 @@
 
     <string name="activity_editlocation_location_downloaderror">An error occurred while retrieving locations. Is your internet connection working?</string>
     
+    <string name="activity_editlocation_save_nolocations">You have to select at least one location to continue</string>
+    
     <!-- Preferences -->
     <string name="settings_title_general">General</string>
 

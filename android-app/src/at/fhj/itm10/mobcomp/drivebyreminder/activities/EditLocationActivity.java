@@ -1,5 +1,6 @@
 package at.fhj.itm10.mobcomp.drivebyreminder.activities;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -7,24 +8,22 @@ import java.util.Locale;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnLongClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
+import at.fhj.itm10.mobcomp.drivebyreminder.helper.DataSingletonStorage;
 import at.fhj.itm10.mobcomp.drivebyreminder.helper.DownloadLocationDataAsyncTask;
 import at.fhj.itm10.mobcomp.drivebyreminder.helper.DownloadLocationDataAsyncTask.ErrorCode;
 import at.fhj.itm10.mobcomp.drivebyreminder.listadapters.LocationSearchListAdapter;
@@ -33,7 +32,9 @@ import at.fhj.itm10.mobcomp.drivebyreminder.models.LocationQuery;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
+import com.google.inject.Inject;
 
 /**
  * Location choosing activity.
@@ -42,7 +43,7 @@ import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivit
  */
 @ContentView(R.layout.activity_editlocation)
 public class EditLocationActivity extends RoboSherlockActivity
-		implements OnClickListener, OnItemSelectedListener {
+		implements OnClickListener {
 
 	@InjectView(R.id.txtLocationName)
 	private EditText txtLocationName;
@@ -64,9 +65,15 @@ public class EditLocationActivity extends RoboSherlockActivity
 	
 	@InjectResource(R.string.activity_editlocation_result_unknownerror)
 	private String strResultUnknownError;
+	
+	@InjectResource(R.string.activity_editlocation_save_nolocations)
+	private String strNoLocationsSelected;
 
 	@InjectView(R.id.lstFoundLocations)
 	private ListView lstFoundLocations;
+
+	@Inject
+	private DataSingletonStorage dataStorage;
 
 	private String currentLanguageCode;
 	
@@ -93,10 +100,14 @@ public class EditLocationActivity extends RoboSherlockActivity
 		}
 	};
 	
-	@SuppressWarnings("deprecation")
+	@SuppressWarnings({ "deprecation", "unchecked" })
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 		super.onCreate(savedInstanceState);
+		
+		setSupportProgressBarIndeterminateVisibility(false);
+        setSupportProgressBarVisibility(false);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
@@ -107,12 +118,16 @@ public class EditLocationActivity extends RoboSherlockActivity
         // Reload locations after activity restart...
         // Should use setRetainInstance
         // see: http://developer.android.com/reference/android/app/Fragment.html#setRetainInstance%28boolean%29
-        // TODO: herrn krajnc fragen wegen deprecated method
-		@SuppressWarnings("unchecked")
 		List<Location> lastLocations = (List<Location>)
         		getLastNonConfigurationInstance();
         if (lastLocations != null) {
             this.processFoundLocations(ErrorCode.NO_ERROR, lastLocations);
+        } else if (getIntent().getBooleanExtra("loadFromStorage", false)) {
+        	Log.d("EditLocationActivity",
+        			"lastLocations was null, loading location data from data storage");
+        	
+        	this.locations = (List<Location>) dataStorage.getData("locationsToShow");
+        	this.processFoundLocations(ErrorCode.NO_ERROR, this.locations);
         }
 	}
 
@@ -126,10 +141,29 @@ public class EditLocationActivity extends RoboSherlockActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case android.R.id.home:
-        case R.id.menu_editlocation_cancel:
+        //case R.id.menu_editlocation_cancel:
+        	this.setResult(Activity.RESULT_CANCELED, new Intent());
             this.finish();
+
             return true;
         case R.id.menu_editlocation_save:
+        	List<Location> selectedLocations = new ArrayList<Location>();
+        	for (Location location : this.locations) {
+        		if (location.isLocationChooserSelected()) {
+        			selectedLocations.add(location);
+        		}
+        	}
+        	
+        	if (selectedLocations.size() == 0) {
+        		Toast.makeText(this, strNoLocationsSelected, Toast.LENGTH_LONG)
+        				.show();
+        		return false;
+        	}
+
+        	dataStorage.setData("locationsToSave", selectedLocations);
+
+        	this.setResult(Activity.RESULT_OK, new Intent());
+        	this.finish();
         	
         	return true;
         }
@@ -161,19 +195,6 @@ public class EditLocationActivity extends RoboSherlockActivity
 	 */
 	private void initViewEvents() {
 		btnLocationSearch.setOnClickListener(this);
-//		lstFoundLocations.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//
-//            public boolean onItemLongClick(AdapterView<?> arg0, View v,
-//                    int index, long arg3) {
-//                // TODO Auto-generated method stub
-//                 Log.d("EditLocationActivity","in onLongClick");
-//                 String str=lstFoundLocations.getItemAtPosition(index).toString();
-//
-//                 Log.d("EditLocationActivity","long click : " +str);
-//                return true;
-//            }
-//}); 
-		lstFoundLocations.setOnItemSelectedListener(this);
 	}
 
 	/**
@@ -247,22 +268,6 @@ public class EditLocationActivity extends RoboSherlockActivity
 					" default case, this should not happen!");
 			break;
 		}
-	}
-
-	@Override
-	public void onItemSelected(AdapterView<?> parent, View v, int position,
-			long id) {
-		Location location = (Location) parent.getItemAtPosition(position);
-		Log.d("EditLocationActivity", "onItemLongClick: onItemSelected = " + location);
-		
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onNothingSelected(AdapterView<?> parent) {
-		// TODO Auto-generated method stub
-		
 	}
 
 //	@Override

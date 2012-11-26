@@ -4,6 +4,7 @@ import java.util.Calendar;
 
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
 import android.app.TimePickerDialog;
@@ -26,6 +27,7 @@ import android.widget.TimePicker;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
 
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 
 /**
@@ -267,6 +269,19 @@ public class AddTaskActivity extends RoboSherlockActivity
 		} else if (view.equals(btnLocation)) {
 			this.startActivityForResult(new Intent(this,
 					EditLocationActivity.class), 1);
+		}
+	}
+
+	@Override 
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		
+		switch(requestCode) {
+		case 1:
+			if (resultCode == Activity.RESULT_OK) {
+				Log.d("AddTaskActivity", "onActivityResult: return code = RESULT_OK");
+			}
+			break;
 		}
 	}
 	
