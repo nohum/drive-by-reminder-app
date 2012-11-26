@@ -27,6 +27,7 @@
    
     <string name="activity_addtask_form_location_where">Location trigger</string>
     <string name="activity_addtask_form_location_button">Choose location</string>
+    <string name="activity_addtask_form_location_button_multiple_prefix">(Multiple)</string>
     
     <string name="activity_addtask_form_alert_nodate">Alert between dates</string>
     <string name="activity_addtask_form_alert_startdate">Earliest alert on</string>

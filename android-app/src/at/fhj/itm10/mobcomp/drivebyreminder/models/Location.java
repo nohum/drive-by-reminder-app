@@ -12,10 +12,7 @@ public class Location {
 	private int taskId;
 	
 	private String name;
-	
-	/**
-	 * Address is not going to be stored in database.
-	 */
+
 	private String address;
 	
 	private double latitude;

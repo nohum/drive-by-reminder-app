@@ -160,6 +160,8 @@ public class EditLocationActivity extends RoboSherlockActivity
         		return false;
         	}
 
+        	Log.d("EditLocationActivity", "dataStorage = " + dataStorage);
+        	Log.d("EditLocationActivity", "locationsToSave = " + selectedLocations);
         	dataStorage.setData("locationsToSave", selectedLocations);
 
         	this.setResult(Activity.RESULT_OK, new Intent());

@@ -1,8 +1,12 @@
 package at.fhj.itm10.mobcomp.drivebyreminder.activities;
 
 import java.util.Calendar;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 import roboguice.inject.ContentView;
+import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -12,6 +16,7 @@ import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NavUtils;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
@@ -25,10 +30,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
+import at.fhj.itm10.mobcomp.drivebyreminder.helper.DataSingletonStorage;
+import at.fhj.itm10.mobcomp.drivebyreminder.models.Location;
 
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
+import com.google.inject.Inject;
 
 /**
  * Add task activity.
@@ -46,6 +53,12 @@ public class AddTaskActivity extends RoboSherlockActivity
 	@InjectView(R.id.btnLocation)
 	private Button btnLocation;
 	
+	@InjectResource(R.string.activity_addtask_form_location_button)
+	private String strButtonSetLocation;
+	
+	@InjectResource(R.string.activity_addtask_form_location_button_multiple_prefix)
+	private String strButtonLocationMultipe;
+
 	@InjectView(R.id.chbDateBoundaries)
 	private CheckBox chbDateBoundaries;
 	
@@ -78,6 +91,9 @@ public class AddTaskActivity extends RoboSherlockActivity
 	private boolean systemTime24Hours;
 	
 	private OpenedPickerType openedPicker;
+	
+	@Inject
+	private DataSingletonStorage dataStorage;
 	
 	/**
 	 * Indicator for opened picker.
@@ -272,6 +288,7 @@ public class AddTaskActivity extends RoboSherlockActivity
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override 
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -280,6 +297,26 @@ public class AddTaskActivity extends RoboSherlockActivity
 		case 1:
 			if (resultCode == Activity.RESULT_OK) {
 				Log.d("AddTaskActivity", "onActivityResult: return code = RESULT_OK");
+				Log.d("AddTaskActivity", "dataStorage = " + dataStorage);
+
+				List<Location> locations = (List<Location>) dataStorage
+						.getData("locationsToSave");
+				Log.d("AddTaskActivity", "onActivityResult: locationsToSave = " + locations);
+				if (locations == null || locations.size() == 0) {
+					btnLocation.setText(strButtonSetLocation);
+				} else if (locations.size() == 1) {
+					btnLocation.setText(locations.get(0).getName());
+				} else {
+					Set<String> locList = new LinkedHashSet<String>();
+					for (Location location : locations) {
+						locList.add(location.getName());
+					}
+
+					btnLocation.setText(strButtonLocationMultipe + " "
+							+ TextUtils.join(", ", locList));
+				}
+				
+				
 			}
 			break;
 		}

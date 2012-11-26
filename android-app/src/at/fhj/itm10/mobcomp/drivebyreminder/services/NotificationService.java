@@ -1,6 +1,9 @@
 package at.fhj.itm10.mobcomp.drivebyreminder.services;
 
+import com.google.inject.Inject;
+
 import android.content.Intent;
+import android.location.LocationManager;
 import android.os.IBinder;
 import roboguice.service.RoboService;
 
@@ -11,6 +14,12 @@ import roboguice.service.RoboService;
  */
 public class NotificationService extends RoboService {
 
+	@Inject
+	private NotificationService notificationService;
+	
+	@Inject
+	private LocationManager locationManager;
+	
 	@Override
 	public IBinder onBind(Intent intent) {
 		// TODO Auto-generated method stub

@@ -29,6 +29,7 @@ public class TaskStorageHelper extends SQLiteOpenHelper {
 			"`id` INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL ," +
 			"`taskId` INTEGER NOT NULL ," +
 			"`title` TEXT NOT NULL ," +
+			"`address` TEXT NOT NULL ," +
 			"`latitude` DOUBLE NOT NULL ," +
 			"`longitude` DOUBLE NOT NULL )";
 
