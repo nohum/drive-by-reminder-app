@@ -3,11 +3,14 @@ package at.fhj.itm10.mobcomp.drivebyreminder.listadapters;
 import java.util.List;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.Location;
@@ -17,7 +20,8 @@ import at.fhj.itm10.mobcomp.drivebyreminder.models.Location;
  * 
  * @author Wolfgang Gaar
  */
-public class LocationSearchListAdapter extends ArrayAdapter<Location> {
+public class LocationSearchListAdapter extends ArrayAdapter<Location>
+		implements OnCheckedChangeListener {
 
 	private List<Location> locations;
 	
@@ -51,11 +55,23 @@ public class LocationSearchListAdapter extends ArrayAdapter<Location> {
         	TextView locationAddress = (TextView) v.findViewById(R.id.lblItemLocationAddress);
 
         	chbItemSelected.setChecked(location.isLocationChooserSelected());
+        	chbItemSelected.setOnCheckedChangeListener(this);
+        	chbItemSelected.setTag(location);
         	locationName.setText(location.getName());
         	locationAddress.setText(location.getAddress());
         }
 
         return v;
     }
+
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		Log.d("LocationSearchListAdapter", "onCheckedChanged: isChecked = " + isChecked);
+		
+		Location location = (Location) buttonView.getTag();
+		if (location != null) {
+			location.setLocationChooserSelected(isChecked);
+		}
+	}
 
 }
