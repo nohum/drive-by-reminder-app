@@ -7,9 +7,11 @@ import java.util.Locale;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NavUtils;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -25,6 +27,7 @@ import at.fhj.itm10.mobcomp.drivebyreminder.listadapters.LocationSearchListAdapt
 import at.fhj.itm10.mobcomp.drivebyreminder.models.Location;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.LocationQuery;
 
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockActivity;
 
@@ -109,6 +112,27 @@ public class EditLocationActivity extends RoboSherlockActivity
         }
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getSupportMenuInflater().inflate(R.menu.menu_editlocation, menu);
+		return true;
+	}
+	
+	@Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+        case android.R.id.home:
+        case R.id.menu_editlocation_cancel:
+            this.finish();
+            return true;
+        case R.id.menu_editlocation_save:
+        	
+        	return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+	
 	/**
 	 * Init data from settings.
 	 */
@@ -134,16 +158,6 @@ public class EditLocationActivity extends RoboSherlockActivity
 	private void initViewEvents() {
 		btnLocationSearch.setOnClickListener(this);
 	}
-
-	@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-        case android.R.id.home:
-            this.finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 
 	/**
 	 * Used to save the received locations over activity restarts.
@@ -192,7 +206,7 @@ public class EditLocationActivity extends RoboSherlockActivity
 
 			// This field is used for maintaining state
 			this.locations = result;
-			
+
 			lblResult.setVisibility(View.GONE);
 			lstFoundLocations.setVisibility(View.VISIBLE);
 			lstFoundLocations.setAdapter(new LocationSearchListAdapter(this,

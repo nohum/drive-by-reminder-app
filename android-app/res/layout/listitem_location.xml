@@ -1,32 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="left|center"
     android:orientation="horizontal"
-    android:paddingBottom="5px"
-    android:paddingLeft="5px"
-    android:paddingTop="5px" >
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:paddingLeft="6dip"
+    android:paddingRight="6dip" >
+    
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.9"
+        android:gravity="left"
+        android:orientation="vertical" >
+
+	    <TextView
+	        android:id="@+id/lblItemLocationName"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:gravity="center"
+	        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+	    <TextView
+	        android:id="@+id/lblItemLocationAddress"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:ellipsize="end"
+	        android:maxLines="1"
+	        android:minLines="1"
+	        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+	</LinearLayout>
     
 	<CheckBox
 	    android:id="@+id/chbItemSelected"
 	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content" />
-	
-	<LinearLayout
-	    android:layout_width="fill_parent"
-	    android:layout_height="match_parent" >
-
-	    <TextView android:id="@+id/lblItemLocationName"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:gravity="center" />
-
-	    <TextView android:id="@+id/lblItemLocationAddress" 
-			android:layout_width="wrap_content" 
-			android:layout_height="wrap_content"
-			android:layout_marginLeft="10px" 
-			android:textColor="#0099CC" />
-	</LinearLayout>
+	    android:layout_height="wrap_content"
+	    android:layout_weight="0.1"
+	    android:checkMark="?android:attr/listChoiceIndicatorMultiple" />
     
 </LinearLayout>

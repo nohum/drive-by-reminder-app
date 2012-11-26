@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/search_container"
+        style="@style/activity_addtask_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <TextView
+            style="@style/activity_addtask_layout_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/activity_editlocation_searchfor" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <EditText
+                android:id="@+id/txtLocationName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.65"
+                android:capitalize="sentences"
+                android:ems="10"
+                android:hint="@string/activity_editlocation_searchfor_hint" />
+
+            <Button
+                android:id="@+id/btnLocationSearch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.0"
+                android:text="@string/activity_editlocation_searchfor_button" />
+
+        </LinearLayout>
+
+        <requestFocus />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="fill_parent"
+        android:layout_height="1.0dip"
+        android:background="@android:drawable/divider_horizontal_dark" />
+
+    <LinearLayout
+        android:id="@+id/locationlist_container"
+        style="@style/activity_addtask_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <TextView
+            style="@style/activity_addtask_layout_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/activity_editlocation_locationlist" />
+
+        <TextView
+            android:id="@+id/lblResult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/activity_editlocation_result_nosearch"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <ListView
+            android:id="@+id/lstFoundLocations"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:choiceMode="multipleChoice" >
+
+        </ListView>
+
+
+    </LinearLayout>
+</LinearLayout>
