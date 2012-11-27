@@ -87,7 +87,8 @@ public class EditLocationActivity extends RoboSherlockActivity
 	/**
 	 * Used to encode the user language for our webservice.
 	 */
-	private HashMap<String, String> languageCodeMap = new HashMap<String, String>() {
+	private HashMap<String, String> languageCodeMap =
+			new HashMap<String, String>() {
 
 		/**
 		 * serial.
@@ -117,16 +118,18 @@ public class EditLocationActivity extends RoboSherlockActivity
         
         // Reload locations after activity restart...
         // Should use setRetainInstance
-        // see: http://developer.android.com/reference/android/app/Fragment.html#setRetainInstance%28boolean%29
+        // see: http://developer.android.com/reference/android/app/
+        // Fragment.html#setRetainInstance%28boolean%29
 		List<Location> lastLocations = (List<Location>)
         		getLastNonConfigurationInstance();
         if (lastLocations != null) {
             this.processFoundLocations(ErrorCode.NO_ERROR, lastLocations);
         } else if (getIntent().getBooleanExtra("loadFromStorage", false)) {
-        	Log.d("EditLocationActivity",
-        			"lastLocations was null, loading location data from data storage");
+        	Log.d("EditLocationActivity", "lastLocations was null, loading"
+        			+ " location data from data storage");
         	
-        	this.locations = (List<Location>) dataStorage.getData("locationsToShow");
+        	this.locations = (List<Location>) dataStorage
+        			.getData("locationsToShow");
         	this.processFoundLocations(ErrorCode.NO_ERROR, this.locations);
         }
 	}
@@ -161,13 +164,16 @@ public class EditLocationActivity extends RoboSherlockActivity
         	}
 
         	Log.d("EditLocationActivity", "dataStorage = " + dataStorage);
-        	Log.d("EditLocationActivity", "locationsToSave = " + selectedLocations);
+        	Log.d("EditLocationActivity", "locationsToSave = "
+        			+ selectedLocations);
         	dataStorage.setData("locationsToSave", selectedLocations);
 
         	this.setResult(Activity.RESULT_OK, new Intent());
         	this.finish();
         	
         	return true;
+        default:
+        	break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -182,7 +188,8 @@ public class EditLocationActivity extends RoboSherlockActivity
 
         String language = Locale.getDefault().getDisplayLanguage();
         this.currentLanguageCode = languageCodeMap.get(language);
-        this.currentRegionBiasCode = preferences.getString("locationBias", "at");
+        this.currentRegionBiasCode =
+        		preferences.getString("locationBias", "at");
 
         Log.d("EditLocationActivity", "language = " + language);
         Log.d("EditLocationActivity", "language code = "
@@ -201,6 +208,8 @@ public class EditLocationActivity extends RoboSherlockActivity
 
 	/**
 	 * Used to save the received locations over activity restarts.
+	 * 
+	 * @return Object
 	 */
 	@Override
 	public Object onRetainNonConfigurationInstance() {
@@ -220,8 +229,9 @@ public class EditLocationActivity extends RoboSherlockActivity
 			} else {
 				lblResult.setVisibility(View.GONE);
 				
-				LocationQuery query = new LocationQuery(this.txtLocationName.getText()
-						.toString(), this.currentRegionBiasCode, this.currentLanguageCode);
+				LocationQuery query = new LocationQuery(this.txtLocationName
+						.getText().toString(), this.currentRegionBiasCode,
+						this.currentLanguageCode);
 
 				// Call the task
 				new DownloadLocationDataAsyncTask(this).execute(query);
@@ -229,6 +239,12 @@ public class EditLocationActivity extends RoboSherlockActivity
 		}
 	}
 
+	/**
+	 * Post-processing after locations have been fetched by the async task.
+	 * 
+	 * @param occuredError error code
+	 * @param result fetched locations
+	 */
 	public void processFoundLocations(ErrorCode occuredError,
 			List<Location> result) {
 		this.locations = null;
@@ -266,8 +282,8 @@ public class EditLocationActivity extends RoboSherlockActivity
 			lstFoundLocations.setVisibility(View.GONE);
 			break;
 		default:
-			Log.w("EditLocationActivity", "processFoundLocations: switch entered" +
-					" default case, this should not happen!");
+			Log.w("EditLocationActivity", "processFoundLocations: switch"
+					+ " entered default case, this should not happen!");
 			break;
 		}
 	}
@@ -277,7 +293,8 @@ public class EditLocationActivity extends RoboSherlockActivity
 //			long id) {
 //
 //		Location location = (Location) parent.getItemAtPosition(position);
-//		Log.d("EditLocationActivity", "onItemLongClick: location = " + location);
+//		Log.d("EditLocationActivity", "onItemLongClick: location = "
+//				+ location);
 //		
 //		if (location != null) {
 //			Intent intent = new Intent(Intent.ACTION_VIEW);

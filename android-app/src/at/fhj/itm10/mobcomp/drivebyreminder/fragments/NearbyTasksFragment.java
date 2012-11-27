@@ -30,7 +30,8 @@ public class NearbyTasksFragment extends AllTasksFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_nearbytasks, container, false);
+        View v = inflater.inflate(R.layout.fragment_nearbytasks, container,
+        		false);
 //        View tv = v.findViewById(R.id.text);
 //       ((TextView)tv).setText("Fragment #");
        return v;

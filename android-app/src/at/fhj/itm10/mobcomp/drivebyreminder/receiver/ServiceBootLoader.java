@@ -17,7 +17,7 @@ public class ServiceBootLoader extends RoboBroadcastReceiver {
 	protected void handleReceive(Context context, Intent intent) {
 		Log.v("ServiceBootLoader", "got boot event, starting service");
 
-        Intent startServiceIntent = new Intent(context, NotificationService.class);
+		Intent startServiceIntent = new Intent(context, NotificationService.class);
         context.startService(startServiceIntent);
     }
 

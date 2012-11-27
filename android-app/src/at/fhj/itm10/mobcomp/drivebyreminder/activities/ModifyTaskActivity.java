@@ -49,7 +49,7 @@ public class ModifyTaskActivity extends AddTaskActivity {
 		doneContainer.setVisibility(LinearLayout.VISIBLE);
 		
 		dataId = getIntent().getIntExtra("taskId", 0);
-		if(dataId == 0) {
+		if (dataId == 0) {
 			throw new IllegalArgumentException("taskId extra must be given");
 		}
 
@@ -83,6 +83,8 @@ public class ModifyTaskActivity extends AddTaskActivity {
         case R.id.menu_modifytask_delete:
         	handleDelete();
         	return true;
+        default:
+        	break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -90,6 +92,8 @@ public class ModifyTaskActivity extends AddTaskActivity {
 
 	/**
 	 * Load data from database.
+	 * 
+	 * @param id the id of the task to load
 	 */
 	private void loadData(int id) {
 		Task task = taskDataDAO.findTaskById(id);
@@ -119,10 +123,14 @@ public class ModifyTaskActivity extends AddTaskActivity {
 
 	/**
 	 * Save all data. Must return true if successful.
+	 * 
+	 * @param id the id of the task to save
+	 * @return true if save operation was successful
 	 */
 	private boolean saveData(int id) {
 		if (TextUtils.isEmpty(txtTitle.getText())) {
-			Toast.makeText(this, strSaveValidationNoTitle, Toast.LENGTH_LONG).show();
+			Toast.makeText(this, strSaveValidationNoTitle, Toast.LENGTH_LONG)
+					.show();
 			return false;
 		}
 
@@ -151,13 +159,14 @@ public class ModifyTaskActivity extends AddTaskActivity {
 
 		return true;
 	}
-	
+
 	/**
 	 * Shows a delete dialog.
 	 */
 	private void handleDelete() {
-		DeleteTaskDialogHelper dialog = new DeleteTaskDialogHelper(strDeleteDialogQuestion,
-				strDeleteDialogPositive, strDeleteDialogNegative);
+		DeleteTaskDialogHelper dialog = new DeleteTaskDialogHelper(
+				strDeleteDialogQuestion, strDeleteDialogPositive,
+				strDeleteDialogNegative);
 
 		dialog.setOnPositiveClickListener(new DialogListener() {
 			

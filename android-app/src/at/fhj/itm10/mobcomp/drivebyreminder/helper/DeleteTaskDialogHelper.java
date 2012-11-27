@@ -20,7 +20,7 @@ public class DeleteTaskDialogHelper {
 	 * @author Wolfgang Gaar
 	 */
 	public interface DialogListener {
-		public void execute();
+		void execute();
 	}
 
 	/**
@@ -70,6 +70,11 @@ public class DeleteTaskDialogHelper {
 		negativeListener = listener;
 	}
 	
+	/**
+	 * Shows a delete dialog.
+	 * 
+	 * @param context the context
+	 */
 	public void show(Context context) {
 		Builder builder = new Builder(context);
 		builder.setCancelable(true);

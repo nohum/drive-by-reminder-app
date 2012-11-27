@@ -15,12 +15,24 @@ public class DataSingletonStorage {
 
 	private Map<String, Object> data = new HashMap<String, Object>();
 	
-	public void setData(String key, Object data) {
-		this.data.put(key, data);
+	/**
+	 * Save data to the storage using key.
+	 * 
+	 * @param key unique key
+	 * @param value object data
+	 */
+	public void setData(String key, Object value) {
+		data.put(key, value);
 	}
 	
+	/**
+	 * Get data from the storage.
+	 * 
+	 * @param key unique key
+	 * @return Object
+	 */
 	public Object getData(String key) {
-		return this.data.get(key);
+		return data.get(key);
 	}
 	
 }

@@ -26,17 +26,23 @@ public class TaskDataDAO {
 	/**
 	 * Create a task data keeper DAO.
 	 * 
-	 * @param storageHelper
+	 * @param storageHelper the storage helper
 	 */
 	public TaskDataDAO(TaskStorageHelper storageHelper) {
 		helper = storageHelper;
 		open();
 	}
 	
+	/**
+	 * Opens database connection.
+	 */
 	public void open() {
 		db = helper.getWritableDatabase();	
 	}
 	
+	/**
+	 * Closes database connection.
+	 */
 	public void close() {
 		db.close();
 	}
@@ -59,7 +65,8 @@ public class TaskDataDAO {
 	
 	public Task findTaskById(long id) {
 		Cursor cursor = db.query(TaskStorageHelper.TABLE_TASKS_NAME, null,
-				"id = ?", new String[] { String.valueOf(id) }, null, null, null);
+				"id = ?", new String[] { String.valueOf(id) }, null, null,
+				null);
 		
 		if (cursor.getCount() == 0) {
 			return null;
@@ -72,8 +79,8 @@ public class TaskDataDAO {
 	}
 	
 	public long findTaskHighestSortingNumber() {
-		Cursor cursor = db.rawQuery("SELECT MAX(sorting) FROM " +
-				TaskStorageHelper.TABLE_TASKS_NAME, null);
+		Cursor cursor = db.rawQuery("SELECT MAX(sorting) FROM "
+				+ TaskStorageHelper.TABLE_TASKS_NAME, null);
 		
 		if (cursor.getCount() == 0) {
 			return 1;
@@ -94,17 +101,19 @@ public class TaskDataDAO {
 	}
 	
 	public void update(Task task) {
-		db.update(TaskStorageHelper.TABLE_TASKS_NAME, fillContentValuesByTask(task),
-				"id = ?", new String[] { String.valueOf(task.getId()) });
+		db.update(TaskStorageHelper.TABLE_TASKS_NAME,
+				fillContentValuesByTask(task), "id = ?",
+				new String[] { String.valueOf(task.getId()) });
 	}
 
 	public List<Location> findAllLocationsByTask(Task task) {
 		Cursor cursor = db.query(TaskStorageHelper.TABLE_LOCATIONS_NAME, null,
-				"taskId = ?", new String[] { String.valueOf(task.getId()) }, null,
-				null, null);
+				"taskId = ?", new String[] { String.valueOf(task.getId()) },
+				null, null, null);
 		
 		// Set the result list length to the cursor result count
-		List<Location> foundLocations = new ArrayList<Location>(cursor.getCount());
+		List<Location> foundLocations =
+				new ArrayList<Location>(cursor.getCount());
 
 		while (!cursor.isAfterLast()) {
 			foundLocations.add(fillLocationByCursor(cursor));
@@ -137,9 +146,10 @@ public class TaskDataDAO {
 	}
 	
 	/**
-	 * Fill a task model object by a database cursor. Does not modify the cursor.
+	 * Fill a task model object by a database cursor. Does not modify
+	 * the cursor.
 	 * 
-	 * @param cursor
+	 * @param cursor the cursor
 	 * @return A filled Task object
 	 */
 	private Task fillTaskByCursor(Cursor cursor) {
@@ -168,7 +178,7 @@ public class TaskDataDAO {
 	/**
 	 * Fills a content values object for database insert or updates.
 	 * 
-	 * @param task
+	 * @param task the task
 	 * @return A filled ContentValues object
 	 */
 	private ContentValues fillContentValuesByTask(Task task) {
@@ -188,9 +198,10 @@ public class TaskDataDAO {
 	}
 	
 	/**
-	 * Fills a location model object by a database cursor. Does not modify the cursor.
+	 * Fills a location model object by a database cursor. Does not
+	 * modify the cursor.
 	 * 
-	 * @param cursor
+	 * @param cursor the cursor
 	 * @return A filled Task object
 	 */
 	private Location fillLocationByCursor(Cursor cursor) {
@@ -209,7 +220,7 @@ public class TaskDataDAO {
 	/**
 	 * Fills a content values object for database insert or updates.
 	 * 
-	 * @param location
+	 * @param location the location
 	 * @return A filled ContentValues object
 	 */
 	private ContentValues fillContentValuesByLocation(Location location) {

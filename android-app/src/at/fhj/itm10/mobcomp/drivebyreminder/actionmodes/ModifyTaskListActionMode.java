@@ -10,11 +10,11 @@ import com.actionbarsherlock.view.MenuItem;
 
 /**
  * Action mode (action bar icons) for add/modify task activities.
- * 
+ *
  * @author Wolfgang Gaar
  */
 public class ModifyTaskListActionMode implements Callback {
-	
+
 	@Override
 	public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 
@@ -36,7 +36,8 @@ public class ModifyTaskListActionMode implements Callback {
 	@Override
 	public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 		Log.v("ModifyTaskListActionMode", "clicked item = " + item);
-		Log.v("ModifyTaskListActionMode", "clicked item.itemid = " + item.getItemId());
+		Log.v("ModifyTaskListActionMode", "clicked item.itemid = "
+				+ item.getItemId());
 		
 		return false;
 	}

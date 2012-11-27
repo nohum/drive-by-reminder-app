@@ -44,7 +44,8 @@ public class MainActivity extends RoboSherlockFragmentActivity
 
         Context context = getSupportActionBar().getThemedContext();
         // Set content of nav dropdown
-        ArrayAdapter<CharSequence> list = ArrayAdapter.createFromResource(context,
+        ArrayAdapter<CharSequence> list =
+        		ArrayAdapter.createFromResource(context,
         		R.array.locations, R.layout.sherlock_spinner_item);
         list.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
 
@@ -52,13 +53,15 @@ public class MainActivity extends RoboSherlockFragmentActivity
         getSupportActionBar().setListNavigationCallbacks(list, this);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         
-        // Pager class which enables us to have several fragments loaded and "pagable"
+        // Pager class which enables us to have several fragments loaded
+        // and "pagable"
         pagerAdapter = new MainFragmentPagerAdapter(
         		getSupportFragmentManager());
         pagerMainView.setAdapter(pagerAdapter);
         pagerMainView.setOnPageChangeListener(this);
         
-        Log.d("MainActivity", "onCreate: given savedInstanceState = " + savedInstanceState);
+        Log.d("MainActivity", "onCreate: given savedInstanceState = "
+        		+ savedInstanceState);
         
         if (savedInstanceState != null) {
 			restoreState(savedInstanceState);

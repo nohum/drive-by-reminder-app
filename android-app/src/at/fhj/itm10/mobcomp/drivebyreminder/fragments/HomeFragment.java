@@ -33,7 +33,8 @@ public class HomeFragment extends RoboSherlockFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("HomeFragment", "onCreate: given savedInstanceState = " + savedInstanceState);
+        Log.d("HomeFragment", "onCreate: given savedInstanceState = "
+        		+ savedInstanceState);
     }
     
 	

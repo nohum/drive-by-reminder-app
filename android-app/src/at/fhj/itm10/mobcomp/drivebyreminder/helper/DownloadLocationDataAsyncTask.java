@@ -23,13 +23,19 @@ import at.fhj.itm10.mobcomp.drivebyreminder.models.Location;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.LocationQuery;
 
 /**
- * Downloads and returns found locations to use in the {@link EditLocationActivity}.
+ * Downloads and returns found locations to use in the
+ * {@link EditLocationActivity}.
  * 
  * @author Wolfgang Gaar
  */
 public class DownloadLocationDataAsyncTask extends
 		AsyncTask<LocationQuery, Void, List<Location>> {
 
+	/**
+	 * The error code for the {@link DownloadLocationDataAsyncTask}.
+	 * 
+	 * @author Wolfgang Gaar
+	 */
 	public enum ErrorCode {
 		NO_ERROR,
 		INVALID_NAME,
@@ -39,12 +45,18 @@ public class DownloadLocationDataAsyncTask extends
 	};
 	
 	private final String API_LOCATION_MORE
-			= "http://drivebyreminder.truthfactory.tk/service/more/byname/%s/inlanguage/%s/inregion/%s";
+			= "http://drivebyreminder.truthfactory.tk/service/more/byname/%s"
+					+ "/inlanguage/%s/inregion/%s";
 	
 	private EditLocationActivity activity;
 	
 	private volatile ErrorCode occuredError = ErrorCode.NO_ERROR;
 
+	/**
+	 * Create the async task.
+	 * 
+	 * @param activity the activity
+	 */
 	public DownloadLocationDataAsyncTask(EditLocationActivity activity) {
 		super();
 		this.activity = activity;
@@ -60,7 +72,8 @@ public class DownloadLocationDataAsyncTask extends
 					URLEncoder.encode(query.getLocationName().trim(), "UTF-8"),
 					query.getLanguageCode(), query.getRegionCode());
 		} catch (UnsupportedEncodingException e1) {
-			Log.d("DownloadLocationDataAsyncTask", "error on encoding url-data!");
+			Log.d("DownloadLocationDataAsyncTask",
+					"error on encoding url-data!");
 			e1.printStackTrace();
 			
 			occuredError = ErrorCode.INVALID_NAME;
@@ -71,7 +84,8 @@ public class DownloadLocationDataAsyncTask extends
 		try {
 			json = retrieveUrlData(url);
 		} catch (Exception e) {
-			Log.d("DownloadLocationDataAsyncTask", "error on downloading data!");
+			Log.d("DownloadLocationDataAsyncTask",
+					"error on downloading data!");
 			e.printStackTrace();
 			
 			occuredError = ErrorCode.DOWNLOAD_ERROR;
@@ -81,20 +95,23 @@ public class DownloadLocationDataAsyncTask extends
 		List<Location> results = null;
 		try {
 			if (!json.getString("status").equals("OK")) {
-				throw new IllegalStateException("Server error, status returned: "
-						+ json.getString("status"));
+				throw new IllegalStateException(
+						"Server error, status returned: "
+								+ json.getString("status"));
 			}
 
 			JSONArray entries = json.getJSONArray("entries");
 			results = new ArrayList<Location>();
-			for(int i = 0; i < entries.length(); i++) {
+			for (int i = 0; i < entries.length(); i++) {
 				JSONObject entry = entries.getJSONObject(i);
 
-				results.add(new Location(entry.getString("name"), entry.getString("address"),
-						entry.getDouble("latitude"), entry.getDouble("longitude")));
+				results.add(new Location(entry.getString("name"),
+						entry.getString("address"), entry.getDouble("latitude"),
+						entry.getDouble("longitude")));
 			}
 		} catch (JSONException e) {
-			Log.d("DownloadLocationDataAsyncTask", "error when converting data!");
+			Log.d("DownloadLocationDataAsyncTask",
+					"error when converting data!");
 			e.printStackTrace();
 			
 			occuredError = ErrorCode.DOWNLOAD_ERROR;
@@ -108,6 +125,9 @@ public class DownloadLocationDataAsyncTask extends
 		return results;
 	}
 
+	/**
+	 * Shows a infinite progress bar.
+	 */
 	protected void onPreExecute() {
 		//Hack to hide the regular progress bar
 		activity.setSupportProgress(Window.PROGRESS_END);
@@ -115,8 +135,14 @@ public class DownloadLocationDataAsyncTask extends
 		activity.setSupportProgressBarIndeterminateVisibility(true);
 	}
 	
+	/**
+	 * Processes the result.
+	 * 
+	 * @param result the location result
+	 */
 	protected void onPostExecute(List<Location> result) {
-		Log.d("DownloadLocationDataAsyncTask", "result code = " + this.occuredError);
+		Log.d("DownloadLocationDataAsyncTask", "result code = "
+				+ this.occuredError);
 	
 		activity.setSupportProgressBarIndeterminateVisibility(false);
 		activity.processFoundLocations(this.occuredError, result);
@@ -125,12 +151,13 @@ public class DownloadLocationDataAsyncTask extends
 	/**
 	 * Retrieve json data from given url.
 	 * 
-	 * @param url
-	 * @return
-	 * @throws IOException
-	 * @throws JSONException
+	 * @param url the url to fetch
+	 * @return JSONObject
+	 * @throws IOException IOException
+	 * @throws JSONException IOException
 	 */
-	private JSONObject retrieveUrlData(String url) throws IOException, JSONException {
+	private JSONObject retrieveUrlData(String url) throws IOException,
+			JSONException {
 		StringBuffer sb = new StringBuffer();
 		BufferedReader inreader = null;
 		URL theUrl = new URL(url);
@@ -149,7 +176,8 @@ public class DownloadLocationDataAsyncTask extends
 		}
 		conn = null;
 
-		Log.d("DownloadLocationDataAsyncTask", "retrieved data: " + sb.toString());
+		Log.d("DownloadLocationDataAsyncTask", "retrieved data: "
+				+ sb.toString());
 		
 		return new JSONObject(sb.toString());
 	}

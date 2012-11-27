@@ -25,6 +25,13 @@ public class LocationSearchListAdapter extends ArrayAdapter<Location>
 
 	private List<Location> locations;
 	
+	/**
+	 * Create a list view adapter.
+	 * 
+	 * @param context the context
+	 * @param textViewResourceId the view resource
+	 * @param objects locations to display
+	 */
 	public LocationSearchListAdapter(Context context, int textViewResourceId,
 			List<Location> objects) {
 		super(context, textViewResourceId, objects);
@@ -35,7 +42,11 @@ public class LocationSearchListAdapter extends ArrayAdapter<Location>
 	/**
 	 * Retrieves the custom item view.
 	 * 
-	 * @see http://codehenge.net/blog/2011/05/customizing-android-listview-item-layout/
+	 * @param position list position
+	 * @param convertView the view
+	 * @param parent parent
+	 * @see http://codehenge.net/blog/2011/05/customizing
+	 * -android-listview-item-layout/
 	 */
 	@Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -50,9 +61,12 @@ public class LocationSearchListAdapter extends ArrayAdapter<Location>
         // Retrieve a specific location
         Location location = locations.get(position);
         if (location != null) {
-        	CheckBox chbItemSelected = (CheckBox) v.findViewById(R.id.chbItemSelected);
-        	TextView locationName = (TextView) v.findViewById(R.id.lblItemLocationName);
-        	TextView locationAddress = (TextView) v.findViewById(R.id.lblItemLocationAddress);
+        	CheckBox chbItemSelected = (CheckBox) v.findViewById(
+        			R.id.chbItemSelected);
+        	TextView locationName = (TextView) v.findViewById(
+        			R.id.lblItemLocationName);
+        	TextView locationAddress = (TextView) v.findViewById(
+        			R.id.lblItemLocationAddress);
 
         	chbItemSelected.setChecked(location.isLocationChooserSelected());
         	chbItemSelected.setOnCheckedChangeListener(this);
@@ -66,7 +80,8 @@ public class LocationSearchListAdapter extends ArrayAdapter<Location>
 
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		Log.d("LocationSearchListAdapter", "onCheckedChanged: isChecked = " + isChecked);
+		Log.d("LocationSearchListAdapter", "onCheckedChanged: isChecked = "
+				+ isChecked);
 		
 		Location location = (Location) buttonView.getTag();
 		if (location != null) {

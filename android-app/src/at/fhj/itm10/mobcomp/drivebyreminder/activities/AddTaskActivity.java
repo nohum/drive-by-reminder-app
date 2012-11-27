@@ -64,7 +64,8 @@ public class AddTaskActivity extends RoboSherlockActivity
 	@InjectResource(R.string.activity_addtask_form_location_button)
 	private String strButtonSetLocation;
 	
-	@InjectResource(R.string.activity_addtask_form_location_button_multiple_prefix)
+	@InjectResource(
+			R.string.activity_addtask_form_location_button_multiple_prefix)
 	private String strButtonLocationMultipe;
 
 	@InjectView(R.id.chbDateBoundaries)
@@ -184,6 +185,8 @@ public class AddTaskActivity extends RoboSherlockActivity
         	}
         	
         	return true;
+        default:
+        	break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -197,7 +200,8 @@ public class AddTaskActivity extends RoboSherlockActivity
 		outState.putLong("startDateTime", startDateTime.getTimeInMillis());
 		outState.putLong("endDateTime", endDateTime.getTimeInMillis());
 
-		outState.putInt("customProximitry", selCustomProximitry.getSelectedItemPosition());
+		outState.putInt("customProximitry", selCustomProximitry
+				.getSelectedItemPosition());
 	}
 
 	@Override
@@ -212,6 +216,8 @@ public class AddTaskActivity extends RoboSherlockActivity
 
 	/**
 	 * Used to save the received locations over activity restarts.
+	 * 
+	 * @return Object
 	 */
 	@Override
 	public Object onRetainNonConfigurationInstance() {
@@ -230,6 +236,11 @@ public class AddTaskActivity extends RoboSherlockActivity
 		chbDateBoundaries.setChecked(false);
 	}
 
+    /**
+     * Restores state from a bundle.
+     * 
+     * @param savedInstanceState
+     */
 	@SuppressWarnings({ "unchecked", "deprecation" })
 	private void restoreFromState(Bundle savedInstanceState) {
 		// Title and description field are restoring themselves!
@@ -243,14 +254,18 @@ public class AddTaskActivity extends RoboSherlockActivity
         	this.associatedLocations = lastLocations;
         }
 
-		chbDateBoundaries.setChecked(savedInstanceState.getBoolean("useDateBoundaries"));
-        changeDateButtonsEnabledState(savedInstanceState.getBoolean("useDateBoundaries"));
+		chbDateBoundaries.setChecked(savedInstanceState
+				.getBoolean("useDateBoundaries"));
+        changeDateButtonsEnabledState(savedInstanceState
+        		.getBoolean("useDateBoundaries"));
 
 		startDateTime = Calendar.getInstance();
-		startDateTime.setTimeInMillis(savedInstanceState.getLong("startDateTime"));
+		startDateTime.setTimeInMillis(savedInstanceState
+				.getLong("startDateTime"));
 		endDateTime = Calendar.getInstance();
 		endDateTime.setTimeInMillis(savedInstanceState.getLong("endDateTime"));
-		selCustomProximitry.setSelection(savedInstanceState.getInt("customProximitry"), false);
+		selCustomProximitry.setSelection(savedInstanceState
+				.getInt("customProximitry"), false);
 	}
 
 	/**
@@ -260,7 +275,8 @@ public class AddTaskActivity extends RoboSherlockActivity
 		// Disable the date buttons if "no date" has been selected
 		changeDateButtonsEnabledState(chbDateBoundaries.isChecked());
 
-		// ... but also set the date buttons to the value of their date variables
+		// ... but also set the date buttons to the value of their
+		// date variables
 		btnStartDate.setText(systemDateFormat.format(startDateTime.getTime()));
 		btnStartTime.setText(systemTimeFormat.format(startDateTime.getTime()));
 		btnEndDate.setText(systemDateFormat.format(endDateTime.getTime()));
@@ -284,6 +300,11 @@ public class AddTaskActivity extends RoboSherlockActivity
 		}
 	}
 	
+	/**
+	 * Change the state of the date buttons. 
+	 * 
+	 * @param newState True to enable, false to disable
+	 */
 	protected void changeDateButtonsEnabledState(boolean newState) {
 		btnStartDate.setEnabled(newState);
 		btnStartTime.setEnabled(newState);
@@ -307,7 +328,7 @@ public class AddTaskActivity extends RoboSherlockActivity
 
 	/**
 	 * Retrieves the date and time format from the system settings.
-	 * @see http://stackoverflow.com/questions/6981505/android-get-user-selected-date-format
+	 * @see http://stackoverflow.com/questions/6981505/
 	 */
 	private void initSystemDateTimeFormats() {
 		// Get the formats
@@ -318,6 +339,9 @@ public class AddTaskActivity extends RoboSherlockActivity
 
 	/**
 	 * Used for the alert date checkbox.
+	 * 
+	 * @param buttonView checkbox
+	 * @param isChecked state
 	 */
 	@Override
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -329,7 +353,7 @@ public class AddTaskActivity extends RoboSherlockActivity
 	/**
 	 * Used for the date selection, location buttons.
 	 * 
-	 * @param view
+	 * @param view the view
 	 */
 	@Override
 	public void onClick(View view) {
@@ -350,7 +374,8 @@ public class AddTaskActivity extends RoboSherlockActivity
 			intent.putExtra("loadFromStorage", false);
 
 			if (this.associatedLocations != null) {
-				dataStorage.setData("locationsToShow", this.associatedLocations);
+				dataStorage.setData("locationsToShow",
+						this.associatedLocations);
 				intent.putExtra("loadFromStorage", true);
 			}
 
@@ -376,13 +401,15 @@ public class AddTaskActivity extends RoboSherlockActivity
 				refreshViewsWithValues();
 			}
 			break;
+		default:
+			break;
 		}
 	}
 	
 	/**
 	 * Retrieves a date picker dialog instance from a calendar.
 	 * 
-	 * @param cal
+	 * @param cal source calendar
 	 * @return DatePickerDialog
 	 */
 	private DatePickerDialog retrieveDatePicker(Calendar cal) {
@@ -393,7 +420,7 @@ public class AddTaskActivity extends RoboSherlockActivity
 	/**
 	 * Retrieves a time picker dialog instance from a calendar.
 	 * 
-	 * @param cal
+	 * @param cal data source calendar
 	 * @return TimePickerDialog
 	 */
 	private TimePickerDialog retrieveTimePicker(Calendar cal) {
@@ -416,7 +443,8 @@ public class AddTaskActivity extends RoboSherlockActivity
 	}
 
 	@Override
-	public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+	public void onDateSet(DatePicker view, int year, int monthOfYear,
+			int dayOfMonth) {
 		if (openedPicker.equals(OpenedPickerType.STARTDATE)) {
 			startDateTime.set(Calendar.YEAR, year);
 			startDateTime.set(Calendar.MONTH, monthOfYear);
@@ -433,10 +461,13 @@ public class AddTaskActivity extends RoboSherlockActivity
 	
 	/**
 	 * Save all data. Must return true if successful.
+	 * 
+	 * @return true on success
 	 */
 	private boolean saveData() {
 		if (TextUtils.isEmpty(txtTitle.getText())) {
-			Toast.makeText(this, strSaveValidationNoTitle, Toast.LENGTH_LONG).show();
+			Toast.makeText(this, strSaveValidationNoTitle, Toast.LENGTH_LONG)
+				.show();
 			return false;
 		}
 

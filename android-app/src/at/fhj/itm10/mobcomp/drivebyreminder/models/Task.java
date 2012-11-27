@@ -4,37 +4,37 @@ import java.util.Calendar;
 
 /**
  * Represents a task stored in this application.
- * 
+ *
  * @author Wolfgang Gaar
  */
 public class Task {
 
 	private long id;
-	
+
 	private String title;
-	
+
 	/**
 	 * Zero indicates usage of the default proximitry.
 	 */
 	private int customProximitry = 0;
 
 	private Calendar startDate;
-	
+
 	private Calendar endDate;
-	
+
 	private boolean noDate;
-	
+
 	private boolean done;
-	
+
 	private String description;
-	
+
 	private long sorting;
 
 	public long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(final long id) {
 		this.id = id;
 	}
 
@@ -42,7 +42,7 @@ public class Task {
 		return title;
 	}
 
-	public void setTitle(String title) {
+	public void setTitle(final String title) {
 		this.title = title;
 	}
 
@@ -50,7 +50,7 @@ public class Task {
 		return customProximitry;
 	}
 
-	public void setCustomProximitry(int customProximitry) {
+	public void setCustomProximitry(final int customProximitry) {
 		this.customProximitry = customProximitry;
 	}
 
@@ -58,7 +58,7 @@ public class Task {
 		return startDate;
 	}
 
-	public void setStartDate(Calendar startDate) {
+	public void setStartDate(final Calendar startDate) {
 		this.startDate = startDate;
 	}
 
@@ -74,7 +74,7 @@ public class Task {
 		return noDate;
 	}
 
-	public void setNoDate(boolean noDate) {
+	public void setNoDate(final boolean noDate) {
 		this.noDate = noDate;
 	}
 
@@ -82,7 +82,7 @@ public class Task {
 		return done;
 	}
 
-	public void setDone(boolean done) {
+	public void setDone(final boolean done) {
 		this.done = done;
 	}
 
@@ -90,7 +90,7 @@ public class Task {
 		return description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
 	}
 
@@ -98,7 +98,7 @@ public class Task {
 		return sorting;
 	}
 
-	public void setSorting(long sorting) {
+	public void setSorting(final long sorting) {
 		this.sorting = sorting;
 	}
 }

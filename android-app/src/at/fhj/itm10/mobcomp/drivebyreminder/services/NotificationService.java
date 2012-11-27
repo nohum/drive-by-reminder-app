@@ -21,7 +21,7 @@ public class NotificationService extends RoboService {
 	private LocationManager locationManager;
 	
 	@Override
-	public IBinder onBind(Intent intent) {
+	public IBinder onBind(final Intent intent) {
 		// TODO Auto-generated method stub
 		return null;
 	}
