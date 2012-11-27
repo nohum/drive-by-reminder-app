@@ -31,9 +31,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
-import at.fhj.itm10.mobcomp.drivebyreminder.helper.DBRApplication;
 import at.fhj.itm10.mobcomp.drivebyreminder.helper.DataSingletonStorage;
 import at.fhj.itm10.mobcomp.drivebyreminder.helper.TaskDataDAO;
+import at.fhj.itm10.mobcomp.drivebyreminder.helper.TaskStorageHelper;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.Location;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.Task;
 
@@ -92,14 +92,12 @@ public class AddTaskActivity extends RoboSherlockActivity
 	@InjectView(R.id.selCustomProximitry)
 	protected Spinner selCustomProximitry;
 	
-	private java.text.DateFormat systemDateFormat;
+	protected java.text.DateFormat systemDateFormat;
 	
-	private java.text.DateFormat systemTimeFormat;
+	protected java.text.DateFormat systemTimeFormat;
 	
 	private boolean systemTime24Hours;
-	
-	private Task application;
-	
+
 	/**
 	 * Indicates the currently user-opened picker dialog.
 	 */
@@ -108,7 +106,7 @@ public class AddTaskActivity extends RoboSherlockActivity
 	/**
 	 * {@link Location Locations} associated with this task.
 	 */
-	private List<Location> associatedLocations = null;
+	protected List<Location> associatedLocations = null;
 	
 	@Inject
 	private DataSingletonStorage dataStorage;
@@ -143,11 +141,26 @@ public class AddTaskActivity extends RoboSherlockActivity
         	restoreFromState(savedInstanceState);
         }
 
-        this.taskDataDAO = ((DBRApplication) getApplication()).getTaskDataManager();
+        this.taskDataDAO = new TaskDataDAO(new TaskStorageHelper(
+        		getApplicationContext()));
         
         initSystemDateTimeFormats();
         refreshViewsWithValues();
         initViewEvents();
+	}
+	
+	@Override
+	protected void onResume() {
+		taskDataDAO.open();
+
+		super.onResume();
+	}
+
+	@Override
+	protected void onPause() {
+		taskDataDAO.close();
+
+		super.onPause();
 	}
 	
 	@Override
@@ -243,7 +256,7 @@ public class AddTaskActivity extends RoboSherlockActivity
 	/**
 	 * Init all views - show values.
 	 */
-	private void refreshViewsWithValues() {
+	protected void refreshViewsWithValues() {
 		// Disable the date buttons if "no date" has been selected
 		changeDateButtonsEnabledState(chbDateBoundaries.isChecked());
 
@@ -253,9 +266,25 @@ public class AddTaskActivity extends RoboSherlockActivity
 		btnEndDate.setText(systemDateFormat.format(endDateTime.getTime()));
 		btnEndTime.setText(systemTimeFormat.format(endDateTime.getTime()));
 		
+		// Handle different kinds of locations
+		if (associatedLocations == null || associatedLocations.size() == 0) {
+			btnLocation.setText(strButtonSetLocation);
+		} else if (associatedLocations.size() == 1) {
+			btnLocation.setText(associatedLocations.get(0).getName() + ", "
+					+ associatedLocations.get(0).getAddress());
+		} else {
+			// Multiple locations
+			Set<String> locList = new LinkedHashSet<String>();
+			for (Location location : associatedLocations) {
+				locList.add(location.getName());
+			}
+
+			btnLocation.setText(strButtonLocationMultipe + " "
+					+ TextUtils.join(", ", locList));
+		}
 	}
 	
-	private void changeDateButtonsEnabledState(boolean newState) {
+	protected void changeDateButtonsEnabledState(boolean newState) {
 		btnStartDate.setEnabled(newState);
 		btnStartTime.setEnabled(newState);
 		btnEndDate.setEnabled(newState);
@@ -265,7 +294,7 @@ public class AddTaskActivity extends RoboSherlockActivity
 	/**
 	 * Add all necessary events to the views.
 	 */
-	private void initViewEvents() {
+	protected void initViewEvents() {
 		btnLocation.setOnClickListener(this);
 		
 		chbDateBoundaries.setOnCheckedChangeListener(this);
@@ -344,22 +373,7 @@ public class AddTaskActivity extends RoboSherlockActivity
 				Log.d("AddTaskActivity", "onActivityResult: locationsToSave = "
 						+ associatedLocations);
 
-				// Handle different kinds of locations
-				if (associatedLocations == null || associatedLocations.size() == 0) {
-					btnLocation.setText(strButtonSetLocation);
-				} else if (associatedLocations.size() == 1) {
-					btnLocation.setText(associatedLocations.get(0).getName() + ", "
-							+ associatedLocations.get(0).getAddress());
-				} else {
-					// Multiple locations
-					Set<String> locList = new LinkedHashSet<String>();
-					for (Location location : associatedLocations) {
-						locList.add(location.getName());
-					}
-
-					btnLocation.setText(strButtonLocationMultipe + " "
-							+ TextUtils.join(", ", locList));
-				}
+				refreshViewsWithValues();
 			}
 			break;
 		}
@@ -434,6 +448,9 @@ public class AddTaskActivity extends RoboSherlockActivity
 		task.setDone(false);
 		task.setDescription(txtDescription.getText().toString());
 		task.setCustomProximitry(selCustomProximitry.getSelectedItemPosition());
+
+		long sorting = taskDataDAO.findTaskHighestSortingNumber() + 1;
+		task.setSorting(sorting);
 
 		long insertId = taskDataDAO.insert(task);
 		for (Location location : associatedLocations) {

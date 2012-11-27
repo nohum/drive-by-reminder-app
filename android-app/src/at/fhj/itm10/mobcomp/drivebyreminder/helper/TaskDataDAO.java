@@ -30,12 +30,15 @@ public class TaskDataDAO {
 	 */
 	public TaskDataDAO(TaskStorageHelper storageHelper) {
 		helper = storageHelper;
-		db = helper.getWritableDatabase();
+		open();
+	}
+	
+	public void open() {
+		db = helper.getWritableDatabase();	
 	}
 	
 	public void close() {
 		db.close();
-		helper.close();
 	}
 
 	public List<Task> findAllTasks() {
@@ -68,6 +71,18 @@ public class TaskDataDAO {
 		return result;
 	}
 	
+	public long findTaskHighestSortingNumber() {
+		Cursor cursor = db.rawQuery("SELECT MAX(sorting) FROM " +
+				TaskStorageHelper.TABLE_TASKS_NAME, null);
+		
+		if (cursor.getCount() == 0) {
+			return 1;
+		}
+		
+		long result = cursor.getLong(0);
+		return result > 1 ? result : 1;
+	}
+	
 	public long insert(Task task) {
 		return db.insert(TaskStorageHelper.TABLE_TASKS_NAME, null,
 				fillContentValuesByTask(task));
@@ -83,7 +98,7 @@ public class TaskDataDAO {
 				"id = ?", new String[] { String.valueOf(task.getId()) });
 	}
 
-	public List<Location> findAllByTask(Task task) {
+	public List<Location> findAllLocationsByTask(Task task) {
 		Cursor cursor = db.query(TaskStorageHelper.TABLE_LOCATIONS_NAME, null,
 				"taskId = ?", new String[] { String.valueOf(task.getId()) }, null,
 				null, null);
@@ -165,8 +180,8 @@ public class TaskDataDAO {
 		values.put("customProximitry", task.getCustomProximitry());
 		values.put("startDate", task.getStartDate().getTimeInMillis());
 		values.put("endDate", task.getEndDate().getTimeInMillis());
-		values.put("noDate", task.isNoDate());
-		values.put("done", task.isDone());
+		values.put("noDate", task.isNoDate() ? 1 : 0);
+		values.put("done", task.isDone() ? 1 : 0);
 		values.put("sorting", task.getSorting());
 
 		return values;
@@ -199,7 +214,7 @@ public class TaskDataDAO {
 	 */
 	private ContentValues fillContentValuesByLocation(Location location) {
 		ContentValues values = new ContentValues();
-		
+
 		values.put("id", location.getId());
 		values.put("taskId", location.getTaskId());
 		values.put("title", location.getName());

@@ -29,6 +29,9 @@
     <string name="activity_addtask_form_location_button">Choose location</string>
     <string name="activity_addtask_form_location_button_multiple_prefix">(Multiple)</string>
     
+    <string name="activity_addtask_form_done_header">Task status</string>
+    <string name="activity_addtask_form_done_explain">Task is done</string>
+    
     <string name="activity_addtask_form_alert_nodate">Alert between dates</string>
     <string name="activity_addtask_form_alert_startdate">Earliest alert on</string>
     <string name="activity_addtask_form_alert_enddate">Latest alert on</string>
@@ -56,6 +59,13 @@
     <string name="activity_editlocation_location_downloaderror">An error occurred while retrieving locations. Is your internet connection working?</string>
     
     <string name="activity_editlocation_save_nolocations">You have to select at least one location to continue</string>
+    
+    <!-- Delete task dialog -->
+    <string name="dialog_delete_task_question">Do you really want to delete this task?</string>
+    <string name="dialog_delete_task_question_multiple">Do you really want to delete these tasks?</string>
+
+    <string name="dialog_delete_task_positive">Delete</string>
+    <string name="dialog_delete_task_negative">Cancel</string>
     
     <!-- Preferences -->
     <string name="settings_title_general">General</string>

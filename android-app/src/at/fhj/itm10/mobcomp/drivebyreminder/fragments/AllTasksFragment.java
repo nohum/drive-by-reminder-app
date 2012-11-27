@@ -1,25 +1,19 @@
 package at.fhj.itm10.mobcomp.drivebyreminder.fragments;
 
-import roboguice.inject.ContentView;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
-import at.fhj.itm10.mobcomp.drivebyreminder.helper.TaskStorageHelper;
 
-import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockFragment;
-import com.google.inject.Inject;
+import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
 
 /**
  * Fragment to view all tasks.
  * 
  * @author Wolfgang Gaar
  */
-public class AllTasksFragment extends RoboSherlockFragment {
-
-//	@Inject
-//	private TaskStorageHelper taskDb;
+public class AllTasksFragment extends RoboSherlockListFragment {
 
 	/**
 	 * Get an instance of this fragment.
