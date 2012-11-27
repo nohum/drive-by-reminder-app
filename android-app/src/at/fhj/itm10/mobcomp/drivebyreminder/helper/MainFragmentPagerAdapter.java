@@ -15,8 +15,11 @@ import at.fhj.itm10.mobcomp.drivebyreminder.fragments.NearbyTasksFragment;
  */
 public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 
-	public MainFragmentPagerAdapter(FragmentManager fm) {
+	private TaskDataDAO dbDao;
+	
+	public MainFragmentPagerAdapter(FragmentManager fm, TaskDataDAO dao) {
 		super(fm);
+		this.dbDao = dao;
 	}
 
 	@Override
@@ -29,10 +32,10 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 			fragment = HomeFragment.newInstance();
 			break;
 		case 1:
-			fragment = AllTasksFragment.newInstance();
+			fragment = AllTasksFragment.newInstance(dbDao);
 			break;
 		case 2:
-			fragment = NearbyTasksFragment.newInstance();
+			fragment = NearbyTasksFragment.newInstance(dbDao);
 			break;
 		default:
 			throw new IllegalStateException("number higher than 2");

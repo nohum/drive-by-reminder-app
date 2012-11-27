@@ -50,9 +50,9 @@ public class LocationSearchListAdapter extends ArrayAdapter<Location>
 	 */
 	@Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View v = convertView;
-      
-        if (v == null) {
+		View v = convertView;
+
+		if (v == null) {
         	LayoutInflater inflater = (LayoutInflater) this.getContext()
         			.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         	v = inflater.inflate(R.layout.listitem_location, null);
@@ -82,7 +82,7 @@ public class LocationSearchListAdapter extends ArrayAdapter<Location>
 	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 		Log.d("LocationSearchListAdapter", "onCheckedChanged: isChecked = "
 				+ isChecked);
-		
+
 		Location location = (Location) buttonView.getTag();
 		if (location != null) {
 			location.setLocationChooserSelected(isChecked);

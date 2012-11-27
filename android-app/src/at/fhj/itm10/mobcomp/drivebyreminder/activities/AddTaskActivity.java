@@ -54,49 +54,49 @@ public class AddTaskActivity extends RoboSherlockActivity
 
 	@InjectView(R.id.txtTitle)
 	protected TextView txtTitle;
-	
+
 	@InjectResource(R.string.activity_addtask_save_validation_notitle)
 	protected String strSaveValidationNoTitle;
-	
+
 	@InjectView(R.id.btnLocation)
 	private Button btnLocation;
-	
+
 	@InjectResource(R.string.activity_addtask_form_location_button)
 	private String strButtonSetLocation;
-	
+
 	@InjectResource(
 			R.string.activity_addtask_form_location_button_multiple_prefix)
 	private String strButtonLocationMultipe;
 
 	@InjectView(R.id.chbDateBoundaries)
 	protected CheckBox chbDateBoundaries;
-	
+
 	@InjectView(R.id.btnStartDate)
 	private Button btnStartDate;
-	
+
 	@InjectView(R.id.btnStartTime)
 	private Button btnStartTime;
-	
+
 	protected Calendar startDateTime;
-	
+
 	@InjectView(R.id.btnEndDate)
 	private Button btnEndDate;
-	
+
 	@InjectView(R.id.btnEndTime)
 	private Button btnEndTime;
-	
+
 	protected Calendar endDateTime;
-	
+
 	@InjectView(R.id.txtDescription)
 	protected TextView txtDescription;
-	
+
 	@InjectView(R.id.selCustomProximitry)
 	protected Spinner selCustomProximitry;
-	
+
 	protected java.text.DateFormat systemDateFormat;
-	
+
 	protected java.text.DateFormat systemTimeFormat;
-	
+
 	private boolean systemTime24Hours;
 
 	/**
@@ -116,7 +116,7 @@ public class AddTaskActivity extends RoboSherlockActivity
 	 * Database DAO.
 	 */
 	protected TaskDataDAO taskDataDAO;
-	
+
 	/**
 	 * Indicator for opened picker.
 	 * 
@@ -142,9 +142,9 @@ public class AddTaskActivity extends RoboSherlockActivity
         	restoreFromState(savedInstanceState);
         }
 
-        this.taskDataDAO = new TaskDataDAO(new TaskStorageHelper(
+        taskDataDAO = new TaskDataDAO(new TaskStorageHelper(
         		getApplicationContext()));
-        
+
         initSystemDateTimeFormats();
         refreshViewsWithValues();
         initViewEvents();
@@ -167,6 +167,7 @@ public class AddTaskActivity extends RoboSherlockActivity
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.menu_addtask, menu);
+		
 		return true;
 	}
 
@@ -231,7 +232,7 @@ public class AddTaskActivity extends RoboSherlockActivity
     	startDateTime = Calendar.getInstance();
 		startDateTime.setTime(Calendar.getInstance().getTime());
 		endDateTime = (Calendar) startDateTime.clone();
-		
+
 		selCustomProximitry.setSelection(0); // 0 = default setting
 		chbDateBoundaries.setChecked(false);
 	}
@@ -281,7 +282,7 @@ public class AddTaskActivity extends RoboSherlockActivity
 		btnStartTime.setText(systemTimeFormat.format(startDateTime.getTime()));
 		btnEndDate.setText(systemDateFormat.format(endDateTime.getTime()));
 		btnEndTime.setText(systemTimeFormat.format(endDateTime.getTime()));
-		
+
 		// Handle different kinds of locations
 		if (associatedLocations == null || associatedLocations.size() == 0) {
 			btnLocation.setText(strButtonSetLocation);

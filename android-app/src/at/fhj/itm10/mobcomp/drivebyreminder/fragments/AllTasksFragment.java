@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
+import at.fhj.itm10.mobcomp.drivebyreminder.helper.TaskDataDAO;
 
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
 
@@ -15,24 +16,30 @@ import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFra
  */
 public class AllTasksFragment extends RoboSherlockListFragment {
 
+	private TaskDataDAO dbDao;
+
 	/**
 	 * Get an instance of this fragment.
 	 * 
 	 * @return AllTasksFragment
 	 */
-	public static AllTasksFragment newInstance() {
+	public static AllTasksFragment newInstance(TaskDataDAO dao) {
 		AllTasksFragment fragment = new AllTasksFragment();
 
         Bundle args = new Bundle();
         fragment.setArguments(args);
+        fragment.setDbDao(dao);
 
         return fragment;
     }
+
+	public void setDbDao(TaskDataDAO dao) {
+		this.dbDao = dao;
+	}
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        mNum = getArguments() != null ? getArguments().getInt("num") : 1;
     }
 
     @Override

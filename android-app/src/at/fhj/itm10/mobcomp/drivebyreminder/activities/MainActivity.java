@@ -15,6 +15,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
 import at.fhj.itm10.mobcomp.drivebyreminder.helper.MainFragmentPagerAdapter;
+import at.fhj.itm10.mobcomp.drivebyreminder.helper.TaskDataDAO;
+import at.fhj.itm10.mobcomp.drivebyreminder.helper.TaskStorageHelper;
 
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import com.actionbarsherlock.view.Menu;
@@ -22,7 +24,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
 
 /**
- * Main view.
+ * Main activity.
  * 
  * @author Wolfgang Gaar
  */
@@ -35,6 +37,11 @@ public class MainActivity extends RoboSherlockFragmentActivity
 	
 	@InjectView(R.id.pgrMainView)
 	private ViewPager pagerMainView;
+
+	/**
+	 * Database DAO.
+	 */
+	protected TaskDataDAO taskDataDAO;
 
 	private MainFragmentPagerAdapter pagerAdapter;
 
@@ -49,6 +56,9 @@ public class MainActivity extends RoboSherlockFragmentActivity
         		R.array.locations, R.layout.sherlock_spinner_item);
         list.setDropDownViewResource(R.layout.sherlock_spinner_dropdown_item);
 
+        taskDataDAO = new TaskDataDAO(new TaskStorageHelper(
+        		getApplicationContext()));
+
         getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
         getSupportActionBar().setListNavigationCallbacks(list, this);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -56,16 +66,30 @@ public class MainActivity extends RoboSherlockFragmentActivity
         // Pager class which enables us to have several fragments loaded
         // and "pagable"
         pagerAdapter = new MainFragmentPagerAdapter(
-        		getSupportFragmentManager());
+        		getSupportFragmentManager(), taskDataDAO);
         pagerMainView.setAdapter(pagerAdapter);
         pagerMainView.setOnPageChangeListener(this);
-        
+
         Log.d("MainActivity", "onCreate: given savedInstanceState = "
         		+ savedInstanceState);
-        
+
         if (savedInstanceState != null) {
 			restoreState(savedInstanceState);
 		}
+	}
+
+	@Override
+	protected void onResume() {
+		taskDataDAO.open();
+
+		super.onResume();
+	}
+
+	@Override
+	protected void onPause() {
+		taskDataDAO.close();
+
+		super.onPause();
 	}
 	
 	@Override
@@ -90,6 +114,7 @@ public class MainActivity extends RoboSherlockFragmentActivity
 	private void restoreState(Bundle savedInstanceState) {
 		// Pager and nav menu item number
 		int currentFragment = savedInstanceState.getInt("currentFragment");
+
 		getSupportActionBar().setSelectedNavigationItem(currentFragment);
 		pagerMainView.setCurrentItem(currentFragment, false);
 	}
@@ -117,6 +142,8 @@ public class MainActivity extends RoboSherlockFragmentActivity
         case R.id.menu_main_settings:
         	this.startActivity(new Intent(this, SettingsActivity.class));
         	return true;
+        default:
+        	break;
         }
 
         return super.onOptionsItemSelected(item);
@@ -124,6 +151,9 @@ public class MainActivity extends RoboSherlockFragmentActivity
 
     /**
      * Used for the top-left navigation menu.
+     * 
+     * @param itemPosition the pager item selection
+     * @param itemId item id
      */
 	@Override
 	public boolean onNavigationItemSelected(int itemPosition, long itemId) {
@@ -147,6 +177,8 @@ public class MainActivity extends RoboSherlockFragmentActivity
 
 	/**
 	 * Called after a fragment has been selected ("scrolled to") by the user.
+	 * 
+	 * @param position the page position
 	 */
 	@Override
 	public void onPageSelected(int position) {
@@ -160,13 +192,14 @@ public class MainActivity extends RoboSherlockFragmentActivity
 		super.onActivityResult(requestCode, resultCode, data);
 
 		switch(requestCode) {
-		case 100:
-			// Process add task activity
+		case 100: // Process add task activity
 			if (resultCode == Activity.RESULT_OK) {
 				Log.d("MainActivity", "AddTaskActivity result = RESULT_OK");
 			} else if (resultCode == Activity.RESULT_CANCELED) {
 				Log.d("MainActivity", "AddTaskActivity result = RESULT_CANCELED");
 			}
+		default:
+			break;
 		}
 	}
 	
