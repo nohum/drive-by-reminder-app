@@ -27,6 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.65"
                 android:inputType="textCapSentences"
+                android:singleLine="true"
                 android:ems="10"
                 android:hint="@string/activity_editlocation_searchfor_hint" />
 

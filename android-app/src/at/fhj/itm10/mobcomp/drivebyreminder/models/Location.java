@@ -7,9 +7,9 @@ package at.fhj.itm10.mobcomp.drivebyreminder.models;
  */
 public class Location {
 
-	private int id;
+	private long id;
 
-	private int taskId;
+	private long taskId;
 	
 	private String name;
 
@@ -33,19 +33,19 @@ public class Location {
 		
 	}
 	
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-	public int getTaskId() {
+	public long getTaskId() {
 		return taskId;
 	}
 
-	public void setTaskId(int taskId) {
+	public void setTaskId(long taskId) {
 		this.taskId = taskId;
 	}
 

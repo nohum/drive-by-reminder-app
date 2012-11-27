@@ -9,7 +9,7 @@ import java.util.Calendar;
  */
 public class Task {
 
-	private int id;
+	private long id;
 	
 	private String title;
 	
@@ -17,7 +17,7 @@ public class Task {
 	 * Zero indicates usage of the default proximitry.
 	 */
 	private int customProximitry = 0;
-	
+
 	private Calendar startDate;
 	
 	private Calendar endDate;
@@ -26,13 +26,15 @@ public class Task {
 	
 	private boolean done;
 	
-	private int sorting;
+	private String description;
+	
+	private long sorting;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
@@ -84,11 +86,19 @@ public class Task {
 		this.done = done;
 	}
 
-	public int getSorting() {
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public long getSorting() {
 		return sorting;
 	}
 
-	public void setSorting(int sorting) {
+	public void setSorting(long sorting) {
 		this.sorting = sorting;
 	}
 }

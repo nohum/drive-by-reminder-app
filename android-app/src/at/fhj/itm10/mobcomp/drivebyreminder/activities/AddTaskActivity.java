@@ -29,9 +29,13 @@ import android.widget.DatePicker;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
+import at.fhj.itm10.mobcomp.drivebyreminder.helper.DBRApplication;
 import at.fhj.itm10.mobcomp.drivebyreminder.helper.DataSingletonStorage;
+import at.fhj.itm10.mobcomp.drivebyreminder.helper.TaskDataDAO;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.Location;
+import at.fhj.itm10.mobcomp.drivebyreminder.models.Task;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -50,6 +54,9 @@ public class AddTaskActivity extends RoboSherlockActivity
 
 	@InjectView(R.id.txtTitle)
 	protected TextView txtTitle;
+	
+	@InjectResource(R.string.activity_addtask_save_validation_notitle)
+	protected String strSaveValidationNoTitle;
 	
 	@InjectView(R.id.btnLocation)
 	private Button btnLocation;
@@ -91,6 +98,8 @@ public class AddTaskActivity extends RoboSherlockActivity
 	
 	private boolean systemTime24Hours;
 	
+	private Task application;
+	
 	/**
 	 * Indicates the currently user-opened picker dialog.
 	 */
@@ -103,6 +112,11 @@ public class AddTaskActivity extends RoboSherlockActivity
 	
 	@Inject
 	private DataSingletonStorage dataStorage;
+
+	/**
+	 * Database DAO.
+	 */
+	protected TaskDataDAO taskDataDAO;
 	
 	/**
 	 * Indicator for opened picker.
@@ -129,6 +143,8 @@ public class AddTaskActivity extends RoboSherlockActivity
         	restoreFromState(savedInstanceState);
         }
 
+        this.taskDataDAO = ((DBRApplication) getApplication()).getTaskDataManager();
+        
         initSystemDateTimeFormats();
         refreshViewsWithValues();
         initViewEvents();
@@ -405,7 +421,26 @@ public class AddTaskActivity extends RoboSherlockActivity
 	 * Save all data. Must return true if successful.
 	 */
 	private boolean saveData() {
-		// TODO Auto-generated method stub
-		return false;
+		if (TextUtils.isEmpty(txtTitle.getText())) {
+			Toast.makeText(this, strSaveValidationNoTitle, Toast.LENGTH_LONG).show();
+			return false;
+		}
+
+		Task task = new Task();
+		task.setTitle(txtTitle.getText().toString());
+		task.setNoDate(!chbDateBoundaries.isChecked());
+		task.setStartDate(startDateTime);
+		task.setEndDate(endDateTime);
+		task.setDone(false);
+		task.setDescription(txtDescription.getText().toString());
+		task.setCustomProximitry(selCustomProximitry.getSelectedItemPosition());
+
+		long insertId = taskDataDAO.insert(task);
+		for (Location location : associatedLocations) {
+			location.setTaskId(insertId);
+			taskDataDAO.insert(location);
+		}
+
+		return true;
 	}
 }

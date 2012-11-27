@@ -17,7 +17,8 @@ public class TaskStorageHelper extends SQLiteOpenHelper {
 	
 	private static final String TABLE_TASKS_SQL = "CREATE TABLE `tasks` (" +
 			"`id` INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL ," +
-			"`title` TEXT NOT NULL , `description` TEXT NOT NULL ," +
+			"`title` TEXT NOT NULL ," +
+			"`description` TEXT NOT NULL ," +
 			"`customProximitry` INTEGER," +
 			"`startDate` DATETIME," +
 			"`endDate` DATETIME," +
@@ -25,7 +26,7 @@ public class TaskStorageHelper extends SQLiteOpenHelper {
 			"`done` BOOL NOT NULL  DEFAULT false," +
 			"`sorting` INTEGER NOT NULL )";
 	
-	private static final String TABLE_LOCATIONS_SQL = "CREATE  TABLE `locations` (" +
+	private static final String TABLE_LOCATIONS_SQL = "CREATE TABLE `locations` (" +
 			"`id` INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL ," +
 			"`taskId` INTEGER NOT NULL ," +
 			"`title` TEXT NOT NULL ," +

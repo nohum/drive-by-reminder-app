@@ -1,12 +1,11 @@
 package at.fhj.itm10.mobcomp.drivebyreminder.activities;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.NavUtils;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 /**
  * Modify task activity.
