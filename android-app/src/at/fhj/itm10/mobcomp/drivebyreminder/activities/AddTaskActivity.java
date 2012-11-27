@@ -49,7 +49,7 @@ public class AddTaskActivity extends RoboSherlockActivity
 				OnDateSetListener {
 
 	@InjectView(R.id.txtTitle)
-	private TextView txtTitle;
+	protected TextView txtTitle;
 	
 	@InjectView(R.id.btnLocation)
 	private Button btnLocation;
@@ -61,7 +61,7 @@ public class AddTaskActivity extends RoboSherlockActivity
 	private String strButtonLocationMultipe;
 
 	@InjectView(R.id.chbDateBoundaries)
-	private CheckBox chbDateBoundaries;
+	protected CheckBox chbDateBoundaries;
 	
 	@InjectView(R.id.btnStartDate)
 	private Button btnStartDate;
@@ -69,7 +69,7 @@ public class AddTaskActivity extends RoboSherlockActivity
 	@InjectView(R.id.btnStartTime)
 	private Button btnStartTime;
 	
-	private Calendar startDateTime;
+	protected Calendar startDateTime;
 	
 	@InjectView(R.id.btnEndDate)
 	private Button btnEndDate;
@@ -77,13 +77,13 @@ public class AddTaskActivity extends RoboSherlockActivity
 	@InjectView(R.id.btnEndTime)
 	private Button btnEndTime;
 	
-	private Calendar endDateTime;
+	protected Calendar endDateTime;
 	
 	@InjectView(R.id.txtDescription)
-	private TextView txtDescription;
+	protected TextView txtDescription;
 	
 	@InjectView(R.id.selCustomProximitry)
-	private Spinner selCustomProximitry;
+	protected Spinner selCustomProximitry;
 	
 	private java.text.DateFormat systemDateFormat;
 	
@@ -91,8 +91,14 @@ public class AddTaskActivity extends RoboSherlockActivity
 	
 	private boolean systemTime24Hours;
 	
+	/**
+	 * Indicates the currently user-opened picker dialog.
+	 */
 	private OpenedPickerType openedPicker;
 	
+	/**
+	 * {@link Location Locations} associated with this task.
+	 */
 	private List<Location> associatedLocations = null;
 	
 	@Inject
@@ -138,22 +144,26 @@ public class AddTaskActivity extends RoboSherlockActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
         case android.R.id.home:
+        	this.setResult(Activity.RESULT_CANCELED);
             NavUtils.navigateUpFromSameTask(this);
+
             return true;
         case R.id.menu_addtask_save:
+        	if (this.saveData()) {
+        		this.setResult(Activity.RESULT_OK);
+        		this.finish();
+        	}
+        	
         	return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		Log.v("AddTaskActivity", "onSaveInstanceState");
-	
-		// Title and description field are persisting themselves!
 
-		// TODO: Locationdata
 		outState.putBoolean("useDateBoundaries", chbDateBoundaries.isChecked());
 		outState.putLong("startDateTime", startDateTime.getTimeInMillis());
 		outState.putLong("endDateTime", endDateTime.getTimeInMillis());
@@ -172,6 +182,14 @@ public class AddTaskActivity extends RoboSherlockActivity
 	}
 
 	/**
+	 * Used to save the received locations over activity restarts.
+	 */
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+	    return this.associatedLocations;
+	}
+
+	/**
 	 * Set activity default values for views.
 	 */
     private void setDefaultValues() {
@@ -183,20 +201,29 @@ public class AddTaskActivity extends RoboSherlockActivity
 		chbDateBoundaries.setChecked(false);
 	}
 
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	private void restoreFromState(Bundle savedInstanceState) {
 		// Title and description field are restoring themselves!
 
-		// TODO: Locationdata
+		// Reload locations after activity restart...
+        // Should use setRetainInstance
+        // see: http://developer.android.com/reference/android/app/Fragment.html#setRetainInstance%28boolean%29
+		List<Location> lastLocations = (List<Location>)
+        		getLastNonConfigurationInstance();
+        if (lastLocations != null) {
+        	this.associatedLocations = lastLocations;
+        }
+
 		chbDateBoundaries.setChecked(savedInstanceState.getBoolean("useDateBoundaries"));
+        changeDateButtonsEnabledState(savedInstanceState.getBoolean("useDateBoundaries"));
 
 		startDateTime = Calendar.getInstance();
 		startDateTime.setTimeInMillis(savedInstanceState.getLong("startDateTime"));
 		endDateTime = Calendar.getInstance();
 		endDateTime.setTimeInMillis(savedInstanceState.getLong("endDateTime"));
-//		txtDescription.setText(savedInstanceState.getString("description"));
 		selCustomProximitry.setSelection(savedInstanceState.getInt("customProximitry"), false);
 	}
-	
+
 	/**
 	 * Init all views - show values.
 	 */
@@ -223,14 +250,14 @@ public class AddTaskActivity extends RoboSherlockActivity
 	 * Add all necessary events to the views.
 	 */
 	private void initViewEvents() {
-		chbDateBoundaries.setOnCheckedChangeListener(this);
+		btnLocation.setOnClickListener(this);
 		
+		chbDateBoundaries.setOnCheckedChangeListener(this);
+
 		btnStartDate.setOnClickListener(this);
 		btnStartTime.setOnClickListener(this);
 		btnEndDate.setOnClickListener(this);
 		btnEndTime.setOnClickListener(this);
-		btnLocation.setOnClickListener(this);
-		
 	}
 
 	/**
@@ -281,7 +308,7 @@ public class AddTaskActivity extends RoboSherlockActivity
 				dataStorage.setData("locationsToShow", this.associatedLocations);
 				intent.putExtra("loadFromStorage", true);
 			}
-			
+
 			this.startActivityForResult(intent, 1);
 		}
 	}
@@ -295,9 +322,6 @@ public class AddTaskActivity extends RoboSherlockActivity
 		case 1:
 			// Process location chooser activity
 			if (resultCode == Activity.RESULT_OK) {
-				Log.d("AddTaskActivity", "onActivityResult: return code = RESULT_OK");
-				Log.d("AddTaskActivity", "dataStorage = " + dataStorage);
-
 				associatedLocations = (List<Location>) dataStorage
 						.getData("locationsToSave");
 
@@ -311,6 +335,7 @@ public class AddTaskActivity extends RoboSherlockActivity
 					btnLocation.setText(associatedLocations.get(0).getName() + ", "
 							+ associatedLocations.get(0).getAddress());
 				} else {
+					// Multiple locations
 					Set<String> locList = new LinkedHashSet<String>();
 					for (Location location : associatedLocations) {
 						locList.add(location.getName());
@@ -348,8 +373,6 @@ public class AddTaskActivity extends RoboSherlockActivity
 
 	@Override
 	public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-		Log.d("AddTaskActivity", "onTimeSet: view = " + view);
-		
 		if (openedPicker.equals(OpenedPickerType.STARTTIME)) {
 			startDateTime.set(Calendar.HOUR_OF_DAY, hourOfDay);
 			startDateTime.set(Calendar.MINUTE, minute);
@@ -364,8 +387,6 @@ public class AddTaskActivity extends RoboSherlockActivity
 
 	@Override
 	public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-		Log.d("AddTaskActivity", "onDateSet: view = " + view);
-
 		if (openedPicker.equals(OpenedPickerType.STARTDATE)) {
 			startDateTime.set(Calendar.YEAR, year);
 			startDateTime.set(Calendar.MONTH, monthOfYear);
@@ -378,5 +399,13 @@ public class AddTaskActivity extends RoboSherlockActivity
 
 		// Refresh views
 		refreshViewsWithValues();
+	}
+	
+	/**
+	 * Save all data. Must return true if successful.
+	 */
+	private boolean saveData() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

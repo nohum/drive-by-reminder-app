@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item android:id="@+id/menu_addtask_save"
+    <item android:id="@+id/menu_modifytask_save"
         android:showAsAction="always|withText"
         android:title="@string/menu_save"
         android:icon="@android:drawable/ic_menu_save"
+        android:orderInCategory="10" />
+    
+    <item android:id="@+id/menu_modifytask_delete"
+        android:showAsAction="never|withText"
+        android:title="@string/menu_delete"
+        android:icon="@android:drawable/ic_menu_delete"
         android:orderInCategory="10" />
 
 </menu>

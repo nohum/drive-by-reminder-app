@@ -3,6 +3,7 @@ package at.fhj.itm10.mobcomp.drivebyreminder.activities;
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -108,7 +109,7 @@ public class MainActivity extends RoboSherlockFragmentActivity
         	// There should only be one "Add new" activity open at any time
         	intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-        	this.startActivity(intent);
+        	this.startActivityForResult(intent, 100);
         	return true;
         case R.id.menu_main_settings:
         	this.startActivity(new Intent(this, SettingsActivity.class));
@@ -136,7 +137,8 @@ public class MainActivity extends RoboSherlockFragmentActivity
 	}
 
 	@Override
-	public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+	public void onPageScrolled(int position, float positionOffset,
+			int positionOffsetPixels) {
 		// Empty by intention	
 	}
 
@@ -150,4 +152,19 @@ public class MainActivity extends RoboSherlockFragmentActivity
 		getSupportActionBar().setSelectedNavigationItem(position);
 	}
 
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		switch(requestCode) {
+		case 100:
+			// Process add task activity
+			if (resultCode == Activity.RESULT_OK) {
+				Log.d("MainActivity", "AddTaskActivity result = RESULT_OK");
+			} else if (resultCode == Activity.RESULT_CANCELED) {
+				Log.d("MainActivity", "AddTaskActivity result = RESULT_CANCELED");
+			}
+		}
+	}
+	
 }

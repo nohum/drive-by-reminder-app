@@ -1,7 +1,7 @@
 package at.fhj.itm10.mobcomp.drivebyreminder.models;
 
 /**
- * Represents a geo location which also has a name.
+ * Represents a geo location which also has a name and an address.
  * 
  * @author Wolfgang Gaar
  */
