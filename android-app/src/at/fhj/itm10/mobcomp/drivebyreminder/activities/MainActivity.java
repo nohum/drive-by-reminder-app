@@ -14,9 +14,9 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
+import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskDataDAO;
+import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskStorageHelper;
 import at.fhj.itm10.mobcomp.drivebyreminder.helper.MainFragmentPagerAdapter;
-import at.fhj.itm10.mobcomp.drivebyreminder.helper.TaskDataDAO;
-import at.fhj.itm10.mobcomp.drivebyreminder.helper.TaskStorageHelper;
 
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import com.actionbarsherlock.view.Menu;

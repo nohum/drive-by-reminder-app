@@ -4,6 +4,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.util.Log;
+import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskDataDAO;
 import at.fhj.itm10.mobcomp.drivebyreminder.fragments.AllTasksFragment;
 import at.fhj.itm10.mobcomp.drivebyreminder.fragments.HomeFragment;
 import at.fhj.itm10.mobcomp.drivebyreminder.fragments.NearbyTasksFragment;

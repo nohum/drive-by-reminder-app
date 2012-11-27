@@ -1,4 +1,4 @@
-package at.fhj.itm10.mobcomp.drivebyreminder.helper;
+package at.fhj.itm10.mobcomp.drivebyreminder.database;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

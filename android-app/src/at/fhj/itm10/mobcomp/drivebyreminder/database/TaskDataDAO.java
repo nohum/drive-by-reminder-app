@@ -1,4 +1,4 @@
-package at.fhj.itm10.mobcomp.drivebyreminder.helper;
+package at.fhj.itm10.mobcomp.drivebyreminder.database;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -46,10 +46,14 @@ public class TaskDataDAO {
 	public void close() {
 		db.close();
 	}
+	
+	public Cursor findAllTasksCursor() {
+		return db.query(TaskStorageHelper.TABLE_TASKS_NAME, null,
+				null, null, null, null, null);
+	}
 
 	public List<Task> findAllTasks() {
-		Cursor cursor = db.query(TaskStorageHelper.TABLE_TASKS_NAME, null,
-				null, null, null, null, null);
+		Cursor cursor = findAllTasksCursor();
 		
 		// Set the result list length to the cursor result count
 		List<Task> foundTasks = new ArrayList<Task>(cursor.getCount());

@@ -31,9 +31,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
+import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskDataDAO;
+import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskStorageHelper;
 import at.fhj.itm10.mobcomp.drivebyreminder.helper.DataSingletonStorage;
-import at.fhj.itm10.mobcomp.drivebyreminder.helper.TaskDataDAO;
-import at.fhj.itm10.mobcomp.drivebyreminder.helper.TaskStorageHelper;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.Location;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.Task;
 
@@ -162,6 +162,32 @@ public class AddTaskActivity extends RoboSherlockActivity
 		taskDataDAO.close();
 
 		super.onPause();
+	}
+
+	
+	/**
+	 * Add all necessary events to the views.
+	 */
+	protected void initViewEvents() {
+		btnLocation.setOnClickListener(this);
+		
+		chbDateBoundaries.setOnCheckedChangeListener(this);
+
+		btnStartDate.setOnClickListener(this);
+		btnStartTime.setOnClickListener(this);
+		btnEndDate.setOnClickListener(this);
+		btnEndTime.setOnClickListener(this);
+	}
+
+	/**
+	 * Retrieves the date and time format from the system settings.
+	 * @see http://stackoverflow.com/questions/6981505/
+	 */
+	private void initSystemDateTimeFormats() {
+		// Get the formats
+		systemDateFormat = DateFormat.getDateFormat(getApplicationContext());
+		systemTimeFormat = DateFormat.getTimeFormat(getApplicationContext());
+		systemTime24Hours = DateFormat.is24HourFormat(getApplicationContext());
 	}
 	
 	@Override
@@ -311,31 +337,6 @@ public class AddTaskActivity extends RoboSherlockActivity
 		btnStartTime.setEnabled(newState);
 		btnEndDate.setEnabled(newState);
 		btnEndTime.setEnabled(newState);
-	}
-	
-	/**
-	 * Add all necessary events to the views.
-	 */
-	protected void initViewEvents() {
-		btnLocation.setOnClickListener(this);
-		
-		chbDateBoundaries.setOnCheckedChangeListener(this);
-
-		btnStartDate.setOnClickListener(this);
-		btnStartTime.setOnClickListener(this);
-		btnEndDate.setOnClickListener(this);
-		btnEndTime.setOnClickListener(this);
-	}
-
-	/**
-	 * Retrieves the date and time format from the system settings.
-	 * @see http://stackoverflow.com/questions/6981505/
-	 */
-	private void initSystemDateTimeFormats() {
-		// Get the formats
-		systemDateFormat = DateFormat.getDateFormat(getApplicationContext());
-		systemTimeFormat = DateFormat.getTimeFormat(getApplicationContext());
-		systemTime24Hours = DateFormat.is24HourFormat(getApplicationContext());
 	}
 
 	/**

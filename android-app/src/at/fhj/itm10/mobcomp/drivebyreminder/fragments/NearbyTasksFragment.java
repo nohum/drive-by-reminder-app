@@ -5,7 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
-import at.fhj.itm10.mobcomp.drivebyreminder.helper.TaskDataDAO;
+import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskDataDAO;
 
 /**
  * Fragment for the nearby tasks view.
@@ -30,7 +30,7 @@ public class NearbyTasksFragment extends AllTasksFragment {
 
         return fragment;
     }
-	
+
 	public void setDbDao(TaskDataDAO dao) {
 		this.dbDao = dao;
 	}
