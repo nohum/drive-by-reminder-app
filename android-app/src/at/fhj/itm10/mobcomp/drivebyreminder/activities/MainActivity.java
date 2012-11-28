@@ -195,6 +195,7 @@ public class MainActivity extends RoboSherlockFragmentActivity
 		case 100: // Process add task activity
 			if (resultCode == Activity.RESULT_OK) {
 				Log.d("MainActivity", "AddTaskActivity result = RESULT_OK");
+				pagerAdapter.refreshFragments();
 			} else if (resultCode == Activity.RESULT_CANCELED) {
 				Log.d("MainActivity", "AddTaskActivity result = RESULT_CANCELED");
 			}

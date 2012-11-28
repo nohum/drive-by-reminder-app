@@ -18,6 +18,10 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 
 	private TaskDataDAO dbDao;
 	
+	private AllTasksFragment allTasks;
+	
+	private NearbyTasksFragment nearbyTasks;
+	
 	public MainFragmentPagerAdapter(FragmentManager fm, TaskDataDAO dao) {
 		super(fm);
 		this.dbDao = dao;
@@ -26,28 +30,29 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 	@Override
 	public Fragment getItem(int number) {
 		Log.v("MainFragmentPagerAdapter", "getItem number = " + number);
-		Fragment fragment = null;
-		
+
 		switch(number) {
 		case 0:
-			fragment = HomeFragment.newInstance();
-			break;
+			return HomeFragment.newInstance();
 		case 1:
-			fragment = AllTasksFragment.newInstance(dbDao);
-			break;
+			allTasks = AllTasksFragment.newInstance(dbDao);
+			return allTasks;
 		case 2:
-			fragment = NearbyTasksFragment.newInstance(dbDao);
-			break;
+			nearbyTasks = NearbyTasksFragment.newInstance(dbDao);
+			return nearbyTasks;
 		default:
 			throw new IllegalStateException("number higher than 2");
 		} 
-		
-		return fragment;
 	}
 
 	@Override
 	public int getCount() {
 		return 3;
+	}
+
+	public void refreshFragments() {
+		allTasks.reloadViewData();
+		nearbyTasks.reloadViewData();
 	}
 
 }

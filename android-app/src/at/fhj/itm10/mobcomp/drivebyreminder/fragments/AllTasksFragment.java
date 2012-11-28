@@ -2,14 +2,13 @@ package at.fhj.itm10.mobcomp.drivebyreminder.fragments;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.LoaderManager.LoaderCallbacks;
-import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
 import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskDataDAO;
+import at.fhj.itm10.mobcomp.drivebyreminder.listadapters.AllTasksListAdapter;
 
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
 
@@ -18,12 +17,13 @@ import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFra
  * 
  * @author Wolfgang Gaar
  */
-public class AllTasksFragment extends RoboSherlockListFragment
-		implements LoaderCallbacks<Cursor> {
+public class AllTasksFragment extends RoboSherlockListFragment {
 
 	private TaskDataDAO dbDao;
 	
 	private SimpleCursorAdapter listAdapter;
+	
+//	private Cursor usedCursor;
 
 	/**
 	 * Get an instance of this fragment.
@@ -58,36 +58,19 @@ public class AllTasksFragment extends RoboSherlockListFragment
     }
 
     public void reloadViewData() {
-    	getLoaderManager().restartLoader(1, null, this);
+    	Cursor usedCursor = dbDao.findAllTasksCursor();
+        listAdapter = AllTasksListAdapter.newInstance(getActivity(), 
+        		usedCursor);
+        setListAdapter(listAdapter);
+        
+        usedCursor.close();
     }
     
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        listAdapter = new SimpleCursorAdapter(getActivity(),
-        		R.layout.listitem_task, null,
-        		new String[] { "title", "description" },
-        		new int[] { R.id.lblTaskTitle, R.id.lblTaskDescription }, 0);
-        setListAdapter(listAdapter);
         
-        getLoaderManager().initLoader(1, null, this);
+        reloadViewData();
     }
 
-	@Override
-	public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-//		return new CursorL
-		return null;
-	}
-
-	@Override
-	public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-		listAdapter.swapCursor(data);
-	}
-
-	@Override
-	public void onLoaderReset(Loader<Cursor> loader) {
-		listAdapter.swapCursor(null);
-	}
-	
 }

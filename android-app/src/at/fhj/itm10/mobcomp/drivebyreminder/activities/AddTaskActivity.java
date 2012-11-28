@@ -483,6 +483,7 @@ public class AddTaskActivity extends RoboSherlockActivity
 		task.setCustomProximitry(selCustomProximitry.getSelectedItemPosition());
 
 		long sorting = taskDataDAO.findTaskHighestSortingNumber() + 1;
+		Log.d("AddTaskActivity", "new task: sorting number = " + sorting);
 		task.setSorting(sorting);
 
 		long insertId = taskDataDAO.insert(task);

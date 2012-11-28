@@ -48,12 +48,18 @@ public class TaskDataDAO {
 	}
 	
 	public Cursor findAllTasksCursor() {
-		return db.query(TaskStorageHelper.TABLE_TASKS_NAME, null,
-				null, null, null, null, null);
+		return db.rawQuery("SELECT DISTINCT id as _id, `id`, `title`, `description`,"
+				+ " `customProximitry`, `startDate`, `endDate`, `noDate`, `done`,"
+				+ " `sorting` FROM " + TaskStorageHelper.TABLE_TASKS_NAME
+				+ " ORDER BY `sorting`", null);
+		
+//		return db.query(TaskStorageHelper.TABLE_TASKS_NAME, null,
+//				null, null, null, null, null);
 	}
 
 	public List<Task> findAllTasks() {
 		Cursor cursor = findAllTasksCursor();
+		cursor.moveToFirst();
 		
 		// Set the result list length to the cursor result count
 		List<Task> foundTasks = new ArrayList<Task>(cursor.getCount());
@@ -71,6 +77,7 @@ public class TaskDataDAO {
 		Cursor cursor = db.query(TaskStorageHelper.TABLE_TASKS_NAME, null,
 				"id = ?", new String[] { String.valueOf(id) }, null, null,
 				null);
+		cursor.moveToFirst();
 		
 		if (cursor.getCount() == 0) {
 			return null;
@@ -83,14 +90,15 @@ public class TaskDataDAO {
 	}
 	
 	public long findTaskHighestSortingNumber() {
-		Cursor cursor = db.rawQuery("SELECT MAX(sorting) FROM "
+		Cursor cursor = db.rawQuery("SELECT MAX(sorting) as sortNum FROM "
 				+ TaskStorageHelper.TABLE_TASKS_NAME, null);
-		
+		cursor.moveToFirst();
+
 		if (cursor.getCount() == 0) {
 			return 1;
 		}
-		
-		long result = cursor.getLong(0);
+
+		long result = cursor.getLong(cursor.getColumnIndex("sortNum"));
 		return result > 1 ? result : 1;
 	}
 	
@@ -114,6 +122,7 @@ public class TaskDataDAO {
 		Cursor cursor = db.query(TaskStorageHelper.TABLE_LOCATIONS_NAME, null,
 				"taskId = ?", new String[] { String.valueOf(task.getId()) },
 				null, null, null);
+		cursor.moveToFirst();
 		
 		// Set the result list length to the cursor result count
 		List<Location> foundLocations =
