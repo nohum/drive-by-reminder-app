@@ -62,8 +62,6 @@ public class AllTasksFragment extends RoboSherlockListFragment {
         listAdapter = AllTasksListAdapter.newInstance(getActivity(), 
         		usedCursor);
         setListAdapter(listAdapter);
-        
-        usedCursor.close();
     }
     
     @Override

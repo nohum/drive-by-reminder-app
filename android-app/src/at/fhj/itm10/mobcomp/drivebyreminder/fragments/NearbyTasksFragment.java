@@ -44,5 +44,10 @@ public class NearbyTasksFragment extends AllTasksFragment {
 //       ((TextView)tv).setText("Fragment #");
        return v;
     }
-	
+
+    public void reloadViewData() {
+    	
+    }
+    
+    
 }
