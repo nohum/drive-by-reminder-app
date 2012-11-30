@@ -27,8 +27,6 @@ public class AllTasksFragment extends RoboSherlockListFragment {
 
 	private Cursor usedCursor;
 
-//	private Cursor usedCursor;
-
 	/**
 	 * Get an instance of this fragment.
 	 * 
@@ -77,9 +75,7 @@ public class AllTasksFragment extends RoboSherlockListFragment {
 
     public void reloadViewData() {
     	Log.d(this.getClass().getSimpleName(), "reloadViewData");
-    	Log.d(this.getClass().getSimpleName(), "reloadViewData: dbDao = "
-    			+ dbDao);
-    	usedCursor = dbDao.findAllTasksCursor();
+    	usedCursor = dbDao.findAllTasksForFragmentCursor();
     	Log.d(this.getClass().getSimpleName(), "reloadViewData: usedCursor = "
     			+ usedCursor);
     	

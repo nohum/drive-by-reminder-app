@@ -50,20 +50,22 @@ public class TaskDataDAO {
 		db.close();
 	}
 	
-	public Cursor findAllTasksCursor() {
+	public Cursor findAllTasksForFragmentCursor() {
 		open();
-		Log.d(this.getClass().getSimpleName(), "findAllTasksCursor db = " + db);
+		Log.d(this.getClass().getSimpleName(),
+				"findAllTasksForFragmentCursor db = " + db);
 
-		return db.rawQuery("SELECT id as _id, `id`, `title`, `description`,"
-				+ " `customProximitry`, `startDate`, `endDate`, `noDate`, `done`,"
-				+ " `sorting` FROM " + TaskStorageHelper.TABLE_TASKS_NAME
-				+ " ORDER BY `sorting`", null);
+		return db.rawQuery("SELECT `id` as _id, `id`, `title`, `startDate`, `endDate`,"
+				+ " `noDate`, `done`, `sorting` FROM "
+				+ TaskStorageHelper.TABLE_TASKS_NAME
+				+ " ORDER BY `sorting` ASC, `noDate` DESC", null);
 	}
 
 	public List<Task> findAllTasks() {
 		open();
 
-		Cursor cursor = findAllTasksCursor();
+		Cursor cursor = db.query(TaskStorageHelper.TABLE_TASKS_NAME, null,
+				null, null, null, null, null);
 		cursor.moveToFirst();
 
 		// Set the result list length to the cursor result count

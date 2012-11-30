@@ -1,8 +1,14 @@
 package at.fhj.itm10.mobcomp.drivebyreminder.listadapters;
 
+import java.text.DateFormat;
+import java.util.Calendar;
+
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Paint;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.view.View;
+import android.widget.TextView;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
 
 /**
@@ -12,41 +18,83 @@ import at.fhj.itm10.mobcomp.drivebyreminder.R;
  */
 public class AllTasksListAdapter extends SimpleCursorAdapter {
 
+	private Context context;
+	
+	private String strTaskItemNoDate;
+	
 	/**
 	 * Create an instance by context and cursor.
 	 * 
-	 * @param context the context
+	 * @param context  the context
 	 * @param cursor cursor
 	 * @return AllTasksListAdapter
 	 */
-	public static AllTasksListAdapter newInstance(Context context,
-			Cursor cursor) {
-		return new AllTasksListAdapter(context, R.layout.listitem_task,
-				cursor, new String[] { "title", "description" },
-        		new int[] { R.id.lblTaskTitle, R.id.lblTaskDescription });
+	public static AllTasksListAdapter newInstance(Context context, Cursor cursor) {
+		return new AllTasksListAdapter(context, R.layout.listitem_task, cursor,
+				new String[] { "title", "startDate", "endDate", "noDate", "done" },
+				new int[] { R.id.lblTaskTitle, R.id.lblTaskDate });
+		
+		/*`id`, `title`, `startDate`, `endDate`, `noDate`, `done` */
 	}
-	
+
 	public AllTasksListAdapter(Context context, int layout, Cursor c,
 			String[] from, int[] to) {
 		super(context, layout, c, from, to, 0);
+		setViewBinder(new TaskItemViewBinder());
+		
+		this.context = context;
 	}
 
-	/*
-	 private class TutorialViewBinder implements SimpleCursorAdapter.ViewBinder {
-    @Override
-    public boolean setViewValue(View view, Cursor cursor, int index) {
-        if (index == cursor.getColumnIndex(TutListDatabase.COL_DATE)) {
-            // get a locale based string for the date
-            DateFormat formatter = android.text.format.DateFormat
-                    .getDateFormat(getActivity().getApplicationContext());
-            long date = cursor.getLong(index);
-            Date dateObj = new Date(date * 1000);
-            ((TextView) view).setText(formatter.format(dateObj));
-            return true;
-        } else {
-            return false;
-        }
-    }
-}
-	 */
+	private class TaskItemViewBinder implements ViewBinder {
+		@Override
+		public boolean setViewValue(View view, Cursor cursor, int index) {
+			switch (view.getId()) {
+			case R.id.lblTaskTitle:
+				TextView taskTitle = (TextView) view;
+				taskTitle.setText(cursor.getString(cursor.getColumnIndex("title")));
+				if (cursor.getInt(cursor.getColumnIndex("done")) != 0) {
+					// Strike trough for tasks with "done" flag
+					taskTitle.setPaintFlags(taskTitle.getPaintFlags()
+							| Paint.STRIKE_THRU_TEXT_FLAG);
+				}
+				return true;
+			case R.id.lblTaskDate:
+				TextView taskDate = (TextView) view;
+				taskDate.setText(strTaskItemNoDate);
+				if (cursor.getInt(cursor.getColumnIndex("noDate")) == 0) {
+					long startTimestamp = cursor.getLong(
+							cursor.getColumnIndex("startDate"));
+					long endTimestamp = cursor.getLong(
+							cursor.getColumnIndex("endDate"));
+					
+					Calendar startDate = Calendar.getInstance();
+					Calendar endDate = Calendar.getInstance();
+					
+					startDate.setTimeInMillis(startTimestamp);
+					endDate.setTimeInMillis(endTimestamp);
+					
+					DateFormat formatter = null;
+					if (startTimestamp == endTimestamp) {
+						formatter = android.text.format.DateFormat
+								.getLongDateFormat(context);
+
+						taskDate.setText(formatter.format(startDate.getTime()));
+					} else {
+						formatter = android.text.format.DateFormat
+								.getDateFormat(context);
+						StringBuilder sb = new StringBuilder();
+						sb.append(formatter.format(startDate.getTime()))
+							.append(" - ")
+							.append(formatter.format(endDate.getTime()));
+						
+						taskDate.setText(sb.toString());
+					}
+				}
+				return true;
+			default:
+				return false;
+			}
+		}
+	}
+
 }

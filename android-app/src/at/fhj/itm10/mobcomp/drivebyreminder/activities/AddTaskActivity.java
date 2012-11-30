@@ -173,7 +173,7 @@ public class AddTaskActivity extends RoboSherlockActivity
 	 */
 	private void initSystemDateTimeFormats() {
 		// Get the formats
-		systemDateFormat = DateFormat.getDateFormat(getApplicationContext());
+		systemDateFormat = DateFormat.getMediumDateFormat(getApplicationContext());
 		systemTimeFormat = DateFormat.getTimeFormat(getApplicationContext());
 		systemTime24Hours = DateFormat.is24HourFormat(getApplicationContext());
 	}
