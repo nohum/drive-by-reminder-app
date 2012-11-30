@@ -42,9 +42,13 @@ public class NearbyTasksFragment extends AllTasksFragment {
        return v;
     }
 
+    @Override
     public void reloadViewData() {
     	
     }
     
-    
+//    @Override
+//    public void finishActionModes() {
+//
+//    }
 }

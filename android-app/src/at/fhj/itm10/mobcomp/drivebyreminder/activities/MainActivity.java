@@ -13,13 +13,13 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
 import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskDataDAO;
 import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskStorageHelper;
 import at.fhj.itm10.mobcomp.drivebyreminder.helper.MainFragmentPagerAdapter;
 
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
+import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
@@ -38,6 +38,16 @@ public class MainActivity extends RoboSherlockFragmentActivity
 	
 	@InjectView(R.id.pgrMainView)
 	private ViewPager pagerMainView;
+	
+	private ActionMode actionMode;
+
+	public ActionMode getActionMode() {
+		return actionMode;
+	}
+
+	public void setActionMode(ActionMode actionMode) {
+		this.actionMode = actionMode;
+	}
 
 	/**
 	 * Database DAO.
@@ -177,7 +187,7 @@ public class MainActivity extends RoboSherlockFragmentActivity
 	@Override
 	public void onPageScrolled(int position, float positionOffset,
 			int positionOffsetPixels) {
-		// Empty by intention	
+		// Empty by intention
 	}
 
 	/**
@@ -190,6 +200,10 @@ public class MainActivity extends RoboSherlockFragmentActivity
 		// Change the focused navigation list item if the viewed fragment has been changed.
 		// position = number of fragment, see MainFragmentPagerAdapter for numbering
 		getSupportActionBar().setSelectedNavigationItem(position);
+		// Cancel action modes
+		if (getActionMode() != null) {
+			getActionMode().finish();
+		}
 	}
 
 	@Override

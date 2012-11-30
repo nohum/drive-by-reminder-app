@@ -9,8 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
-import android.widget.Toast;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
 import at.fhj.itm10.mobcomp.drivebyreminder.activities.MainActivity;
 import at.fhj.itm10.mobcomp.drivebyreminder.activities.ModifyTaskActivity;
@@ -18,6 +20,10 @@ import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskDataDAO;
 import at.fhj.itm10.mobcomp.drivebyreminder.helper.MainFragmentPagerAdapter;
 import at.fhj.itm10.mobcomp.drivebyreminder.listadapters.AllTasksListAdapter;
 
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.ActionMode.Callback;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
 
 /**
@@ -25,7 +31,8 @@ import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFra
  * 
  * @author Wolfgang Gaar
  */
-public class AllTasksFragment extends RoboSherlockListFragment {
+public class AllTasksFragment extends RoboSherlockListFragment
+		implements OnItemLongClickListener, OnItemClickListener {
 
 	private TaskDataDAO dbDao;
 	
@@ -34,6 +41,8 @@ public class AllTasksFragment extends RoboSherlockListFragment {
 	private SimpleCursorAdapter listAdapter;
 
 	private Cursor usedCursor;
+	
+	private ActionMode actionMode;
 
 	/**
 	 * Get an instance of this fragment.
@@ -44,8 +53,6 @@ public class AllTasksFragment extends RoboSherlockListFragment {
 			MainFragmentPagerAdapter pagerAdapter) {
 		AllTasksFragment fragment = new AllTasksFragment();
 
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
         fragment.setDbDao(dao);
         fragment.setPagerAdapter(pagerAdapter);
 
@@ -78,6 +85,16 @@ public class AllTasksFragment extends RoboSherlockListFragment {
     }
     
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+    	super.onViewCreated(view, savedInstanceState);
+
+    	getListView().setOnItemLongClickListener(this);
+    	getListView().setOnItemClickListener(this);
+    	getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+    	getListView().setItemsCanFocus(false);
+    }
+    
+    @Override
 	public void onDestroy() {
     	if (usedCursor != null) {
     		usedCursor.close();
@@ -88,7 +105,6 @@ public class AllTasksFragment extends RoboSherlockListFragment {
     }
 
     public void reloadViewData() {
-    	Log.d(this.getClass().getSimpleName(), "reloadViewData");
     	usedCursor = dbDao.findAllTasksForFragmentCursor();
     	Log.d(this.getClass().getSimpleName(), "reloadViewData: usedCursor = "
     			+ usedCursor);
@@ -97,6 +113,12 @@ public class AllTasksFragment extends RoboSherlockListFragment {
         		usedCursor);
         setListAdapter(listAdapter);
     }
+    
+//    public void finishActionModes() {
+//    	if (actionMode != null) {
+//    		actionMode.finish();
+//    	}
+//    }
     
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -107,18 +129,6 @@ public class AllTasksFragment extends RoboSherlockListFragment {
         }
         
         reloadViewData();
-    }
-
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-    	long taskId = (Long) v.getTag();
-
-    	if (taskId > 0) {
-    		Intent edit = new Intent(getActivity(), ModifyTaskActivity.class);
-    		edit.putExtra("taskId", taskId);
-    		this.startActivityForResult(edit, 200);
-    	}
-
     }
     
 	@Override
@@ -136,5 +146,104 @@ public class AllTasksFragment extends RoboSherlockListFragment {
 		default:
 			break;
 		}
+	}
+
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View v, int position,
+			long id) {
+		// If in action mode, skip this to prevent re-entering the action mode
+		if (actionMode != null) {
+			return false;
+		}
+		
+		long taskId = (Long) v.getTag();
+    	if (taskId > 0) {
+    		// We have to use the sherlock action mode starter to maintain
+    		// compatibility
+    		actionMode = ((MainActivity) getActivity())
+    				.startActionMode(new ModifyTaskListActionMode(getListView()));
+    		((MainActivity) getActivity()).setActionMode(actionMode);
+    		v.setSelected(true);
+
+    		return true;
+    	}
+		
+		return false;
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+		if (actionMode != null) {
+			v.setSelected(true);
+			return;
+		}
+		
+		long taskId = (Long) v.getTag();
+    	if (taskId > 0) {
+    		Intent edit = new Intent(getActivity(), ModifyTaskActivity.class);
+    		edit.putExtra("taskId", taskId);
+    		this.startActivityForResult(edit, 200);
+    	}
+	}
+	
+	/**
+	 * Action mode (action bar icons) for add/modify task activities.
+	 *
+	 * @author Wolfgang Gaar
+	 */
+	public class ModifyTaskListActionMode implements Callback {
+
+		private ListView listView;
+		
+		public ModifyTaskListActionMode(ListView lv) {
+			this.listView = lv;
+		}
+		
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			getSherlockActivity().getSupportMenuInflater()
+					.inflate(R.menu.menu_cab_alltasks, menu);
+
+	        return true;
+		}
+
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			mode.setTitle("wtf?");
+			
+			
+			
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		@Override
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			Log.v("ModifyTaskListActionMode", "clicked item = " + item);
+
+            long[] selected = listView.getCheckedItemIds();
+            if (selected.length > 0) {
+                for (long id : selected) {
+                	Log.v("ModifyTaskListActionMode", "selected id = " + id);
+                }
+            }
+
+            mode.finish();
+            return true;
+		}
+
+		@Override
+		public void onDestroyActionMode(ActionMode mode) {
+			Log.v("ModifyTaskListActionMode", "onDestroyActionMode");
+
+			// Destroying action mode, let's unselect all items
+            for (int i = 0; i < listView.getAdapter().getCount(); i++)
+            	listView.setItemChecked(i, false);
+ 
+            if (mode == actionMode) {
+            	actionMode = null;
+            }
+		}
+
 	}
 }

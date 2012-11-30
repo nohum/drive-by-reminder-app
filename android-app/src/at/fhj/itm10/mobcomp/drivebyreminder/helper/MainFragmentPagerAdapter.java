@@ -29,7 +29,7 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 
 	@Override
 	public Fragment getItem(int number) {
-		Log.v("MainFragmentPagerAdapter", "getItem number = " + number);
+		Log.d("MainFragmentPagerAdapter", "getItem number = " + number);
 
 		switch(number) {
 		case 0:
@@ -51,8 +51,27 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 	}
 
 	public void refreshFragments() {
+		nullChecks();
+		
 		allTasks.reloadViewData();
 		nearbyTasks.reloadViewData();
 	}
 
+//	public void finishActionModes() {
+//		nullChecks();
+//
+//		allTasks.finishActionModes();
+//		nearbyTasks.finishActionModes();
+//	}
+
+	private void nullChecks() {
+		if (allTasks == null) {
+			getItem(1);
+		}
+		
+		if (nearbyTasks == null) {
+			getItem(2);
+		}
+	}
+	
 }
