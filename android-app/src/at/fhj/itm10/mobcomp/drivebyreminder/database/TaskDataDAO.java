@@ -229,7 +229,7 @@ public class TaskDataDAO {
 		}
 
 		values.put("title", task.getTitle());
-		values.put("description", task.getTitle());
+		values.put("description", task.getDescription());
 		values.put("customProximitry", task.getCustomProximitry());
 		values.put("startDate", task.getStartDate().getTimeInMillis());
 		values.put("endDate", task.getEndDate().getTimeInMillis());
@@ -257,7 +257,7 @@ public class TaskDataDAO {
 		location.setLatitude(cursor.getDouble(4));
 		location.setLongitude(cursor.getDouble(5));
 
-		return null;
+		return location;
 	}
 
 	/**

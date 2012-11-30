@@ -449,12 +449,7 @@ public class AddTaskActivity extends RoboSherlockActivity
 		refreshViewsWithValues();
 	}
 	
-	/**
-	 * Save all data. Must return true if successful.
-	 * 
-	 * @return true on success
-	 */
-	private boolean saveData() {
+	protected boolean validateAndCorrectData() {
 		if (TextUtils.isEmpty(txtTitle.getText())) {
 			Toast.makeText(this, strSaveValidationNoTitle, Toast.LENGTH_LONG)
 				.show();
@@ -464,6 +459,26 @@ public class AddTaskActivity extends RoboSherlockActivity
 		if (associatedLocations == null || associatedLocations.size() == 0) {
 			Toast.makeText(this, strSaveValidationNoLocations, Toast.LENGTH_LONG)
 				.show();
+			return false;
+		}
+		
+		// Be nice about swapped start and end time
+		if (startDateTime.after(endDateTime)) {
+			Calendar temp = startDateTime;
+			startDateTime = endDateTime;
+			endDateTime = temp;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Save all data. Must return true if successful.
+	 * 
+	 * @return true on success
+	 */
+	private boolean saveData() {
+		if (!validateAndCorrectData()) {
 			return false;
 		}
 

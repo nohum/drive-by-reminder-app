@@ -5,7 +5,9 @@ import java.util.List;
 import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.widget.CheckBox;
 import android.widget.LinearLayout;
@@ -26,7 +28,7 @@ import com.actionbarsherlock.view.MenuItem;
  */
 public class ModifyTaskActivity extends AddTaskActivity {
 
-	private int dataId;
+	private long dataId;
 	
 	@InjectView(R.id.done_container)
 	private LinearLayout doneContainer;
@@ -42,13 +44,18 @@ public class ModifyTaskActivity extends AddTaskActivity {
 	
     @InjectResource(R.string.dialog_delete_task_negative)
 	private String strDeleteDialogNegative;
+    
+    @InjectResource(R.string.activity_modifytask_task_deletesuccessful)
+    private String strDeleteTaskSuccessful;
+
+	private long sorting;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		doneContainer.setVisibility(LinearLayout.VISIBLE);
 		
-		dataId = getIntent().getIntExtra("taskId", 0);
+		dataId = getIntent().getLongExtra("taskId", 0);
 		if (dataId == 0) {
 			throw new IllegalArgumentException("taskId extra must be given");
 		}
@@ -95,7 +102,7 @@ public class ModifyTaskActivity extends AddTaskActivity {
 	 * 
 	 * @param id the id of the task to load
 	 */
-	private void loadData(int id) {
+	private void loadData(long id) {
 		Task task = taskDataDAO.findTaskById(id);
 		if (task == null) {
 			throw new IllegalStateException("no task found for id: " + id);
@@ -105,6 +112,8 @@ public class ModifyTaskActivity extends AddTaskActivity {
 		chbDateBoundaries.setChecked(!task.isNoDate());
 		
 		changeDateButtonsEnabledState(chbDateBoundaries.isChecked());
+		
+		chbDone.setChecked(task.isDone());
 		
 		startDateTime = task.getStartDate();
 		endDateTime = task.getEndDate();
@@ -118,6 +127,8 @@ public class ModifyTaskActivity extends AddTaskActivity {
 			location.setLocationChooserSelected(true);
 		}
 
+		sorting = task.getSorting();
+		
 		refreshViewsWithValues();
 	}
 
@@ -127,27 +138,21 @@ public class ModifyTaskActivity extends AddTaskActivity {
 	 * @param id the id of the task to save
 	 * @return true if save operation was successful
 	 */
-	private boolean saveData(int id) {
-		if (TextUtils.isEmpty(txtTitle.getText())) {
-			Toast.makeText(this, strSaveValidationNoTitle, Toast.LENGTH_LONG)
-					.show();
-			return false;
-		}
-		
-		if (associatedLocations == null || associatedLocations.size() == 0) {
-			Toast.makeText(this, strSaveValidationNoLocations, Toast.LENGTH_LONG)
-				.show();
+	private boolean saveData(long id) {
+		if (!validateAndCorrectData()) {
 			return false;
 		}
 
 		Task task = new Task();
+		task.setId(dataId);
 		task.setTitle(txtTitle.getText().toString());
 		task.setNoDate(!chbDateBoundaries.isChecked());
 		task.setStartDate(startDateTime);
 		task.setEndDate(endDateTime);
-		task.setDone(false);
+		task.setDone(chbDone.isChecked());
 		task.setDescription(txtDescription.getText().toString());
 		task.setCustomProximitry(selCustomProximitry.getSelectedItemPosition());
+		task.setSorting(sorting);
 
 		taskDataDAO.update(task);
 
@@ -170,24 +175,44 @@ public class ModifyTaskActivity extends AddTaskActivity {
 	 * Shows a delete dialog.
 	 */
 	private void handleDelete() {
-		DeleteTaskDialogHelper dialog = new DeleteTaskDialogHelper(
-				strDeleteDialogQuestion, strDeleteDialogPositive,
-				strDeleteDialogNegative);
-
-		dialog.setOnPositiveClickListener(new DialogListener() {
-			
-			@Override
-			public void execute() {
-				Task task = taskDataDAO.findTaskById(dataId);
-				if (task != null) {
-					taskDataDAO.delete(task);
-
-					ModifyTaskActivity.this.setResult(Activity.RESULT_OK);
-					ModifyTaskActivity.this.finish();
-				}
-			}
-		});
+		SharedPreferences preferences = PreferenceManager
+        		.getDefaultSharedPreferences(getApplicationContext());
 		
-		dialog.show(this);
+		// Confirm?
+		if (preferences.getBoolean("confirmDelete", true)) {
+			DeleteTaskDialogHelper dialog = new DeleteTaskDialogHelper(
+					strDeleteDialogQuestion, strDeleteDialogPositive,
+					strDeleteDialogNegative);
+
+			dialog.setOnPositiveClickListener(new DialogListener() {
+				
+				@Override
+				public void execute() {
+					doDeleteThisTask();
+				}
+			});
+			
+			dialog.show(this);
+		} else {
+			// No confirmation, just delete
+			doDeleteThisTask();	
+		}
+	}
+	
+	private void doDeleteThisTask() {
+		Task task = taskDataDAO.findTaskById(dataId);
+		if (task != null) {
+			for (Location location :
+					taskDataDAO.findAllLocationsByTask(task)) {
+				taskDataDAO.delete(location);
+			}
+			
+			taskDataDAO.delete(task);
+
+			Toast.makeText(this, strDeleteTaskSuccessful, Toast.LENGTH_SHORT)
+					.show();
+			ModifyTaskActivity.this.setResult(Activity.RESULT_OK);
+			ModifyTaskActivity.this.finish();
+		}
 	}
 }

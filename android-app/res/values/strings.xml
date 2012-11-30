@@ -18,6 +18,8 @@
     <!-- All tasks fragment -->
     <string name="fragment_alltasks_emptylist">There are no tasks at the moment. Add one using the add symbol located in the upper-right corner.</string>
     
+    <string name="fragment_alltasks_task_nodate">No date given</string>
+    
     <!-- Nearby tasks fragment -->
     <string name="fragment_nearbytasks_emptylist">There are no nearby tasks at the moment.</string>
     
@@ -60,6 +62,9 @@
     <string name="activity_editlocation_location_downloaderror">An error occurred while retrieving locations. Is your internet connection working?</string>
     
     <string name="activity_editlocation_save_nolocations">You have to select at least one location to continue</string>
+    
+    <!-- Modify task activity -->
+    <string name="activity_modifytask_task_deletesuccessful">The task has been deleted successfully</string>
     
     <!-- Delete task dialog -->
     <string name="dialog_delete_task_question">Do you really want to delete this task?</string>

@@ -35,10 +35,10 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 		case 0:
 			return HomeFragment.newInstance();
 		case 1:
-			allTasks = AllTasksFragment.newInstance(dbDao);
+			allTasks = AllTasksFragment.newInstance(dbDao, this);
 			return allTasks;
 		case 2:
-			nearbyTasks = NearbyTasksFragment.newInstance(dbDao);
+			nearbyTasks = NearbyTasksFragment.newInstance(dbDao, this);
 			return nearbyTasks;
 		default:
 			throw new IllegalStateException("number higher than 2");
@@ -52,7 +52,6 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 
 	public void refreshFragments() {
 		allTasks.reloadViewData();
-		Log.v(this.getClass().getSimpleName(), "refreshFragments: nearbyTasks = " + nearbyTasks);
 		nearbyTasks.reloadViewData();
 	}
 

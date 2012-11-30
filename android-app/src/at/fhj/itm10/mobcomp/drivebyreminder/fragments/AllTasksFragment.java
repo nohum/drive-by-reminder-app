@@ -1,5 +1,7 @@
 package at.fhj.itm10.mobcomp.drivebyreminder.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -7,9 +9,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
+import android.widget.Toast;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
 import at.fhj.itm10.mobcomp.drivebyreminder.activities.MainActivity;
+import at.fhj.itm10.mobcomp.drivebyreminder.activities.ModifyTaskActivity;
 import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskDataDAO;
+import at.fhj.itm10.mobcomp.drivebyreminder.helper.MainFragmentPagerAdapter;
 import at.fhj.itm10.mobcomp.drivebyreminder.listadapters.AllTasksListAdapter;
 
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
@@ -23,6 +29,8 @@ public class AllTasksFragment extends RoboSherlockListFragment {
 
 	private TaskDataDAO dbDao;
 	
+	private MainFragmentPagerAdapter pagerAdapter;
+	
 	private SimpleCursorAdapter listAdapter;
 
 	private Cursor usedCursor;
@@ -32,12 +40,14 @@ public class AllTasksFragment extends RoboSherlockListFragment {
 	 * 
 	 * @return AllTasksFragment
 	 */
-	public static AllTasksFragment newInstance(TaskDataDAO dao) {
+	public static AllTasksFragment newInstance(TaskDataDAO dao,
+			MainFragmentPagerAdapter pagerAdapter) {
 		AllTasksFragment fragment = new AllTasksFragment();
 
         Bundle args = new Bundle();
         fragment.setArguments(args);
         fragment.setDbDao(dao);
+        fragment.setPagerAdapter(pagerAdapter);
 
         return fragment;
     }
@@ -45,8 +55,12 @@ public class AllTasksFragment extends RoboSherlockListFragment {
 	public void setDbDao(TaskDataDAO dao) {
 		this.dbDao = dao;
 	}
-	
-    @Override
+
+	public void setPagerAdapter(MainFragmentPagerAdapter pagerAdapter) {
+		this.pagerAdapter = pagerAdapter;
+	}
+
+	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -95,4 +109,32 @@ public class AllTasksFragment extends RoboSherlockListFragment {
         reloadViewData();
     }
 
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+    	long taskId = (Long) v.getTag();
+
+    	if (taskId > 0) {
+    		Intent edit = new Intent(getActivity(), ModifyTaskActivity.class);
+    		edit.putExtra("taskId", taskId);
+    		this.startActivityForResult(edit, 200);
+    	}
+
+    }
+    
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		switch(requestCode) {
+		case 200: // Process modify task activity
+			if (resultCode == Activity.RESULT_OK) {
+				Log.d("MainActivity", "ModifyTaskActivity result = RESULT_OK");
+				pagerAdapter.refreshFragments();
+			} else if (resultCode == Activity.RESULT_CANCELED) {
+				Log.d("MainActivity", "ModifyTaskActivity result = RESULT_CANCELED");
+			}
+		default:
+			break;
+		}
+	}
 }

@@ -3,6 +3,7 @@ package at.fhj.itm10.mobcomp.drivebyreminder.listadapters;
 import java.text.DateFormat;
 import java.util.Calendar;
 
+import roboguice.inject.InjectResource;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Paint;
@@ -20,6 +21,7 @@ public class AllTasksListAdapter extends SimpleCursorAdapter {
 
 	private Context context;
 	
+	@InjectResource(R.string.fragment_alltasks_task_nodate)
 	private String strTaskItemNoDate;
 	
 	/**
@@ -45,13 +47,23 @@ public class AllTasksListAdapter extends SimpleCursorAdapter {
 		this.context = context;
 	}
 
+//	@Override
+//	public View getView(int position, View convertView, ViewGroup parent) {
+//		return super.getView(position, convertView, parent);
+//	}
+	
 	private class TaskItemViewBinder implements ViewBinder {
 		@Override
 		public boolean setViewValue(View view, Cursor cursor, int index) {
+			// Save the id to the list element using the tag property
+			((View) view.getParent()).setTag(cursor.getLong(
+					cursor.getColumnIndex("id")));
+
 			switch (view.getId()) {
 			case R.id.lblTaskTitle:
 				TextView taskTitle = (TextView) view;
-				taskTitle.setText(cursor.getString(cursor.getColumnIndex("title")));
+				taskTitle.setText(cursor.getString(
+						cursor.getColumnIndex("title")));
 				if (cursor.getInt(cursor.getColumnIndex("done")) != 0) {
 					// Strike trough for tasks with "done" flag
 					taskTitle.setPaintFlags(taskTitle.getPaintFlags()
@@ -81,7 +93,7 @@ public class AllTasksListAdapter extends SimpleCursorAdapter {
 						taskDate.setText(formatter.format(startDate.getTime()));
 					} else {
 						formatter = android.text.format.DateFormat
-								.getDateFormat(context);
+								.getMediumDateFormat(context);
 						StringBuilder sb = new StringBuilder();
 						sb.append(formatter.format(startDate.getTime()))
 							.append(" - ")
