@@ -77,19 +77,23 @@ public class MainActivity extends RoboSherlockFragmentActivity
 			restoreState(savedInstanceState);
 		}
 	}
-
+	
 	@Override
 	protected void onResume() {
 		taskDataDAO.open();
-
 		super.onResume();
 	}
-
+	
 	@Override
 	protected void onPause() {
 		taskDataDAO.close();
-
 		super.onPause();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		taskDataDAO.close();
+		super.onDestroy();
 	}
 	
 	@Override
@@ -202,6 +206,10 @@ public class MainActivity extends RoboSherlockFragmentActivity
 		default:
 			break;
 		}
+	}
+	
+	public TaskDataDAO getDao() {
+		return taskDataDAO;
 	}
 	
 }

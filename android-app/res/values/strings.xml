@@ -43,6 +43,7 @@
     <string name="activity_addtask_form_proximitry_spinner">Set custom proximitry</string>
     
     <string name="activity_addtask_save_validation_notitle">You have to enter a title for your new task</string>
+    <string name="activity_addtask_save_validation_nolocations">You have to select at least one task location</string>
     
     <!-- Edit location activity -->
     <string name="activity_editlocation_searchfor">Search for location</string>

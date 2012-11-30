@@ -38,4 +38,19 @@ public class NotificationService extends RoboService {
 		super.onDestroy();
 		
 	}
+	
+	public void notifyUser() {
+//		Notification updateComplete = new Notification();
+//		updateComplete.icon = android.R.drawable.stat_notify_sync;
+//		updateComplete.tickerText = context
+//		    .getText(R.string.notification_title);
+//		updateComplete.when = System.currentTimeMillis();
+		
+//		Intent notificationIntent = new Intent(context,
+//			    TutListActivity.class);
+//			PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
+//			    notificationIntent, 0);
+		
+//		notificationManager.notify(LIST_UPDATE_NOTIFICATION, updateComplete);
+	}
 }

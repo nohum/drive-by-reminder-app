@@ -145,6 +145,7 @@ public class DownloadLocationDataAsyncTask extends
 				+ this.occuredError);
 	
 		activity.setSupportProgressBarIndeterminateVisibility(false);
+		Log.d("DownloadLocationDataAsyncTask", "calling activity.processFoundLocations()");
 		activity.processFoundLocations(this.occuredError, result);
     }
 	

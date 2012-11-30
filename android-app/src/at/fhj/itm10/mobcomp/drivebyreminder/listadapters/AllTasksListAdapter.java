@@ -31,4 +31,22 @@ public class AllTasksListAdapter extends SimpleCursorAdapter {
 		super(context, layout, c, from, to, 0);
 	}
 
+	/*
+	 private class TutorialViewBinder implements SimpleCursorAdapter.ViewBinder {
+    @Override
+    public boolean setViewValue(View view, Cursor cursor, int index) {
+        if (index == cursor.getColumnIndex(TutListDatabase.COL_DATE)) {
+            // get a locale based string for the date
+            DateFormat formatter = android.text.format.DateFormat
+                    .getDateFormat(getActivity().getApplicationContext());
+            long date = cursor.getLong(index);
+            Date dateObj = new Date(date * 1000);
+            ((TextView) view).setText(formatter.format(dateObj));
+            return true;
+        } else {
+            return false;
+        }
+    }
+}
+	 */
 }

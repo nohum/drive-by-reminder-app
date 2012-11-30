@@ -133,6 +133,12 @@ public class ModifyTaskActivity extends AddTaskActivity {
 					.show();
 			return false;
 		}
+		
+		if (associatedLocations == null || associatedLocations.size() == 0) {
+			Toast.makeText(this, strSaveValidationNoLocations, Toast.LENGTH_LONG)
+				.show();
+			return false;
+		}
 
 		Task task = new Task();
 		task.setTitle(txtTitle.getText().toString());

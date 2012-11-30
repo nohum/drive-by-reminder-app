@@ -63,6 +63,9 @@ public class AddTaskActivity extends RoboSherlockActivity
 
 	@InjectResource(R.string.activity_addtask_form_location_button)
 	private String strButtonSetLocation;
+	
+	@InjectResource(R.string.activity_addtask_save_validation_nolocations)
+	protected String strSaveValidationNoLocations;
 
 	@InjectResource(
 			R.string.activity_addtask_form_location_button_multiple_prefix)
@@ -149,21 +152,6 @@ public class AddTaskActivity extends RoboSherlockActivity
         refreshViewsWithValues();
         initViewEvents();
 	}
-	
-	@Override
-	protected void onResume() {
-		taskDataDAO.open();
-
-		super.onResume();
-	}
-
-	@Override
-	protected void onPause() {
-		taskDataDAO.close();
-
-		super.onPause();
-	}
-
 	
 	/**
 	 * Add all necessary events to the views.
@@ -469,6 +457,12 @@ public class AddTaskActivity extends RoboSherlockActivity
 	private boolean saveData() {
 		if (TextUtils.isEmpty(txtTitle.getText())) {
 			Toast.makeText(this, strSaveValidationNoTitle, Toast.LENGTH_LONG)
+				.show();
+			return false;
+		}
+		
+		if (associatedLocations == null || associatedLocations.size() == 0) {
+			Toast.makeText(this, strSaveValidationNoLocations, Toast.LENGTH_LONG)
 				.show();
 			return false;
 		}

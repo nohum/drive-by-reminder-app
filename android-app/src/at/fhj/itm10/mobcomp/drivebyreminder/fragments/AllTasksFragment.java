@@ -3,10 +3,12 @@ package at.fhj.itm10.mobcomp.drivebyreminder.fragments;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
+import at.fhj.itm10.mobcomp.drivebyreminder.activities.MainActivity;
 import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskDataDAO;
 import at.fhj.itm10.mobcomp.drivebyreminder.listadapters.AllTasksListAdapter;
 
@@ -22,7 +24,9 @@ public class AllTasksFragment extends RoboSherlockListFragment {
 	private TaskDataDAO dbDao;
 	
 	private SimpleCursorAdapter listAdapter;
-	
+
+	private Cursor usedCursor;
+
 //	private Cursor usedCursor;
 
 	/**
@@ -47,6 +51,10 @@ public class AllTasksFragment extends RoboSherlockListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (dbDao == null) {
+        	dbDao = ((MainActivity) getActivity()).getDao();
+        }
     }
 
     @Override
@@ -56,9 +64,25 @@ public class AllTasksFragment extends RoboSherlockListFragment {
        
        return v;
     }
+    
+    @Override
+	public void onDestroy() {
+    	if (usedCursor != null) {
+    		usedCursor.close();
+    		usedCursor = null;
+    	}
+    	
+    	super.onDestroy();
+    }
 
     public void reloadViewData() {
-    	Cursor usedCursor = dbDao.findAllTasksCursor();
+    	Log.d(this.getClass().getSimpleName(), "reloadViewData");
+    	Log.d(this.getClass().getSimpleName(), "reloadViewData: dbDao = "
+    			+ dbDao);
+    	usedCursor = dbDao.findAllTasksCursor();
+    	Log.d(this.getClass().getSimpleName(), "reloadViewData: usedCursor = "
+    			+ usedCursor);
+    	
         listAdapter = AllTasksListAdapter.newInstance(getActivity(), 
         		usedCursor);
         setListAdapter(listAdapter);
@@ -67,6 +91,10 @@ public class AllTasksFragment extends RoboSherlockListFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        
+        if (dbDao == null) {
+        	dbDao = ((MainActivity) getActivity()).getDao();
+        }
         
         reloadViewData();
     }

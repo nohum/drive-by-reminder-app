@@ -7,6 +7,7 @@ import java.util.List;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.Location;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.Task;
 
@@ -37,7 +38,9 @@ public class TaskDataDAO {
 	 * Opens database connection.
 	 */
 	public void open() {
-		db = helper.getWritableDatabase();	
+		if (db == null || !db.isOpen()) {
+			db = helper.getWritableDatabase();
+		}
 	}
 	
 	/**
@@ -48,19 +51,21 @@ public class TaskDataDAO {
 	}
 	
 	public Cursor findAllTasksCursor() {
-		return db.rawQuery("SELECT DISTINCT id as _id, `id`, `title`, `description`,"
+		open();
+		Log.d(this.getClass().getSimpleName(), "findAllTasksCursor db = " + db);
+
+		return db.rawQuery("SELECT id as _id, `id`, `title`, `description`,"
 				+ " `customProximitry`, `startDate`, `endDate`, `noDate`, `done`,"
 				+ " `sorting` FROM " + TaskStorageHelper.TABLE_TASKS_NAME
 				+ " ORDER BY `sorting`", null);
-		
-//		return db.query(TaskStorageHelper.TABLE_TASKS_NAME, null,
-//				null, null, null, null, null);
 	}
 
 	public List<Task> findAllTasks() {
+		open();
+
 		Cursor cursor = findAllTasksCursor();
 		cursor.moveToFirst();
-		
+
 		// Set the result list length to the cursor result count
 		List<Task> foundTasks = new ArrayList<Task>(cursor.getCount());
 		
@@ -74,6 +79,8 @@ public class TaskDataDAO {
 	}
 	
 	public Task findTaskById(long id) {
+		open();
+
 		Cursor cursor = db.query(TaskStorageHelper.TABLE_TASKS_NAME, null,
 				"id = ?", new String[] { String.valueOf(id) }, null, null,
 				null);
@@ -90,6 +97,8 @@ public class TaskDataDAO {
 	}
 	
 	public long findTaskHighestSortingNumber() {
+		open();
+
 		Cursor cursor = db.rawQuery("SELECT MAX(sorting) as sortNum FROM "
 				+ TaskStorageHelper.TABLE_TASKS_NAME, null);
 		cursor.moveToFirst();
@@ -103,22 +112,30 @@ public class TaskDataDAO {
 	}
 	
 	public long insert(Task task) {
+		open();
+
 		return db.insert(TaskStorageHelper.TABLE_TASKS_NAME, null,
 				fillContentValuesByTask(task));
 	}
 
 	public void delete(Task task) {
+		open();
+
 		db.delete(TaskStorageHelper.TABLE_TASKS_NAME, "id = ?",
 				new String[] { String.valueOf(task.getId()) });
 	}
 	
 	public void update(Task task) {
+		open();
+
 		db.update(TaskStorageHelper.TABLE_TASKS_NAME,
 				fillContentValuesByTask(task), "id = ?",
 				new String[] { String.valueOf(task.getId()) });
 	}
 
 	public List<Location> findAllLocationsByTask(Task task) {
+		open();
+
 		Cursor cursor = db.query(TaskStorageHelper.TABLE_LOCATIONS_NAME, null,
 				"taskId = ?", new String[] { String.valueOf(task.getId()) },
 				null, null, null);
@@ -139,20 +156,28 @@ public class TaskDataDAO {
 
 	public List<Location> findLocationsByBoundaries(double minLatitude,
 			double minLongitude, double maxLatitude, double maxLongitude) {
+		open();
+
 		return null;
 	}
 
 	public long insert(Location location) {
+		open();
+
 		return db.insert(TaskStorageHelper.TABLE_LOCATIONS_NAME, null,
 				fillContentValuesByLocation(location));
 	}
 
 	public void delete(Location location) {
+		open();
+
 		db.delete(TaskStorageHelper.TABLE_LOCATIONS_NAME, "id = ?",
 				new String[] { String.valueOf(location.getId()) });
 	}
 
 	public void update(Location location) {
+		open();
+
 		db.update(TaskStorageHelper.TABLE_TASKS_NAME,
 				fillContentValuesByLocation(location), "id = ?",
 				new String[] { String.valueOf(location.getId()) });
@@ -197,7 +222,10 @@ public class TaskDataDAO {
 	private ContentValues fillContentValuesByTask(Task task) {
 		ContentValues values = new ContentValues();
 		
-		values.put("id", task.getId());
+		if (task.getId() > 0) {
+			values.put("id", task.getId());
+		}
+
 		values.put("title", task.getTitle());
 		values.put("description", task.getTitle());
 		values.put("customProximitry", task.getCustomProximitry());
@@ -239,7 +267,10 @@ public class TaskDataDAO {
 	private ContentValues fillContentValuesByLocation(Location location) {
 		ContentValues values = new ContentValues();
 
-		values.put("id", location.getId());
+		if (location.getId() > 0) {
+			values.put("id", location.getId());
+		}
+
 		values.put("taskId", location.getTaskId());
 		values.put("title", location.getName());
 		values.put("address", location.getAddress());

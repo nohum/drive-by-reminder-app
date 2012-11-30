@@ -52,6 +52,7 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 
 	public void refreshFragments() {
 		allTasks.reloadViewData();
+		Log.v(this.getClass().getSimpleName(), "refreshFragments: nearbyTasks = " + nearbyTasks);
 		nearbyTasks.reloadViewData();
 	}
 
