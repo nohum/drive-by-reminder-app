@@ -221,15 +221,20 @@ public class AllTasksFragment extends RoboSherlockListFragment
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 			Log.v("ModifyTaskListActionMode", "clicked item = " + item);
 
-            long[] selected = listView.getCheckedItemIds();
-            if (selected.length > 0) {
-                for (long id : selected) {
-                	Log.v("ModifyTaskListActionMode", "selected id = " + id);
-                }
-            }
+			switch (item.getItemId()) {
+			case R.id.menu_cab_alltasks_delete:
+	            long[] selected = listView.getCheckedItemIds();
+	            if (selected.length > 0) {
+	                for (long id : selected) {
+	                	Log.v("ModifyTaskListActionMode", "selected id = " + id);
+	                }
+	            }
 
-            mode.finish();
-            return true;
+	            mode.finish();
+				return true;
+			default:
+				return false;
+			}
 		}
 
 		@Override
