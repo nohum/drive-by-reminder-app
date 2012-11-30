@@ -1,4 +1,7 @@
-
+Used libraries:
+	- ActionbarSherlock, http://www.actionbarsherlock.com
+	- RoboGuice, http://code.google.com/p/roboguice
+	- RoboGuice-Sherlock, https://github.com/rtyley/roboguice-sherlock
 
 Icons:
 	- Android icons: Android SDK

@@ -32,4 +32,10 @@
         <item name="android:paddingRight">7.0dip</item>
     </style>
     
+    <style name="fragment_home_layout">
+        <item name="android:paddingLeft">6.0dip</item>
+        <item name="android:paddingTop">8.0dip</item>
+        <item name="android:paddingRight">7.0dip</item>
+    </style>
+    
 </resources>

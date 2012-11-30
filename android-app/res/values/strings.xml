@@ -13,7 +13,7 @@
     <string name="menu_discard">Discard</string>
     
     <!-- Home fragment -->
-    <string name="fragment_home_intro">Welcome to Drive-by Reminder\n\nSome descriptive text would be inserted here.</string>
+    <string name="fragment_home_intro">Welcome to Drive-by Reminder\n\nUse this brand new android app to remind yourself about e.g. tasks when you visit certain locations.</string>
     
     <!-- All tasks fragment -->
     <string name="fragment_alltasks_emptylist">There are no tasks at the moment. Add one using the add symbol located in the upper-right corner.</string>
