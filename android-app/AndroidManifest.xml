@@ -18,7 +18,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/Theme.Sherlock" >
+        android:theme="@style/Theme.Sherlock.Light.DarkActionBar" >
         <activity
             android:name="at.fhj.itm10.mobcomp.drivebyreminder.activities.MainActivity"
             android:label="@string/app_name" >
@@ -51,10 +51,7 @@
         </activity>
         <activity
             android:name="at.fhj.itm10.mobcomp.drivebyreminder.activities.EditLocationActivity"
-            android:label="@string/menu_set_location" ><!-- 
-            <meta-data
-            	android:name="android.support.PARENT_ACTIVITY"
-            	android:value="at.fhj.itm10.mobcomp.drivebyreminder.activities.AddTaskActivity" />-->
+            android:label="@string/menu_set_location" >
         </activity>
         <service
         	android:name="at.fhj.itm10.mobcomp.drivebyreminder.services.NotificationService" >

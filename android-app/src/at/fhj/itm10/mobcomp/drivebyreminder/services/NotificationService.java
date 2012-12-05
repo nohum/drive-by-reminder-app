@@ -39,7 +39,13 @@ public class NotificationService extends RoboService {
 		
 	}
 	
-	public void notifyUser() {
+	@Override
+	public void onStart(Intent intent, int startId) {
+		// TODO Auto-generated method stub
+		super.onStart(intent, startId);
+	}
+	
+	private void notifyUser() {
 //		Notification updateComplete = new Notification();
 //		updateComplete.icon = android.R.drawable.stat_notify_sync;
 //		updateComplete.tickerText = context

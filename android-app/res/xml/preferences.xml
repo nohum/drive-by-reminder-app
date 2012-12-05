@@ -4,6 +4,13 @@
     <PreferenceCategory 
         android:title="@string/settings_title_general"
         android:key="settings_general">
+        
+        <CheckBoxPreference
+	    	android:key="appEnabled"
+	    	android:summaryOn="@string/settings_summaryon_appenabled"
+	    	android:summaryOff="@string/settings_summaryoff_appenabled"
+	    	android:title="@string/settings_title_appenabled"
+	    	android:defaultValue="true" />
 
         <ListPreference
             android:key="defaultProximitry"

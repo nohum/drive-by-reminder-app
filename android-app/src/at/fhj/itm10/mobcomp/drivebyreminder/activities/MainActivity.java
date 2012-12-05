@@ -6,7 +6,9 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -17,6 +19,7 @@ import at.fhj.itm10.mobcomp.drivebyreminder.R;
 import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskDataDAO;
 import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskStorageHelper;
 import at.fhj.itm10.mobcomp.drivebyreminder.helper.MainFragmentPagerAdapter;
+import at.fhj.itm10.mobcomp.drivebyreminder.services.NotificationService;
 
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import com.actionbarsherlock.view.ActionMode;
@@ -87,6 +90,24 @@ public class MainActivity extends RoboSherlockFragmentActivity
         if (savedInstanceState != null) {
 			restoreState(savedInstanceState);
 		}
+	}
+	
+	@Override
+	protected void onStart() {
+		SharedPreferences preferences = PreferenceManager
+        		.getDefaultSharedPreferences(getApplicationContext());
+		
+		// Start the service if requested by the user
+		if (preferences.getBoolean("appEnabled", true)) {
+			Log.v(getClass().getSimpleName(),
+					"onStart: appEnabled set to true, starting service...");
+			
+			Intent startServiceIntent = new Intent(this,
+					NotificationService.class);
+	        startService(startServiceIntent);
+		}
+
+		super.onStart();
 	}
 	
 	@Override
