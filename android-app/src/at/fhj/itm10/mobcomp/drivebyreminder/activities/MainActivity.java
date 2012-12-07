@@ -22,7 +22,6 @@ import at.fhj.itm10.mobcomp.drivebyreminder.helper.MainFragmentPagerAdapter;
 import at.fhj.itm10.mobcomp.drivebyreminder.services.NotificationService;
 
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
-import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
@@ -42,15 +41,15 @@ public class MainActivity extends RoboSherlockFragmentActivity
 	@InjectView(R.id.pgrMainView)
 	private ViewPager pagerMainView;
 	
-	private ActionMode actionMode;
-
-	public ActionMode getActionMode() {
-		return actionMode;
-	}
-
-	public void setActionMode(ActionMode actionMode) {
-		this.actionMode = actionMode;
-	}
+//	private ActionMode actionMode;
+//
+//	public ActionMode getActionMode() {
+//		return actionMode;
+//	}
+//
+//	public void setActionMode(ActionMode actionMode) {
+//		this.actionMode = actionMode;
+//	}
 
 	/**
 	 * Database DAO.
@@ -221,10 +220,11 @@ public class MainActivity extends RoboSherlockFragmentActivity
 		// Change the focused navigation list item if the viewed fragment has been changed.
 		// position = number of fragment, see MainFragmentPagerAdapter for numbering
 		getSupportActionBar().setSelectedNavigationItem(position);
+		
 		// Cancel action modes
-		if (getActionMode() != null) {
-			getActionMode().finish();
-		}
+//		if (getActionMode() != null) {
+//			getActionMode().finish();
+//		}
 	}
 
 	@Override

@@ -32,7 +32,7 @@ import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFra
  * @author Wolfgang Gaar
  */
 public class AllTasksFragment extends RoboSherlockListFragment
-		implements OnItemLongClickListener, OnItemClickListener {
+		implements OnItemClickListener {
 
 	private TaskDataDAO dbDao;
 	
@@ -88,7 +88,7 @@ public class AllTasksFragment extends RoboSherlockListFragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
     	super.onViewCreated(view, savedInstanceState);
 
-    	getListView().setOnItemLongClickListener(this);
+//    	getListView().setOnItemLongClickListener(this);
     	getListView().setOnItemClickListener(this);
     	getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
     	getListView().setItemsCanFocus(false);
@@ -148,28 +148,28 @@ public class AllTasksFragment extends RoboSherlockListFragment
 		}
 	}
 
-	@Override
-	public boolean onItemLongClick(AdapterView<?> parent, View v, int position,
-			long id) {
-		// If in action mode, skip this to prevent re-entering the action mode
-		if (actionMode != null) {
-			return false;
-		}
-		
-		long taskId = (Long) v.getTag();
-    	if (taskId > 0) {
-    		// We have to use the sherlock action mode starter to maintain
-    		// compatibility
-    		actionMode = ((MainActivity) getActivity())
-    				.startActionMode(new ModifyTaskListActionMode(getListView()));
-    		((MainActivity) getActivity()).setActionMode(actionMode);
-    		v.setSelected(true);
-
-    		return true;
-    	}
-		
-		return false;
-	}
+//	@Override
+//	public boolean onItemLongClick(AdapterView<?> parent, View v, int position,
+//			long id) {
+//		// If in action mode, skip this to prevent re-entering the action mode
+//		if (actionMode != null) {
+//			return false;
+//		}
+//		
+//		long taskId = (Long) v.getTag();
+//    	if (taskId > 0) {
+//    		// We have to use the sherlock action mode starter to maintain
+//    		// compatibility
+//    		actionMode = ((MainActivity) getActivity())
+//    				.startActionMode(new ModifyTaskListActionMode(getListView()));
+//    		((MainActivity) getActivity()).setActionMode(actionMode);
+//    		v.setSelected(true);
+//
+//    		return true;
+//    	}
+//		
+//		return false;
+//	}
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {

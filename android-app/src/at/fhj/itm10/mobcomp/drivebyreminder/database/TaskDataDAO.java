@@ -8,6 +8,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import at.fhj.itm10.mobcomp.drivebyreminder.models.BoundedLocations;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.Location;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.Task;
 
@@ -156,10 +157,30 @@ public class TaskDataDAO {
 		return foundLocations;
 	}
 
-	public List<Location> findLocationsByBoundaries(double minLatitude,
+	public List<BoundedLocations> findLocationsByBoundaries(double minLatitude,
 			double minLongitude, double maxLatitude, double maxLongitude) {
 		open();
 
+		/* Original query:
+		SELECT l.taskId, t.customProximitry, t.title, t.description, l.latitude,
+				l.longitude FROM locations l
+		INNER JOIN tasks t ON l.taskId = t.id
+		WHERE t.done = 0 AND (t.noDate = 1 OR (t.noDate = 0 AND '06/12/2012 00:00:00'
+				BETWEEN t.startDate AND t.endDate)) AND l.latitude BETWEEN 1 AND 2
+				AND l.longitude BETWEEN 1 AND 2
+		*/
+		
+		Cursor cursor = db.rawQuery("SELECT l.taskId, t.customProximitry, t.title, "
+				+ "t.description, l.latitude, l.longitude FROM "
+				+ TaskStorageHelper.TABLE_LOCATIONS_NAME + " l INNER JOIN "
+				+ TaskStorageHelper.TABLE_TASKS_NAME + " t ON l.taskId = t.id "
+				+ "WHERE t.done = 0 AND (t.noDate = 1 OR (t.noDate = 0 AND ? "
+				+ "BETWEEN t.startDate AND t.endDate)) AND l.latitude BETWEEN ? "
+				+ "AND ? AND l.longitude BETWEEN ? AND ?", null);
+		cursor.moveToFirst();
+		
+		
+		
 		return null;
 	}
 
