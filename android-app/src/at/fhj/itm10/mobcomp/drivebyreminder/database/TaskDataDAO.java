@@ -157,6 +157,16 @@ public class TaskDataDAO {
 		return foundLocations;
 	}
 
+	/**
+	 * Find locations by certain boundaries.
+	 * 
+	 * @param date
+	 * @param minLatitude
+	 * @param minLongitude
+	 * @param maxLatitude
+	 * @param maxLongitude
+	 * @return List<BoundedLocation>
+	 */
 	public List<BoundedLocation> findLocationsByBoundaries(Calendar date,
 			double minLatitude, double minLongitude, double maxLatitude,
 			double maxLongitude) {

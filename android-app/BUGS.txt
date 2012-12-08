@@ -1,2 +1,3 @@
 - location chooser: beim scrollen werden bereits markierte einträge "vergessen"
 - service: standard radius vor db ist nicht 15 kilometer
+- service: änderung der einstellungen wird nicht übernommen!

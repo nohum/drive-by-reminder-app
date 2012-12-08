@@ -51,6 +51,7 @@ public class NotificationService extends RoboService
 	
 	/**
 	 * Describes the maximum distance of a point of interest from a user's view.
+	 * Taken from res/values/arrays.xml - proximitryEntriesWithDefault - last entry.
 	 */
 	private static final int MAXIMUM_USER_DISTANCE = 15000;
 	
@@ -89,17 +90,15 @@ public class NotificationService extends RoboService
 	private void initService() {
 		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
 				LOCATION_UPDATE_INTERVAL, METERS_UPDATE_THRESHOLD, this);
+		// Register also an passive provider to get locations if other apps need them
 		locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER,
 				LOCATION_UPDATE_INTERVAL, METERS_UPDATE_THRESHOLD, this);
 		
-		defaultMaximumMetersDistance = Integer.parseInt( preferences.getString(
+		defaultMaximumMetersDistance = Integer.parseInt(preferences.getString(
 				"defaultProximitry", "3000"));
+		
 		Log.d(getClass().getSimpleName(), "initService: defaultMaximumMetersDistance = "
 				+ defaultMaximumMetersDistance);
-		
-//		ArrayAdapter<CharSequence> list =
-//        		ArrayAdapter.createFromResource(getApplicationContext(),
-//        		R.array.locations, R.layout.sherlock_spinner_item);
 	}
 
 	/**
@@ -138,12 +137,12 @@ public class NotificationService extends RoboService
 		double minLongitude = userLocation.getLongitude() - MAXIMUM_TASK_DISTANCE_LON;
 		double maxLatitude = userLocation.getLatitude() + MAXIMUM_TASK_DISTANCE_LAT;
 		double maxLongitude = userLocation.getLongitude() + MAXIMUM_TASK_DISTANCE_LON;
-		
+
 //		Log.d(getClass().getSimpleName(), "checkLocationMatchInDatabase: min latitude = "
 //				+ minLatitude + ", min longitude = " + minLongitude);
 //		Log.d(getClass().getSimpleName(), "checkLocationMatchInDatabase: max latitude = "
 //				+ maxLatitude + ", max longitude = " + maxLongitude);
-		
+
 		float[] minResults = new float[3];
 		Location.distanceBetween(userLocation.getLatitude(), userLocation.getLongitude(),
 				minLatitude, minLongitude, minResults);
@@ -163,10 +162,46 @@ public class NotificationService extends RoboService
 		for (BoundedLocation foundLocation : locations) {
 			Log.d(getClass().getSimpleName(), "checkLocationMatchInDatabase: found: "
 					+ foundLocation.toString());
+
+			// The custom proximitry is zero, check for the
+			// defaultMaximumMetersDistance
+			if (foundLocation.getCustomProximitry() == 0) {
+				testFoundTaskProximitry(foundLocation, defaultMaximumMetersDistance);
+			}
+			// If the custom proximitry equals the highest possible proximitry, this
+			// is going to be true. We already checked for MAXIMUM_USER_DISTANCE using
+			// the supplied dao query, so we just report this task and all work is done.
+			else if (foundLocation.getCustomProximitry() == proximitryEntries.length - 1) {
+				notifyUserAboutTask(foundLocation);
+			}
+			// Any other setting
+			else {
+				testFoundTaskProximitry(foundLocation, Integer.parseInt(
+						proximitryEntries[foundLocation.getCustomProximitry()]));
+			}
 		}
 	}
-	
-//	private void notifyUser() {
+
+	/**
+	 * Test found location for a custom proximitry and notify the user if
+	 * appropriate.
+	 * 
+	 * @param foundLocation
+	 * @param proximitry task proximitry in meters
+	 */
+	private void testFoundTaskProximitry(BoundedLocation foundLocation,
+			int proximitry) {
+		
+		
+		
+	}
+
+	/**
+	 * Notify the user about a nearby task.
+	 * 
+	 * @param foundLocation
+	 */
+	private void notifyUserAboutTask(BoundedLocation foundLocation) {
 //		Notification updateComplete = new Notification();
 //		updateComplete.icon = android.R.drawable.stat_notify_sync;
 //		updateComplete.tickerText = context
@@ -179,7 +214,7 @@ public class NotificationService extends RoboService
 //			    notificationIntent, 0);
 		
 //		notificationManager.notify(LIST_UPDATE_NOTIFICATION, updateComplete);
-//	}
+	}
 
 	@Override
 	public void onLocationChanged(Location location) {

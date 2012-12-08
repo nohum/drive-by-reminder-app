@@ -3,7 +3,6 @@ package at.fhj.itm10.mobcomp.drivebyreminder.helper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
 import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskDataDAO;
 import at.fhj.itm10.mobcomp.drivebyreminder.fragments.AllTasksFragment;
 import at.fhj.itm10.mobcomp.drivebyreminder.fragments.HomeFragment;
@@ -40,7 +39,7 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 			return nearbyTasks;
 		default:
 			throw new IllegalStateException("number higher than 2");
-		} 
+		}
 	}
 
 	@Override

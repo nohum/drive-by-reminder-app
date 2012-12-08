@@ -42,7 +42,7 @@
         <item>3000</item>
         <item>5000</item>
         <item>10000</item>
-        <item>15000</item>
+        <item>15000</item> <!-- referenced in .services.NotificationService -->
     </string-array>
     
     <string-array name="locationBiasEntriesHuman">
