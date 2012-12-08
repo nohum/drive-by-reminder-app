@@ -28,7 +28,7 @@
     <string-array name="proximitryEntries">
         <item>500</item>
         <item>1000</item>
-        <item>3000</item> <!-- referenced in xml/preferences.xml -->
+        <item>3000</item> <!-- referenced in xml/preferences.xml and .services.NotificationService -->
         <item>5000</item>
         <item>10000</item>
         <item>15000</item>

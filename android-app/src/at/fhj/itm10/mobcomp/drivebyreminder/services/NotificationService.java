@@ -27,7 +27,7 @@ import at.fhj.itm10.mobcomp.drivebyreminder.models.BoundedLocation;
 public class NotificationService extends RoboService
 		implements LocationListener {
 
-//	private NotificationService notificationService;
+	private NotificationService notificationService;
 
 	private LocationManager locationManager;
 	
@@ -78,7 +78,7 @@ public class NotificationService extends RoboService
 		initServiceVars();
 		initService();
 
-		Log.d(getClass().getSimpleName(), "notification service is up and running");
+		Log.i(getClass().getSimpleName(), "notification service is up and running");
 
 		checkLocationMatchInDatabase(locationManager.getLastKnownLocation(
 				LocationManager.NETWORK_PROVIDER));
@@ -95,9 +95,10 @@ public class NotificationService extends RoboService
 				LOCATION_UPDATE_INTERVAL, METERS_UPDATE_THRESHOLD, this);
 		
 		defaultMaximumMetersDistance = Integer.parseInt(preferences.getString(
+				// 3000 = see res/values/arrays.xml - proximitryEntries
 				"defaultProximitry", "3000"));
 		
-		Log.d(getClass().getSimpleName(), "initService: defaultMaximumMetersDistance = "
+		Log.v(getClass().getSimpleName(), "initService: defaultMaximumMetersDistance = "
 				+ defaultMaximumMetersDistance);
 	}
 
@@ -125,7 +126,7 @@ public class NotificationService extends RoboService
 		locationManager.removeUpdates(this);
 		dbDao.close();
 		
-		Log.d(getClass().getSimpleName(), "notification service is shutting down");
+		Log.i(getClass().getSimpleName(), "notification service is shutting down");
 	}
 	
 	private void checkLocationMatchInDatabase(Location userLocation) {
@@ -146,7 +147,7 @@ public class NotificationService extends RoboService
 		float[] minResults = new float[3];
 		Location.distanceBetween(userLocation.getLatitude(), userLocation.getLongitude(),
 				minLatitude, minLongitude, minResults);
-		Log.d(getClass().getSimpleName(), "checkLocationMatchInDatabase: min location "
+		Log.v(getClass().getSimpleName(), "checkLocationMatchInDatabase: min location "
 				+ "distance from original point = " + minResults[0]);
 
 		List<BoundedLocation> locations = dbDao.findLocationsByBoundaries(
@@ -155,18 +156,19 @@ public class NotificationService extends RoboService
 
 		// Get out of here fast if there are no matches
 		if (locations.size() == 0) {
-			Log.d(getClass().getSimpleName(), "checkLocationMatchInDatabase: no locations");
+			Log.v(getClass().getSimpleName(), "checkLocationMatchInDatabase: no locations");
 			return;
 		}
 
 		for (BoundedLocation foundLocation : locations) {
-			Log.d(getClass().getSimpleName(), "checkLocationMatchInDatabase: found: "
+			Log.v(getClass().getSimpleName(), "checkLocationMatchInDatabase: found: "
 					+ foundLocation.toString());
-
+			
 			// The custom proximitry is zero, check for the
 			// defaultMaximumMetersDistance
 			if (foundLocation.getCustomProximitry() == 0) {
-				testFoundTaskProximitry(foundLocation, defaultMaximumMetersDistance);
+				testFoundTaskProximitry(userLocation, foundLocation,
+						defaultMaximumMetersDistance);
 			}
 			// If the custom proximitry equals the highest possible proximitry, this
 			// is going to be true. We already checked for MAXIMUM_USER_DISTANCE using
@@ -176,7 +178,7 @@ public class NotificationService extends RoboService
 			}
 			// Any other setting
 			else {
-				testFoundTaskProximitry(foundLocation, Integer.parseInt(
+				testFoundTaskProximitry(userLocation, foundLocation, Integer.parseInt(
 						proximitryEntries[foundLocation.getCustomProximitry()]));
 			}
 		}
@@ -186,14 +188,24 @@ public class NotificationService extends RoboService
 	 * Test found location for a custom proximitry and notify the user if
 	 * appropriate.
 	 * 
+	 * @param userLocation
 	 * @param foundLocation
 	 * @param proximitry task proximitry in meters
 	 */
-	private void testFoundTaskProximitry(BoundedLocation foundLocation,
-			int proximitry) {
+	private void testFoundTaskProximitry(Location userLocation,
+			BoundedLocation foundLocation, int proximitry) {
+		Log.d(getClass().getSimpleName(), "testFoundTaskProximitry: checking against"
+				+ " proximitry = " + proximitry + ": " + foundLocation.toString());
+
+		float[] results = new float[3];
+		Location.distanceBetween(userLocation.getLatitude(), userLocation.getLongitude(),
+				foundLocation.getLatitude(), foundLocation.getLongitude(), results);
 		
-		
-		
+		Log.v(getClass().getSimpleName(), "testFoundTaskProximitry: proximitry result = "
+				+ results[0]);
+		if (results[0] <= proximitry) {
+			notifyUserAboutTask(foundLocation);
+		}
 	}
 
 	/**
