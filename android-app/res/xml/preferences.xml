@@ -18,7 +18,7 @@
             android:title="@string/settings_title_defaultproximitry"
             android:entries="@array/proximitryEntriesHuman"
             android:entryValues="@array/proximitryEntries"
-            android:defaultValue="500" />
+            android:defaultValue="3000" />
 
     </PreferenceCategory>
     
@@ -39,7 +39,7 @@
             android:title="@string/settings_title_locationbias"
             android:entries="@array/locationBiasEntriesHuman"
             android:entryValues="@array/locationBiasEntries"
-            android:defaultValue="500" />
+            android:defaultValue="at" />
 
     </PreferenceCategory>
     

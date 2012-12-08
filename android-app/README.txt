@@ -1,4 +1,12 @@
-Used libraries:
+-- Drive-by Reminder --
+
+Features:
+    - 
+
+Richtiger Import des Projekts ins Eclipse:
+    
+
+Benutzte Libraries:
 	- ActionbarSherlock, http://www.actionbarsherlock.com
 	- RoboGuice, http://code.google.com/p/roboguice
 	- RoboGuice-Sherlock, https://github.com/rtyley/roboguice-sherlock

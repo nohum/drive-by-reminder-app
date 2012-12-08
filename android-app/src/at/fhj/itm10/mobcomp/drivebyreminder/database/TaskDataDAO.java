@@ -8,7 +8,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import at.fhj.itm10.mobcomp.drivebyreminder.models.BoundedLocations;
+import at.fhj.itm10.mobcomp.drivebyreminder.models.BoundedLocation;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.Location;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.Task;
 
@@ -157,31 +157,58 @@ public class TaskDataDAO {
 		return foundLocations;
 	}
 
-	public List<BoundedLocations> findLocationsByBoundaries(double minLatitude,
-			double minLongitude, double maxLatitude, double maxLongitude) {
+	public List<BoundedLocation> findLocationsByBoundaries(Calendar date,
+			double minLatitude, double minLongitude, double maxLatitude,
+			double maxLongitude) {
 		open();
 
 		/* Original query:
 		SELECT l.taskId, t.customProximitry, t.title, t.description, l.latitude,
 				l.longitude FROM locations l
 		INNER JOIN tasks t ON l.taskId = t.id
-		WHERE t.done = 0 AND (t.noDate = 1 OR (t.noDate = 0 AND '06/12/2012 00:00:00'
+		WHERE t.done = 0 AND (t.noDate = 1 OR (t.noDate = 0 AND 1222211
 				BETWEEN t.startDate AND t.endDate)) AND l.latitude BETWEEN 1 AND 2
 				AND l.longitude BETWEEN 1 AND 2
 		*/
-		
+
 		Cursor cursor = db.rawQuery("SELECT l.taskId, t.customProximitry, t.title, "
 				+ "t.description, l.latitude, l.longitude FROM "
 				+ TaskStorageHelper.TABLE_LOCATIONS_NAME + " l INNER JOIN "
 				+ TaskStorageHelper.TABLE_TASKS_NAME + " t ON l.taskId = t.id "
 				+ "WHERE t.done = 0 AND (t.noDate = 1 OR (t.noDate = 0 AND ? "
 				+ "BETWEEN t.startDate AND t.endDate)) AND l.latitude BETWEEN ? "
-				+ "AND ? AND l.longitude BETWEEN ? AND ?", null);
+				+ "AND ? AND l.longitude BETWEEN ? AND ?", new String[] {
+						String.valueOf(date.getTimeInMillis()),
+						String.valueOf(minLatitude), String.valueOf(maxLatitude),
+						String.valueOf(minLongitude), String.valueOf(maxLongitude)});
 		cursor.moveToFirst();
 		
+//		String debugSql = "SELECT l.taskId, t.customProximitry, t.title, t.description, l.latitude,"
+//		+ " l.longitude FROM locations l INNER JOIN tasks t ON l.taskId = t.id"
+//		+ " WHERE t.done = 0 AND (t.noDate = 1 OR (t.noDate = 0 AND " + String.valueOf(
+//				date.getTimeInMillis())
+//		+ " BETWEEN t.startDate AND t.endDate)) AND l.latitude BETWEEN " + String.valueOf(minLatitude)
+//		+ " AND " + String.valueOf(maxLatitude) + " AND l.longitude BETWEEN "
+//		+ String.valueOf(minLongitude) + " AND " + String.valueOf(maxLongitude);
+//		Log.v(getClass().getSimpleName(), "findLocationsByBoundaries sql = " + debugSql);
+
+		List<BoundedLocation> foundLocations =
+				new ArrayList<BoundedLocation>(cursor.getCount());
+
+		while (!cursor.isAfterLast()) {
+			BoundedLocation b = new BoundedLocation();
+			b.setTaskId(cursor.getLong(0));
+			b.setCustomProximitry(cursor.getInt(1));
+			b.setTitle(cursor.getString(2));
+			b.setDescription(cursor.getString(3));
+			b.setLatitude(cursor.getDouble(4));
+			b.setLongitude(cursor.getDouble(5));
+
+			foundLocations.add(b);
+			cursor.moveToNext();
+		}
 		
-		
-		return null;
+		return foundLocations;
 	}
 
 	public long insert(Location location) {

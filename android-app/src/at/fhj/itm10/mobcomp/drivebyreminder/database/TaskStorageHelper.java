@@ -23,10 +23,10 @@ public class TaskStorageHelper extends SQLiteOpenHelper {
 			+ "`title` TEXT NOT NULL ,"
 			+ "`description` TEXT NOT NULL ,"
 			+ "`customProximitry` INTEGER,"
-			+ "`startDate` DATETIME,"
-			+ "`endDate` DATETIME,"
-			+ "`noDate` BOOL NOT NULL  DEFAULT false,"
-			+ "`done` BOOL NOT NULL  DEFAULT false,"
+			+ "`startDate` INTEGER,"
+			+ "`endDate` INTEGER,"
+			+ "`noDate` BOOL NOT NULL DEFAULT false,"
+			+ "`done` BOOL NOT NULL DEFAULT false,"
 			+ "`sorting` INTEGER NOT NULL )";
 	
 	public static final String TABLE_LOCATIONS_NAME = "locations";

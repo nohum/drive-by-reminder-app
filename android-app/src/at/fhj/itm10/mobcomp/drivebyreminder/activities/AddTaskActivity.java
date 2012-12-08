@@ -153,6 +153,12 @@ public class AddTaskActivity extends RoboSherlockActivity
         initViewEvents();
 	}
 	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		taskDataDAO.close();
+	}
+	
 	/**
 	 * Add all necessary events to the views.
 	 */

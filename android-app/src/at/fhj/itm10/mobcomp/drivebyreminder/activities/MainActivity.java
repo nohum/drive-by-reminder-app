@@ -83,9 +83,6 @@ public class MainActivity extends RoboSherlockFragmentActivity
         pagerMainView.setAdapter(pagerAdapter);
         pagerMainView.setOnPageChangeListener(this);
 
-        Log.d("MainActivity", "onCreate: given savedInstanceState = "
-        		+ savedInstanceState);
-
         if (savedInstanceState != null) {
 			restoreState(savedInstanceState);
 		}
@@ -100,7 +97,7 @@ public class MainActivity extends RoboSherlockFragmentActivity
 		if (preferences.getBoolean("appEnabled", true)) {
 			Log.v(getClass().getSimpleName(),
 					"onStart: appEnabled set to true, starting service...");
-			
+
 			Intent startServiceIntent = new Intent(this,
 					NotificationService.class);
 	        startService(startServiceIntent);
@@ -130,7 +127,6 @@ public class MainActivity extends RoboSherlockFragmentActivity
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		Log.d("MainActivity", "onSaveInstanceState: setting state");
 
 		outState.putInt("currentFragment", pagerMainView.getCurrentItem());
 	}
@@ -138,8 +134,6 @@ public class MainActivity extends RoboSherlockFragmentActivity
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		super.onRestoreInstanceState(savedInstanceState);
-		Log.d("MainActivity", "onRestoreInstanceState: given savedInstanceState = "
-				+ savedInstanceState);
 		
 		if (savedInstanceState != null) {
 			restoreState(savedInstanceState);
