@@ -54,7 +54,7 @@ public class NotificationService extends RoboService implements LocationListener
 	private static final int LOCATION_UPDATE_INTERVAL = 1000 * 60 * 5;
 	
 	private static final int METERS_UPDATE_THRESHOLD = 300;
-	
+
 	/**
 	 * Describes the maximum distance of a point of interest from a user's view.
 	 * Taken from res/values/arrays.xml - proximitryEntriesWithDefault - last entry.
@@ -148,13 +148,6 @@ public class NotificationService extends RoboService implements LocationListener
 				userLocation, MAXIMUM_USER_DISTANCE);
 		Location min = calc.getMinBoundary();
 		Location max = calc.getMaxBoundary();	
-
-		// Output the meters distance for debugging
-		float[] minResults = new float[3];
-		Location.distanceBetween(userLocation.getLatitude(), userLocation.getLongitude(),
-				min.getLatitude(), min.getLongitude(), minResults);
-		Log.v(getClass().getSimpleName(), "checkLocationMatchInDatabase: min location "
-				+ "distance from original point = " + minResults[0]);
 
 		List<TaskLocationResult> locations = dbDao.findLocationsByBoundaries(
 				Calendar.getInstance(), min.getLatitude(), min.getLongitude(),

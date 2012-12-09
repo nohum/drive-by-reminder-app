@@ -35,7 +35,7 @@ public class TaskSnoozeReceiver extends RoboBroadcastReceiver {
 					+ taskId);
 			return;
 		}
-		
+
 		int snoozeTime = Integer.parseInt(PreferenceManager
 				// 20 = see res/arrays.xml
 				.getDefaultSharedPreferences(context).getString("snoozeTime", "20"));

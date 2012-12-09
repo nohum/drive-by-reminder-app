@@ -1,6 +1,7 @@
 package at.fhj.itm10.mobcomp.drivebyreminder.helper;
 
 import android.location.Location;
+import android.util.Log;
 
 /**
  * Geo location boundaries calculator.
@@ -52,14 +53,27 @@ public class LocationBoundariesCalculator {
 		minBoundary = new Location(location);
 		maxBoundary = new Location(location);
 		
+		Log.v(getClass().getSimpleName(), "calculate: distance meters = "
+				+ distanceInMeters);
 		double distanceLat = DEGREES_PER_METER_LAT * distanceInMeters;
 		double distanceLon = DEGREES_PER_METER_LON * distanceInMeters;
 		
 		minBoundary.setLatitude(minBoundary.getLatitude() - distanceLat);
 		minBoundary.setLongitude(minBoundary.getLongitude() - distanceLon);
 		
-		maxBoundary.setLatitude(maxBoundary.getLatitude() - distanceLat);
-		maxBoundary.setLongitude(maxBoundary.getLongitude() - distanceLon);
+		maxBoundary.setLatitude(maxBoundary.getLatitude() + distanceLat);
+		maxBoundary.setLongitude(maxBoundary.getLongitude() + distanceLon);
+		
+		float[] minResults = new float[3];
+		float[] maxResults = new float[3];
+
+		Location.distanceBetween(location.getLatitude(), location.getLongitude(),
+				minBoundary.getLatitude(), minBoundary.getLongitude(), minResults);
+		Location.distanceBetween(location.getLatitude(), location.getLongitude(),
+				maxBoundary.getLatitude(), maxBoundary.getLongitude(), maxResults);
+
+		Log.v(getClass().getSimpleName(), "calculate: min meters = " + minResults[0]);
+		Log.v(getClass().getSimpleName(), "calculate: max meters = " + maxResults[0]);
 	}
 	
 }

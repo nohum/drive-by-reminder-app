@@ -219,14 +219,14 @@ public class TaskDataDAO {
 						String.valueOf(minLongitude), String.valueOf(maxLongitude)});
 		cursor.moveToFirst();
 		
-//		String debugSql = "SELECT l.taskId, t.customProximitry, t.title, t.description, t.snoozeDate,"
-//		+ " l.latitude, l.longitude FROM locations l INNER JOIN tasks t ON l.taskId = t.id"
-//		+ " WHERE t.done = 0 AND (t.noDate = 1 OR (t.noDate = 0 AND " + String.valueOf(
-//				date.getTimeInMillis())
-//		+ " BETWEEN t.startDate AND t.endDate)) AND l.latitude BETWEEN " + String.valueOf(minLatitude)
-//		+ " AND " + String.valueOf(maxLatitude) + " AND l.longitude BETWEEN "
-//		+ String.valueOf(minLongitude) + " AND " + String.valueOf(maxLongitude);
-//		Log.v(getClass().getSimpleName(), "findLocationsByBoundaries sql = " + debugSql);
+		String debugSql = "SELECT l.taskId, t.customProximitry, t.title, t.description, t.snoozeDate,"
+		+ " l.latitude, l.longitude FROM locations l INNER JOIN tasks t ON l.taskId = t.id"
+		+ " WHERE t.done = 0 AND (t.noDate = 1 OR (t.noDate = 0 AND " + String.valueOf(
+				date.getTimeInMillis())
+		+ " BETWEEN t.startDate AND t.endDate)) AND l.latitude BETWEEN " + String.valueOf(minLatitude)
+		+ " AND " + String.valueOf(maxLatitude) + " AND l.longitude BETWEEN "
+		+ String.valueOf(minLongitude) + " AND " + String.valueOf(maxLongitude);
+		Log.v(getClass().getSimpleName(), "findLocationsByBoundaries sql = " + debugSql);
 
 		List<TaskLocationResult> foundLocations =
 				new ArrayList<TaskLocationResult>(cursor.getCount());
