@@ -298,7 +298,7 @@ public class MainActivity extends RoboSherlockFragmentActivity
 			Location location = (Location) intent.getParcelableExtra("location");
 
 			Log.d(getClass().getSimpleName(), "handleReceive: location = " + location);
-			fragment.updateUserLocation(location);
+			fragment.updateUserLocation(location, context);
 
 			super.handleReceive(context, intent);
 		}

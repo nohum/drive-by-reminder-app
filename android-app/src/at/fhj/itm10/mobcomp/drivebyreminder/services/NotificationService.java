@@ -4,10 +4,13 @@ import java.util.Calendar;
 import java.util.List;
 
 import roboguice.inject.InjectResource;
+import roboguice.receiver.RoboBroadcastReceiver;
 import roboguice.service.RoboService;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
@@ -32,10 +35,7 @@ import com.google.inject.Inject;
  * 
  * @author Wolfgang Gaar
  */
-public class NotificationService extends RoboService
-		implements LocationListener {
-	
-	// "at.fhj.itm10.mobcomp.drivebyreminder.intents.REQUEST_LOCATION"
+public class NotificationService extends RoboService implements LocationListener {
 
 	@Inject
 	private NotificationManager notificationManager;
@@ -44,6 +44,8 @@ public class NotificationService extends RoboService
 	private LocationManager locationManager;
 
 	private SharedPreferences preferences;
+	
+	private LocationUpdateRequestReceiver updateRequestReceiver;
 	
 	private TaskDataDAO dbDao;
 	
@@ -110,6 +112,9 @@ public class NotificationService extends RoboService
 		// Register also an passive provider to get locations if other apps need them
 		locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER,
 				LOCATION_UPDATE_INTERVAL, METERS_UPDATE_THRESHOLD, this);
+		updateRequestReceiver = new LocationUpdateRequestReceiver();
+		registerReceiver(updateRequestReceiver, new IntentFilter(
+				"at.fhj.itm10.mobcomp.drivebyreminder.intents.REQUEST_LOCATION"));
 		
 		defaultMaximumMetersDistance = Integer.parseInt(preferences.getString(
 				// 3000 = see res/values/arrays.xml - proximitryEntries
@@ -128,6 +133,7 @@ public class NotificationService extends RoboService
 		super.onDestroy();
 		
 		locationManager.removeUpdates(this);
+		unregisterReceiver(updateRequestReceiver);
 		dbDao.close();
 
 		Log.i(getClass().getSimpleName(), "notification service is shutting down");
@@ -304,6 +310,26 @@ public class NotificationService extends RoboService
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 
+	}
+	
+	/**
+	 * Receiver for requested location updates.
+	 * 
+	 * @author Wolfgang Gaar
+	 */
+	private class LocationUpdateRequestReceiver extends RoboBroadcastReceiver {
+		
+		@Override
+		protected void handleReceive(Context context, Intent intent) {
+			Log.d(getClass().getSimpleName(), "handleReceive called");
+			
+			// TODO: geht das einfach so?
+			sendLocationToActivities(currentUserLocation);
+			Log.v(getClass().getSimpleName(), "data sent");
+
+			super.handleReceive(context, intent);
+		}
+		
 	}
 
 }

@@ -7,6 +7,9 @@ import java.util.List;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
+import android.util.Log;
+import at.fhj.itm10.mobcomp.drivebyreminder.R.id;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.Location;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.Task;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.TaskLocationResult;
@@ -56,6 +59,24 @@ public class TaskDataDAO {
 		return db.rawQuery("SELECT `id` as _id, * FROM "
 				+ TaskStorageHelper.TABLE_TASKS_NAME
 				+ " ORDER BY `sorting` ASC, `noDate` DESC", null);
+	}
+
+	public Cursor constructFindTasksCursorByIdList(List<Long> ids) {
+		String baseSQL = "SELECT `id` as _id, * FROM "
+				+ TaskStorageHelper.TABLE_TASKS_NAME + " WHERE id IN (%s)"
+				+ " ORDER BY `sorting` ASC, `noDate` DESC";
+
+		String idsConcatenated = TextUtils.join(", ", ids);
+		if (idsConcatenated.isEmpty()) {
+			// dummy - to prevent sql error
+			idsConcatenated = "null";
+		}
+		
+		Cursor c = db.rawQuery(String.format(baseSQL, idsConcatenated), null);
+		Log.v(getClass().getSimpleName(), "constructFindTasksCursorByIdList: cursor = "
+				+ c);
+		
+		return c;
 	}
 
 	public List<Task> findAllTasks() {

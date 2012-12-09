@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import roboguice.inject.InjectResource;
+import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -77,6 +78,10 @@ public class NearbyTasksFragment extends AllTasksFragment {
 
     @Override
     public void reloadViewData() {
+    	reloadViewData(getActivity());
+    }
+
+    public void reloadViewData(Context context) {
     	if (currentUserLocation == null) {
     		Log.w(getClass().getSimpleName(),
     				"reloadViewData: currentUserLocation is null");
@@ -88,6 +93,11 @@ public class NearbyTasksFragment extends AllTasksFragment {
 		Location min = calc.getMinBoundary();
 		Location max = calc.getMaxBoundary();	
 
+		Log.v(getClass().getSimpleName(), "reloadViewData: min boundary = "
+				+ min);
+		Log.v(getClass().getSimpleName(), "reloadViewData: max boundary = "
+				+ max);
+		
     	List<TaskLocationResult> taskLocations = dbDao.findLocationsByBoundaries(
     			Calendar.getInstance(), min.getLatitude(), min.getLongitude(),
     			max.getLatitude(), max.getLongitude());
@@ -120,19 +130,18 @@ public class NearbyTasksFragment extends AllTasksFragment {
 				}
 			}
 		}
-    	
+
     	// Get a query using the already determined task ids
-    	
-    	
-        listAdapter = TasksListAdapter.newInstance(getActivity(), 
+    	usedCursor = dbDao.constructFindTasksCursorByIdList(taskIds);
+        listAdapter = TasksListAdapter.newInstance(context, 
         		usedCursor);
 
         setListAdapter(listAdapter);
     }
 
-	public void updateUserLocation(Location location) {
+	public void updateUserLocation(Location location, Context context) {
 		currentUserLocation = location;
-		reloadViewData();
+		reloadViewData(context);
 	}
     
 	/**

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Paint;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
@@ -32,6 +33,9 @@ public class TasksListAdapter extends SimpleCursorAdapter {
 	 * @return AllTasksListAdapter
 	 */
 	public static TasksListAdapter newInstance(Context context, Cursor cursor) {
+		Log.v("TasksListAdapter", "newInstance: context = " + context);
+		Log.v("TasksListAdapter", "newInstance: cursor = " + cursor);
+		
 		return new TasksListAdapter(context, R.layout.listitem_task, cursor,
 				new String[] { "title", "startDate", "endDate", "noDate",
 						"snoozeDate", "description", "done" },
