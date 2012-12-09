@@ -19,7 +19,7 @@ public class TaskStorageHelper extends SQLiteOpenHelper {
 	
 	private static final String TABLE_TASKS_SQL =
 			"CREATE TABLE `tasks` ("
-			+ "`id` INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL ,"
+			+ "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,"
 			+ "`title` TEXT NOT NULL ,"
 			+ "`description` TEXT NOT NULL ,"
 			+ "`customProximitry` INTEGER,"
@@ -27,13 +27,14 @@ public class TaskStorageHelper extends SQLiteOpenHelper {
 			+ "`endDate` INTEGER,"
 			+ "`noDate` BOOL NOT NULL DEFAULT false,"
 			+ "`done` BOOL NOT NULL DEFAULT false,"
+			+ "`snoozeDate` INTEGER,"
 			+ "`sorting` INTEGER NOT NULL )";
 	
 	public static final String TABLE_LOCATIONS_NAME = "locations";
 	
 	private static final String TABLE_LOCATIONS_SQL =
 			"CREATE TABLE `locations` ("
-			+ "`id` INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL ,"
+			+ "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL ,"
 			+ "`taskId` INTEGER NOT NULL ,"
 			+ "`title` TEXT NOT NULL ,"
 			+ "`address` TEXT NOT NULL ,"
@@ -57,7 +58,7 @@ public class TaskStorageHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// Empty by now, not needed
+
 	}
 
 }

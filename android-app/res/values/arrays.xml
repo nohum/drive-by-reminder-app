@@ -34,7 +34,6 @@
         <item>15000</item>
     </string-array>
     
-    
     <string-array name="proximitryEntriesWithDefault">
         <item>0</item>
         <item>500</item>
@@ -45,6 +44,22 @@
         <item>15000</item> <!-- referenced in .services.NotificationService -->
     </string-array>
     
+    <string-array name="snoozeTimeEntriesHuman">
+        <item>10 minutes</item>
+        <item>20 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>2 hours</item>
+    </string-array>
+
+    <string-array name="snoozeTimeEntries">
+        <item>10</item>
+        <item>20</item> <!-- referenced in xml/preferences.xml -->
+        <item>30</item>
+        <item>60</item>
+        <item>120</item>
+    </string-array>
+
     <string-array name="locationBiasEntriesHuman">
         <item>Austria</item>
         <item>Germany</item>

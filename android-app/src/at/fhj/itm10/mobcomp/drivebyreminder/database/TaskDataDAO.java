@@ -8,7 +8,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
-import at.fhj.itm10.mobcomp.drivebyreminder.models.BoundedLocation;
+import at.fhj.itm10.mobcomp.drivebyreminder.models.TaskLocationResult;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.Location;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.Task;
 
@@ -167,14 +167,14 @@ public class TaskDataDAO {
 	 * @param maxLongitude
 	 * @return List<BoundedLocation>
 	 */
-	public List<BoundedLocation> findLocationsByBoundaries(Calendar date,
+	public List<TaskLocationResult> findLocationsByBoundaries(Calendar date,
 			double minLatitude, double minLongitude, double maxLatitude,
 			double maxLongitude) {
 		open();
 
 		/* Original query:
-		SELECT l.taskId, t.customProximitry, t.title, t.description, l.latitude,
-				l.longitude FROM locations l
+		SELECT l.taskId, t.customProximitry, t.title, t.description, t.snoozeDate,
+				l.latitude, l.longitude FROM locations l
 		INNER JOIN tasks t ON l.taskId = t.id
 		WHERE t.done = 0 AND (t.noDate = 1 OR (t.noDate = 0 AND 1222211
 				BETWEEN t.startDate AND t.endDate)) AND l.latitude BETWEEN 1 AND 2
@@ -182,7 +182,7 @@ public class TaskDataDAO {
 		*/
 
 		Cursor cursor = db.rawQuery("SELECT l.taskId, t.customProximitry, t.title, "
-				+ "t.description, l.latitude, l.longitude FROM "
+				+ "t.description, t.snoozeDate, l.latitude, l.longitude FROM "
 				+ TaskStorageHelper.TABLE_LOCATIONS_NAME + " l INNER JOIN "
 				+ TaskStorageHelper.TABLE_TASKS_NAME + " t ON l.taskId = t.id "
 				+ "WHERE t.done = 0 AND (t.noDate = 1 OR (t.noDate = 0 AND ? "
@@ -193,8 +193,8 @@ public class TaskDataDAO {
 						String.valueOf(minLongitude), String.valueOf(maxLongitude)});
 		cursor.moveToFirst();
 		
-//		String debugSql = "SELECT l.taskId, t.customProximitry, t.title, t.description, l.latitude,"
-//		+ " l.longitude FROM locations l INNER JOIN tasks t ON l.taskId = t.id"
+//		String debugSql = "SELECT l.taskId, t.customProximitry, t.title, t.description, t.snoozeDate,"
+//		+ " l.latitude, l.longitude FROM locations l INNER JOIN tasks t ON l.taskId = t.id"
 //		+ " WHERE t.done = 0 AND (t.noDate = 1 OR (t.noDate = 0 AND " + String.valueOf(
 //				date.getTimeInMillis())
 //		+ " BETWEEN t.startDate AND t.endDate)) AND l.latitude BETWEEN " + String.valueOf(minLatitude)
@@ -202,17 +202,27 @@ public class TaskDataDAO {
 //		+ String.valueOf(minLongitude) + " AND " + String.valueOf(maxLongitude);
 //		Log.v(getClass().getSimpleName(), "findLocationsByBoundaries sql = " + debugSql);
 
-		List<BoundedLocation> foundLocations =
-				new ArrayList<BoundedLocation>(cursor.getCount());
+		List<TaskLocationResult> foundLocations =
+				new ArrayList<TaskLocationResult>(cursor.getCount());
 
 		while (!cursor.isAfterLast()) {
-			BoundedLocation b = new BoundedLocation();
+			TaskLocationResult b = new TaskLocationResult();
 			b.setTaskId(cursor.getLong(0));
 			b.setCustomProximitry(cursor.getInt(1));
 			b.setTitle(cursor.getString(2));
 			b.setDescription(cursor.getString(3));
-			b.setLatitude(cursor.getDouble(4));
-			b.setLongitude(cursor.getDouble(5));
+			
+			long snoozeDate = cursor.getLong(4);
+			if (snoozeDate == 0) {
+				b.setSnoozeDate(null);
+			} else {
+				Calendar snooze = Calendar.getInstance();
+				snooze.setTimeInMillis(snoozeDate);
+				b.setSnoozeDate(snooze);
+			}
+
+			b.setLatitude(cursor.getDouble(5));
+			b.setLongitude(cursor.getDouble(6));
 
 			foundLocations.add(b);
 			cursor.moveToNext();
@@ -252,23 +262,33 @@ public class TaskDataDAO {
 	 */
 	private Task fillTaskByCursor(Cursor cursor) {
 		Task task = new Task();
-		
+
 		task.setId(cursor.getLong(0));
 		task.setTitle(cursor.getString(1));
 		task.setDescription(cursor.getString(2));
 		task.setCustomProximitry(cursor.getInt(3));
-		
+
 		Calendar start = Calendar.getInstance();
 		start.setTimeInMillis(cursor.getLong(4));
 		task.setStartDate(start);
-		
+
 		Calendar end = Calendar.getInstance();
 		end.setTimeInMillis(cursor.getLong(5));
-		
+
 		task.setEndDate(end);
 		task.setNoDate(cursor.getInt(6) == 0 ? false : true);
 		task.setDone(cursor.getInt(7) == 0 ? false : true);
-		task.setSorting(cursor.getLong(8));
+
+		long snoozeData = cursor.getLong(8);
+		if (snoozeData == 0) {
+			task.setSnoozeDate(null);
+		} else {
+			Calendar snooze = Calendar.getInstance();
+			snooze.setTimeInMillis(snoozeData);
+			task.setSnoozeDate(snooze);
+		}
+
+		task.setSorting(cursor.getLong(9));
 
 		return task;
 	}
@@ -293,6 +313,11 @@ public class TaskDataDAO {
 		values.put("endDate", task.getEndDate().getTimeInMillis());
 		values.put("noDate", task.isNoDate() ? 1 : 0);
 		values.put("done", task.isDone() ? 1 : 0);
+		if (task.getSnoozeDate() == null) {
+			values.put("snoozeDate", 0);
+		} else {
+			values.put("snoozeDate", task.getSnoozeDate().getTimeInMillis());
+		}
 		values.put("sorting", task.getSorting());
 
 		return values;

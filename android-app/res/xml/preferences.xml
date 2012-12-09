@@ -19,6 +19,14 @@
             android:entries="@array/proximitryEntriesHuman"
             android:entryValues="@array/proximitryEntries"
             android:defaultValue="3000" />
+        
+        <ListPreference
+            android:key="snoozeTime"
+            android:summary="@string/settings_summary_snoozetime"
+            android:title="@string/settings_title_snoozetime"
+            android:entries="@array/snoozeTimeEntriesHuman"
+            android:entryValues="@array/snoozeTimeEntries"
+            android:defaultValue="20" />
 
     </PreferenceCategory>
     

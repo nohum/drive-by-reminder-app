@@ -5,19 +5,28 @@ import java.util.List;
 
 import roboguice.inject.InjectResource;
 import roboguice.service.RoboService;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
+import at.fhj.itm10.mobcomp.drivebyreminder.activities.MainActivity;
 import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskDataDAO;
 import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskStorageHelper;
-import at.fhj.itm10.mobcomp.drivebyreminder.models.BoundedLocation;
+import at.fhj.itm10.mobcomp.drivebyreminder.models.TaskLocationResult;
+import at.fhj.itm10.mobcomp.drivebyreminder.receiver.TaskSnoozeReceiver;
+
+import com.google.inject.Inject;
 
 /**
  * Notification service for the nearby tasks reminder.
@@ -27,10 +36,12 @@ import at.fhj.itm10.mobcomp.drivebyreminder.models.BoundedLocation;
 public class NotificationService extends RoboService
 		implements LocationListener {
 
-	private NotificationService notificationService;
+	@Inject
+	private NotificationManager notificationManager;
 
+	@Inject
 	private LocationManager locationManager;
-	
+
 	private SharedPreferences preferences;
 	
 	private TaskDataDAO dbDao;
@@ -63,8 +74,15 @@ public class NotificationService extends RoboService
 
 	private int defaultMaximumMetersDistance = 0;
 	
+	private Uri notificationRingtoneResource = null;
+	
+	private boolean notificationVibrate = true;
+	
 	@InjectResource(R.array.proximitryEntriesWithDefault)
 	private String[] proximitryEntries;
+	
+	@InjectResource(R.string.service_notification_title)
+	private String strNotificationTitle;
 	
 	@Override
 	public IBinder onBind(final Intent data) {
@@ -85,6 +103,19 @@ public class NotificationService extends RoboService
 	}
 
 	/**
+	 * Init service variables.
+	 */
+	private void initServiceVars() {
+		preferences = PreferenceManager.getDefaultSharedPreferences(
+				getApplicationContext());
+		dbDao = new TaskDataDAO(new TaskStorageHelper(getApplicationContext()));
+
+		Log.d(getClass().getSimpleName(), "DEGREES_PER_METER = " + DEGREES_PER_METER_LAT);
+		Log.d(getClass().getSimpleName(), "MAXIMUM_USER_DISTANCE = " + MAXIMUM_USER_DISTANCE);
+		Log.d(getClass().getSimpleName(), "MAXIMUM_TASK_DISTANCE = " + MAXIMUM_TASK_DISTANCE_LAT);
+	}
+	
+	/**
 	 * Register for updates and fill other internal variables.
 	 */
 	private void initService() {
@@ -98,25 +129,19 @@ public class NotificationService extends RoboService
 				// 3000 = see res/values/arrays.xml - proximitryEntries
 				"defaultProximitry", "3000"));
 		
-		Log.v(getClass().getSimpleName(), "initService: defaultMaximumMetersDistance = "
-				+ defaultMaximumMetersDistance);
-	}
+		String settingTemp = preferences.getString("notificationRingtone", "");
+		if (!settingTemp.isEmpty()) {
+			notificationRingtoneResource = Uri.parse(settingTemp);
+		}
 
-	/**
-	 * Init service variables.
-	 */
-	private void initServiceVars() {
-//		notificationService = (NotificationService) getApplicationContext()
-//				.getSystemService(NOTIFICATION_SERVICE);
-		locationManager = (LocationManager) getApplicationContext()
-				.getSystemService(LOCATION_SERVICE);
-		preferences = PreferenceManager.getDefaultSharedPreferences(
-				getApplicationContext());
-		dbDao = new TaskDataDAO(new TaskStorageHelper(getApplicationContext()));
-
-		Log.d(getClass().getSimpleName(), "DEGREES_PER_METER = " + DEGREES_PER_METER_LAT);
-		Log.d(getClass().getSimpleName(), "MAXIMUM_USER_DISTANCE = " + MAXIMUM_USER_DISTANCE);
-		Log.d(getClass().getSimpleName(), "MAXIMUM_TASK_DISTANCE = " + MAXIMUM_TASK_DISTANCE_LAT);
+		notificationVibrate = preferences.getBoolean("notificationVibrate", true);
+		
+		Log.v(getClass().getSimpleName(), "initService: settingTemp for ringtone = "
+				+ settingTemp);
+		Log.v(getClass().getSimpleName(), "initService: notificationRingtoneResource = "
+				+ notificationRingtoneResource);
+		Log.v(getClass().getSimpleName(), "initService: notificationVibrate = "
+				+ notificationVibrate);
 	}
 
 	@Override
@@ -150,7 +175,7 @@ public class NotificationService extends RoboService
 		Log.v(getClass().getSimpleName(), "checkLocationMatchInDatabase: min location "
 				+ "distance from original point = " + minResults[0]);
 
-		List<BoundedLocation> locations = dbDao.findLocationsByBoundaries(
+		List<TaskLocationResult> locations = dbDao.findLocationsByBoundaries(
 				Calendar.getInstance(), minLatitude, minLongitude, maxLatitude,
 				maxLongitude);
 
@@ -160,10 +185,10 @@ public class NotificationService extends RoboService
 			return;
 		}
 
-		for (BoundedLocation foundLocation : locations) {
+		for (TaskLocationResult foundLocation : locations) {
 			Log.v(getClass().getSimpleName(), "checkLocationMatchInDatabase: found: "
 					+ foundLocation.toString());
-			
+
 			// The custom proximitry is zero, check for the
 			// defaultMaximumMetersDistance
 			if (foundLocation.getCustomProximitry() == 0) {
@@ -193,14 +218,14 @@ public class NotificationService extends RoboService
 	 * @param proximitry task proximitry in meters
 	 */
 	private void testFoundTaskProximitry(Location userLocation,
-			BoundedLocation foundLocation, int proximitry) {
+			TaskLocationResult foundLocation, int proximitry) {
 		Log.d(getClass().getSimpleName(), "testFoundTaskProximitry: checking against"
 				+ " proximitry = " + proximitry + ": " + foundLocation.toString());
 
 		float[] results = new float[3];
 		Location.distanceBetween(userLocation.getLatitude(), userLocation.getLongitude(),
 				foundLocation.getLatitude(), foundLocation.getLongitude(), results);
-		
+
 		Log.v(getClass().getSimpleName(), "testFoundTaskProximitry: proximitry result = "
 				+ results[0]);
 		if (results[0] <= proximitry) {
@@ -213,19 +238,51 @@ public class NotificationService extends RoboService
 	 * 
 	 * @param foundLocation
 	 */
-	private void notifyUserAboutTask(BoundedLocation foundLocation) {
-//		Notification updateComplete = new Notification();
-//		updateComplete.icon = android.R.drawable.stat_notify_sync;
-//		updateComplete.tickerText = context
-//		    .getText(R.string.notification_title);
-//		updateComplete.when = System.currentTimeMillis();
+	private void notifyUserAboutTask(TaskLocationResult foundLocation) {
+		Log.v(getClass().getSimpleName(), "notifyUserAboutTask: foundLocation = "
+				+ foundLocation);
 		
-//		Intent notificationIntent = new Intent(context,
-//			    TutListActivity.class);
-//			PendingIntent contentIntent = PendingIntent.getActivity(context, 0,
-//			    notificationIntent, 0);
-		
-//		notificationManager.notify(LIST_UPDATE_NOTIFICATION, updateComplete);
+		// If there is a snooze time set and it is in the future, skip this notification...
+		if (foundLocation.getSnoozeDate() != null
+				&& foundLocation.getSnoozeDate().compareTo(Calendar.getInstance()) < 0) {
+			Log.i(getClass().getSimpleName(), "notifyUserAboutTask: skipping because of snooze");
+			return;
+		}
+
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+		builder.setSmallIcon(R.drawable.ic_launcher);
+		builder.setContentTitle(strNotificationTitle);
+		builder.setContentText(foundLocation.getTitle());
+		builder.setTicker(foundLocation.getTitle());
+		builder.setOnlyAlertOnce(true);
+
+		// On dismiss of notification: snooze that task
+		Intent snoozeTaskIntent = new Intent();
+		snoozeTaskIntent.putExtra("taskId", foundLocation.getTaskId());
+		snoozeTaskIntent.setAction(
+				"at.fhj.itm10.mobcomp.drivebyreminder.intents.TASK_SNOOZED");
+		builder.setDeleteIntent(PendingIntent.getBroadcast(getApplicationContext(),
+				0, snoozeTaskIntent, 0));
+
+		// Show nearby tasks on click
+		Intent showNearbyTasksIntent = new Intent(this, MainActivity.class);
+		showNearbyTasksIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		showNearbyTasksIntent.putExtra("openedFragment", 2);
+		builder.setContentIntent(PendingIntent.getActivity(getApplicationContext(),
+				0, showNearbyTasksIntent, 0));
+
+		if (notificationRingtoneResource != null) {
+			builder.setSound(notificationRingtoneResource);
+		}
+
+		if (notificationVibrate) {
+			builder.setVibrate(new long[] {0, 300, 400, 300});
+			builder.setLights(0xff00ff00, 300, 1000);
+		}
+
+		Notification taskNotification = builder.getNotification();
+		// Show a notification for this task only once... id here also unique
+		notificationManager.notify((int) foundLocation.getTaskId(), taskNotification);
 	}
 
 	@Override
@@ -250,4 +307,5 @@ public class NotificationService extends RoboService
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 
 	}
+
 }

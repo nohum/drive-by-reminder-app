@@ -17,22 +17,19 @@ public class ServiceBootLoader extends RoboBroadcastReceiver {
 
 	@Override
 	protected void handleReceive(Context context, Intent intent) {
-		Log.v("ServiceBootLoader", "got boot event...");
+		Log.v(getClass().getSimpleName(), "got boot event...");
 		
 		SharedPreferences preferences = PreferenceManager
         		.getDefaultSharedPreferences(context);
-		
+
 		if (preferences.getBoolean("appEnabled", true)) {
-			Log.v("ServiceBootLoader",
+			Log.v(getClass().getSimpleName(),
 					"preference set to true, starting service...");
 			
 			Intent startServiceIntent = new Intent(context,
 					NotificationService.class);
 	        context.startService(startServiceIntent);
-		} else {
-			Log.v("ServiceBootLoader",
-					"preference set to true, NOT starting service...");
-		}		
+		}	
     }
 
 }

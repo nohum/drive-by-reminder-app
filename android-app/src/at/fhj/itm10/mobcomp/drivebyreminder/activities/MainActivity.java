@@ -40,16 +40,6 @@ public class MainActivity extends RoboSherlockFragmentActivity
 	
 	@InjectView(R.id.pgrMainView)
 	private ViewPager pagerMainView;
-	
-//	private ActionMode actionMode;
-//
-//	public ActionMode getActionMode() {
-//		return actionMode;
-//	}
-//
-//	public void setActionMode(ActionMode actionMode) {
-//		this.actionMode = actionMode;
-//	}
 
 	/**
 	 * Database DAO.
@@ -92,7 +82,7 @@ public class MainActivity extends RoboSherlockFragmentActivity
 	protected void onStart() {
 		SharedPreferences preferences = PreferenceManager
         		.getDefaultSharedPreferences(getApplicationContext());
-		
+
 		// Start the service if requested by the user
 		if (preferences.getBoolean("appEnabled", true)) {
 			Log.v(getClass().getSimpleName(),
@@ -139,13 +129,33 @@ public class MainActivity extends RoboSherlockFragmentActivity
 			restoreState(savedInstanceState);
 		}
 	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+        // Used by notifications
+        if (intent != null) {
+        	int openedFragment = intent.getIntExtra("openedFragment", -1);
+        	if (openedFragment > -1) {
+        		showFragmentWithNumber(openedFragment);
+        	}
+        }
+
+		super.onNewIntent(intent);
+	}
 	
 	private void restoreState(Bundle savedInstanceState) {
 		// Pager and nav menu item number
-		int currentFragment = savedInstanceState.getInt("currentFragment");
-
-		getSupportActionBar().setSelectedNavigationItem(currentFragment);
-		pagerMainView.setCurrentItem(currentFragment, false);
+		showFragmentWithNumber(savedInstanceState.getInt("currentFragment"));
+	}
+	
+	/**
+	 * Show specific fragment.
+	 * 
+	 * @param number
+	 */
+	private void showFragmentWithNumber(int number) {
+		getSupportActionBar().setSelectedNavigationItem(number);
+		pagerMainView.setCurrentItem(number, false);
 	}
 
 	@Override

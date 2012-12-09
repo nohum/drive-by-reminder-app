@@ -12,6 +12,9 @@
     <string name="menu_delete">Delete</string>
     <string name="menu_discard">Discard</string>
     
+    <!-- Service -->
+    <string name="service_notification_title">Tasks nearby have been found</string>
+    
     <!-- Home fragment -->
     <string name="fragment_home_intro">Welcome to Drive-by Reminder\n\nUse this brand new android app to remind yourself about e.g. tasks when you visit certain locations.\n\nSwipe to the right or use the upper menu to get directly to the task list.</string>
     
@@ -78,10 +81,13 @@
     
     <string name="settings_title_appenabled">Enable app</string>
  	<string name="settings_summaryon_appenabled">Alert when hitting task locations</string>
-	<string name="settings_summaryoff_appenabled">App is disabled and does not report matches</string>
+	<string name="settings_summaryoff_appenabled">App does not report location matches</string>
 
 	<string name="settings_title_defaultproximitry">Default proximitry</string>
 	<string name="settings_summary_defaultproximitry">Default notification proximitry</string>
+	
+	<string name="settings_summary_snoozetime">Time before showing tasks again whose notifications have been cleared</string>
+	<string name="settings_title_snoozetime">Notification snooze time</string>
     
     <string name="settings_title_eventcreationedit">Event creation and edit</string>
 
@@ -100,6 +106,5 @@
 
     <string name="settings_title_about">About</string>
     <string name="settings_title_createdby">Created by Wolfgang Gaar</string>
-    
-    
+
 </resources>

@@ -29,6 +29,8 @@ public class Task {
 	private String description;
 
 	private long sorting;
+	
+	private Calendar snoozeDate;
 
 	public long getId() {
 		return id;
@@ -100,5 +102,13 @@ public class Task {
 
 	public void setSorting(final long sorting) {
 		this.sorting = sorting;
+	}
+
+	public Calendar getSnoozeDate() {
+		return snoozeDate;
+	}
+
+	public void setSnoozeDate(Calendar snoozeDate) {
+		this.snoozeDate = snoozeDate;
 	}
 }
