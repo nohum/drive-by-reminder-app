@@ -19,16 +19,10 @@ public class LocationBoundariesCalculator {
 	
 	private Location maxBoundary;
 	
-	
 	/**
-	 * Latitude degrees for one meter - 40076 / 360 / 60 / 1000000.
+	 * Earth radius.
 	 */
-	private static final double DEGREES_PER_METER_LAT = 0.00000185537037037037;
-	
-	/**
-	 * Longitude degrees for one meter - 40076 / 360 / 60 / 100000.
-	 */
-	private static final double DEGREES_PER_METER_LON = 0.0000185537037037037;
+	private static final int R = 6378137;
 
 	public LocationBoundariesCalculator(Location baseLocation,
 			int distanceInMeters) {
@@ -55,14 +49,9 @@ public class LocationBoundariesCalculator {
 		
 		Log.v(getClass().getSimpleName(), "calculate: distance meters = "
 				+ distanceInMeters);
-		double distanceLat = DEGREES_PER_METER_LAT * distanceInMeters;
-		double distanceLon = DEGREES_PER_METER_LON * distanceInMeters;
 		
-		minBoundary.setLatitude(minBoundary.getLatitude() - distanceLat);
-		minBoundary.setLongitude(minBoundary.getLongitude() - distanceLon);
-		
-		maxBoundary.setLatitude(maxBoundary.getLatitude() + distanceLat);
-		maxBoundary.setLongitude(maxBoundary.getLongitude() + distanceLon);
+		calcDistanceFor(distanceInMeters * -1, minBoundary);
+		calcDistanceFor(distanceInMeters, maxBoundary);
 		
 		float[] minResults = new float[3];
 		float[] maxResults = new float[3];
@@ -76,4 +65,14 @@ public class LocationBoundariesCalculator {
 		Log.v(getClass().getSimpleName(), "calculate: max meters = " + maxResults[0]);
 	}
 	
+	private void calcDistanceFor(int distance, Location field) {
+		double currentLat = location.getLatitude();
+		double currentLon = location.getLongitude();
+		
+		double dLat = distance / R;
+		double dLon = distance / (R * Math.cos(Math.PI * currentLat / 180));
+		
+		field.setLatitude(currentLat + dLat * 180 / Math.PI);
+		field.setLongitude(currentLon + dLon * 180 / Math.PI);
+	}
 }
