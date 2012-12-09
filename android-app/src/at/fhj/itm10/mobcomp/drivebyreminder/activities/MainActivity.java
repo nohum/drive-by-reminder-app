@@ -2,11 +2,14 @@ package at.fhj.itm10.mobcomp.drivebyreminder.activities;
 
 import roboguice.inject.ContentView;
 import roboguice.inject.InjectView;
+import roboguice.receiver.RoboBroadcastReceiver;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.location.Location;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
@@ -18,6 +21,7 @@ import android.widget.TextView;
 import at.fhj.itm10.mobcomp.drivebyreminder.R;
 import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskDataDAO;
 import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskStorageHelper;
+import at.fhj.itm10.mobcomp.drivebyreminder.fragments.NearbyTasksFragment;
 import at.fhj.itm10.mobcomp.drivebyreminder.helper.MainFragmentPagerAdapter;
 import at.fhj.itm10.mobcomp.drivebyreminder.services.NotificationService;
 
@@ -48,6 +52,8 @@ public class MainActivity extends RoboSherlockFragmentActivity
 
 	private MainFragmentPagerAdapter pagerAdapter;
 
+	private InternalLocationUpdateReceiver locationUpdateReceiver;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -77,7 +83,7 @@ public class MainActivity extends RoboSherlockFragmentActivity
 			restoreState(savedInstanceState);
 		}
 	}
-	
+
 	@Override
 	protected void onStart() {
 		SharedPreferences preferences = PreferenceManager
@@ -98,13 +104,23 @@ public class MainActivity extends RoboSherlockFragmentActivity
 	
 	@Override
 	protected void onResume() {
+		Log.v(getClass().getSimpleName(), "onResume called");
+		
+		locationUpdateReceiver = new InternalLocationUpdateReceiver();
+		registerReceiver(locationUpdateReceiver, new IntentFilter(
+				"at.fhj.itm10.mobcomp.drivebyreminder.intents.LOCATION_CHANGED"));
 		taskDataDAO.open();
+		
+		requestLocationUpdate();
+		
 		super.onResume();
 	}
 	
 	@Override
 	protected void onPause() {
+		unregisterReceiver(locationUpdateReceiver);
 		taskDataDAO.close();
+
 		super.onPause();
 	}
 	
@@ -133,7 +149,7 @@ public class MainActivity extends RoboSherlockFragmentActivity
 	@Override
 	protected void onNewIntent(Intent intent) {
 		Log.v(getClass().getSimpleName(), "onNewIntent called");
-		
+
         // Used by notifications
         if (intent != null) {
         	int openedFragment = intent.getIntExtra("openedFragment", -1);
@@ -148,6 +164,18 @@ public class MainActivity extends RoboSherlockFragmentActivity
 	private void restoreState(Bundle savedInstanceState) {
 		// Pager and nav menu item number
 		showFragmentWithNumber(savedInstanceState.getInt("currentFragment"));
+	}
+	
+	/**
+	 * Request a location update from the service.
+	 */
+	private void requestLocationUpdate() {
+		Log.v(getClass().getSimpleName(), "requestLocationUpdate called");
+		
+		Intent requestLocationUpdateIntent = new Intent();
+        requestLocationUpdateIntent.setAction(
+        		"at.fhj.itm10.mobcomp.drivebyreminder.intents.REQUEST_LOCATION");
+        sendBroadcast(requestLocationUpdateIntent);
 	}
 	
 	/**
@@ -252,6 +280,29 @@ public class MainActivity extends RoboSherlockFragmentActivity
 	
 	public TaskDataDAO getDao() {
 		return taskDataDAO;
+	}
+	
+	/**
+	 * Location update broadcast receiver.
+	 * 
+	 * @author Wolfgang Gaar
+	 */
+	private class InternalLocationUpdateReceiver extends RoboBroadcastReceiver {
+
+		@Override
+		protected void handleReceive(Context context, Intent intent) {
+			// Get fragment and update it's knowledge of the last user location
+
+			NearbyTasksFragment fragment = (NearbyTasksFragment) pagerAdapter
+					.getItem(MainFragmentPagerAdapter.NEARBY_TASKS_FRAGMENT);
+			Location location = (Location) intent.getParcelableExtra("location");
+
+			Log.d(getClass().getSimpleName(), "handleReceive: location = " + location);
+			fragment.updateUserLocation(location);
+
+			super.handleReceive(context, intent);
+		}
+
 	}
 	
 }

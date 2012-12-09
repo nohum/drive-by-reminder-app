@@ -52,6 +52,8 @@ public class TaskSnoozeReceiver extends RoboBroadcastReceiver {
 
 		dao.update(task);
 		dao.close();
+		
+		super.handleReceive(context, intent);
 	}
 	
 }

@@ -21,6 +21,10 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 	
 	private NearbyTasksFragment nearbyTasks;
 	
+	public static final int ALL_TASKS_FRAGMENT = 1;
+	
+	public static final int NEARBY_TASKS_FRAGMENT = 2;
+	
 	public MainFragmentPagerAdapter(FragmentManager fm, TaskDataDAO dao) {
 		super(fm);
 		this.dbDao = dao;
@@ -31,11 +35,17 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 		switch(number) {
 		case 0:
 			return HomeFragment.newInstance();
-		case 1:
-			allTasks = AllTasksFragment.newInstance(dbDao, this);
+		case ALL_TASKS_FRAGMENT:
+			if (allTasks == null) {
+				allTasks = AllTasksFragment.newInstance(dbDao, this);
+			}
+
 			return allTasks;
 		case 2:
-			nearbyTasks = NearbyTasksFragment.newInstance(dbDao, this);
+			if (nearbyTasks == null) {
+				nearbyTasks = NearbyTasksFragment.newInstance(dbDao, this);
+			}
+
 			return nearbyTasks;
 		default:
 			throw new IllegalStateException("number higher than 2");
@@ -56,11 +66,11 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 
 	private void nullChecks() {
 		if (allTasks == null) {
-			getItem(1);
+			getItem(ALL_TASKS_FRAGMENT);
 		}
 		
 		if (nearbyTasks == null) {
-			getItem(2);
+			getItem(NEARBY_TASKS_FRAGMENT);
 		}
 	}
 	

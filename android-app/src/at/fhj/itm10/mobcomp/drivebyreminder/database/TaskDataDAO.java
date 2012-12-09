@@ -7,10 +7,9 @@ import java.util.List;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
-import at.fhj.itm10.mobcomp.drivebyreminder.models.TaskLocationResult;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.Location;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.Task;
+import at.fhj.itm10.mobcomp.drivebyreminder.models.TaskLocationResult;
 
 /**
  * Task data keeper.
@@ -53,8 +52,6 @@ public class TaskDataDAO {
 	
 	public Cursor findAllTasksForFragmentCursor() {
 		open();
-		Log.d(this.getClass().getSimpleName(),
-				"findAllTasksForFragmentCursor db = " + db);
 
 		return db.rawQuery("SELECT `id` as _id, * FROM "
 				+ TaskStorageHelper.TABLE_TASKS_NAME
@@ -156,6 +153,16 @@ public class TaskDataDAO {
 		return foundLocations;
 	}
 
+	public Cursor findLocationsByBoundariesForFragmentCursor(Calendar date,
+			double minLatitude, double minLongitude, double maxLatitude,
+			double maxLongitude) {
+		open();
+
+		return db.rawQuery("SELECT `id` as _id, * FROM "
+				+ TaskStorageHelper.TABLE_TASKS_NAME
+				+ " ORDER BY `sorting` ASC, `noDate` DESC", null);
+	}
+	
 	/**
 	 * Find locations by certain boundaries.
 	 * 

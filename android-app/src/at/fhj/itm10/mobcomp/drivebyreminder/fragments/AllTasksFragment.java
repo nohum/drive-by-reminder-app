@@ -17,7 +17,7 @@ import at.fhj.itm10.mobcomp.drivebyreminder.activities.MainActivity;
 import at.fhj.itm10.mobcomp.drivebyreminder.activities.ModifyTaskActivity;
 import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskDataDAO;
 import at.fhj.itm10.mobcomp.drivebyreminder.helper.MainFragmentPagerAdapter;
-import at.fhj.itm10.mobcomp.drivebyreminder.listadapters.AllTasksListAdapter;
+import at.fhj.itm10.mobcomp.drivebyreminder.listadapters.TasksListAdapter;
 
 import com.actionbarsherlock.view.ActionMode;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
@@ -30,13 +30,13 @@ import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFra
 public class AllTasksFragment extends RoboSherlockListFragment
 		implements OnItemClickListener {
 
-	private TaskDataDAO dbDao;
+	protected TaskDataDAO dbDao;
 	
 	private MainFragmentPagerAdapter pagerAdapter;
 	
 	private SimpleCursorAdapter listAdapter;
 
-	private Cursor usedCursor;
+	protected Cursor usedCursor;
 	
 	private ActionMode actionMode;
 
@@ -75,16 +75,13 @@ public class AllTasksFragment extends RoboSherlockListFragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {
-       View v = inflater.inflate(R.layout.fragment_alltasks, container, false);
-       
-       return v;
+       return inflater.inflate(R.layout.fragment_alltasks, container, false);
     }
     
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
     	super.onViewCreated(view, savedInstanceState);
 
-//    	getListView().setOnItemLongClickListener(this);
     	getListView().setOnItemClickListener(this);
     	getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
     	getListView().setItemsCanFocus(false);
@@ -102,11 +99,9 @@ public class AllTasksFragment extends RoboSherlockListFragment
 
     public void reloadViewData() {
     	usedCursor = dbDao.findAllTasksForFragmentCursor();
-    	Log.d(this.getClass().getSimpleName(), "reloadViewData: usedCursor = "
-    			+ usedCursor);
-    	
-        listAdapter = AllTasksListAdapter.newInstance(getActivity(), 
+        listAdapter = TasksListAdapter.newInstance(getActivity(), 
         		usedCursor);
+
         setListAdapter(listAdapter);
     }
     
@@ -138,29 +133,6 @@ public class AllTasksFragment extends RoboSherlockListFragment
 		}
 	}
 
-//	@Override
-//	public boolean onItemLongClick(AdapterView<?> parent, View v, int position,
-//			long id) {
-//		// If in action mode, skip this to prevent re-entering the action mode
-//		if (actionMode != null) {
-//			return false;
-//		}
-//		
-//		long taskId = (Long) v.getTag();
-//    	if (taskId > 0) {
-//    		// We have to use the sherlock action mode starter to maintain
-//    		// compatibility
-//    		actionMode = ((MainActivity) getActivity())
-//    				.startActionMode(new ModifyTaskListActionMode(getListView()));
-//    		((MainActivity) getActivity()).setActionMode(actionMode);
-//    		v.setSelected(true);
-//
-//    		return true;
-//    	}
-//		
-//		return false;
-//	}
-
 	@Override
 	public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 		if (actionMode != null) {
@@ -172,6 +144,7 @@ public class AllTasksFragment extends RoboSherlockListFragment
     	if (taskId > 0) {
     		Intent edit = new Intent(getActivity(), ModifyTaskActivity.class);
     		edit.putExtra("taskId", taskId);
+
     		this.startActivityForResult(edit, 200);
     	}
 	}

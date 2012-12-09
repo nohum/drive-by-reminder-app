@@ -16,7 +16,7 @@ import at.fhj.itm10.mobcomp.drivebyreminder.R;
  * 
  * @author Wolfgang Gaar
  */
-public class AllTasksListAdapter extends SimpleCursorAdapter {
+public class TasksListAdapter extends SimpleCursorAdapter {
 
 	private Context context;
 	
@@ -31,15 +31,15 @@ public class AllTasksListAdapter extends SimpleCursorAdapter {
 	 * @param cursor cursor
 	 * @return AllTasksListAdapter
 	 */
-	public static AllTasksListAdapter newInstance(Context context, Cursor cursor) {
-		return new AllTasksListAdapter(context, R.layout.listitem_task, cursor,
+	public static TasksListAdapter newInstance(Context context, Cursor cursor) {
+		return new TasksListAdapter(context, R.layout.listitem_task, cursor,
 				new String[] { "title", "startDate", "endDate", "noDate",
 						"snoozeDate", "description", "done" },
 				new int[] { R.id.lblTaskTitle, R.id.lblTaskDate,
 						R.id.lblTaskDescription, R.id.lblTaskSnoozed });
 	}
 
-	public AllTasksListAdapter(Context context, int layout, Cursor c,
+	public TasksListAdapter(Context context, int layout, Cursor c,
 			String[] from, int[] to) {
 		super(context, layout, c, from, to, 0);
 		setViewBinder(new TaskItemViewBinder());

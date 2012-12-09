@@ -22,6 +22,7 @@ import at.fhj.itm10.mobcomp.drivebyreminder.R;
 import at.fhj.itm10.mobcomp.drivebyreminder.activities.MainActivity;
 import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskDataDAO;
 import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskStorageHelper;
+import at.fhj.itm10.mobcomp.drivebyreminder.helper.LocationBoundariesCalculator;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.TaskLocationResult;
 
 import com.google.inject.Inject;
@@ -33,6 +34,8 @@ import com.google.inject.Inject;
  */
 public class NotificationService extends RoboService
 		implements LocationListener {
+	
+	// "at.fhj.itm10.mobcomp.drivebyreminder.intents.REQUEST_LOCATION"
 
 	@Inject
 	private NotificationManager notificationManager;
@@ -44,31 +47,17 @@ public class NotificationService extends RoboService
 	
 	private TaskDataDAO dbDao;
 	
+	private Location currentUserLocation;
+	
 	private static final int LOCATION_UPDATE_INTERVAL = 1000 * 60 * 5;
 	
 	private static final int METERS_UPDATE_THRESHOLD = 300;
-	
-	/**
-	 * Latitude degrees for one meter - 40076 / 360 / 60 / 1000000.
-	 */
-	private static final double DEGREES_PER_METER_LAT = 0.00000185537037037037;
-	
-	/**
-	 * Longitude degrees for one meter - 40076 / 360 / 60 / 100000.
-	 */
-	private static final double DEGREES_PER_METER_LON = 0.0000185537037037037;
 	
 	/**
 	 * Describes the maximum distance of a point of interest from a user's view.
 	 * Taken from res/values/arrays.xml - proximitryEntriesWithDefault - last entry.
 	 */
 	private static final int MAXIMUM_USER_DISTANCE = 15000;
-	
-	private static final double MAXIMUM_TASK_DISTANCE_LAT = DEGREES_PER_METER_LAT
-			* MAXIMUM_USER_DISTANCE;
-	
-	private static final double MAXIMUM_TASK_DISTANCE_LON = DEGREES_PER_METER_LON
-			* MAXIMUM_USER_DISTANCE;
 
 	private int defaultMaximumMetersDistance = 0;
 	
@@ -95,9 +84,12 @@ public class NotificationService extends RoboService
 		initService();
 
 		Log.i(getClass().getSimpleName(), "notification service is up and running");
+		
+		Location lastLocation = locationManager.getLastKnownLocation(
+				LocationManager.NETWORK_PROVIDER);
 
-		checkLocationMatchInDatabase(locationManager.getLastKnownLocation(
-				LocationManager.NETWORK_PROVIDER));
+		sendLocationToActivities(lastLocation);
+		checkLocationMatchInDatabase(lastLocation);
 	}
 
 	/**
@@ -107,10 +99,6 @@ public class NotificationService extends RoboService
 		preferences = PreferenceManager.getDefaultSharedPreferences(
 				getApplicationContext());
 		dbDao = new TaskDataDAO(new TaskStorageHelper(getApplicationContext()));
-
-		Log.d(getClass().getSimpleName(), "DEGREES_PER_METER = " + DEGREES_PER_METER_LAT);
-		Log.d(getClass().getSimpleName(), "MAXIMUM_USER_DISTANCE = " + MAXIMUM_USER_DISTANCE);
-		Log.d(getClass().getSimpleName(), "MAXIMUM_TASK_DISTANCE = " + MAXIMUM_TASK_DISTANCE_LAT);
 	}
 	
 	/**
@@ -141,7 +129,7 @@ public class NotificationService extends RoboService
 		
 		locationManager.removeUpdates(this);
 		dbDao.close();
-		
+
 		Log.i(getClass().getSimpleName(), "notification service is shutting down");
 	}
 
@@ -150,25 +138,21 @@ public class NotificationService extends RoboService
 			return;
 		}
 
-		double minLatitude = userLocation.getLatitude() - MAXIMUM_TASK_DISTANCE_LAT;
-		double minLongitude = userLocation.getLongitude() - MAXIMUM_TASK_DISTANCE_LON;
-		double maxLatitude = userLocation.getLatitude() + MAXIMUM_TASK_DISTANCE_LAT;
-		double maxLongitude = userLocation.getLongitude() + MAXIMUM_TASK_DISTANCE_LON;
+		LocationBoundariesCalculator calc = new LocationBoundariesCalculator(
+				userLocation, MAXIMUM_USER_DISTANCE);
+		Location min = calc.getMinBoundary();
+		Location max = calc.getMaxBoundary();	
 
-//		Log.d(getClass().getSimpleName(), "checkLocationMatchInDatabase: min latitude = "
-//				+ minLatitude + ", min longitude = " + minLongitude);
-//		Log.d(getClass().getSimpleName(), "checkLocationMatchInDatabase: max latitude = "
-//				+ maxLatitude + ", max longitude = " + maxLongitude);
-
+		// Output the meters distance for debugging
 		float[] minResults = new float[3];
 		Location.distanceBetween(userLocation.getLatitude(), userLocation.getLongitude(),
-				minLatitude, minLongitude, minResults);
+				min.getLatitude(), min.getLongitude(), minResults);
 		Log.v(getClass().getSimpleName(), "checkLocationMatchInDatabase: min location "
 				+ "distance from original point = " + minResults[0]);
 
 		List<TaskLocationResult> locations = dbDao.findLocationsByBoundaries(
-				Calendar.getInstance(), minLatitude, minLongitude, maxLatitude,
-				maxLongitude);
+				Calendar.getInstance(), min.getLatitude(), min.getLongitude(),
+    			max.getLatitude(), max.getLongitude());
 
 		// Get out of here fast if there are no matches
 		if (locations.size() == 0) {
@@ -229,13 +213,18 @@ public class NotificationService extends RoboService
 		Log.v(getClass().getSimpleName(), "notifyUserAboutTask: foundLocation = "
 				+ foundLocation);
 
-		// If there is a snooze time set and it is in the future, skip this notification...
+		// If there is a snooze time set and it is in the future,
+		// skip this notification...
 		if (foundLocation.getSnoozeDate() != null
 				&& foundLocation.getSnoozeDate().compareTo(Calendar.getInstance()) == 1) {
-			Log.i(getClass().getSimpleName(), "notifyUserAboutTask: skipping because of snooze");
-			Log.v(getClass().getSimpleName(), "snooze date = " + foundLocation.getSnoozeDate()
+			Log.i(getClass().getSimpleName(), 
+					"notifyUserAboutTask: skipping because of snooze");
+			Log.v(getClass().getSimpleName(), 
+					"snooze date = " + foundLocation.getSnoozeDate()
 					.getTime());
-			Log.v(getClass().getSimpleName(), "now = " + Calendar.getInstance().getTime());
+			Log.v(getClass().getSimpleName(), 
+					"now = " + Calendar.getInstance().getTime());
+
 			return;
 		}
 
@@ -276,11 +265,29 @@ public class NotificationService extends RoboService
 				builder.getNotification());
 	}
 
+	/**
+	 * Send the current user location to the activities so that they are
+	 * able to use that data.
+	 * 
+	 * @param location
+	 */
+	private void sendLocationToActivities(Location location) {
+		Intent sendIntent = new Intent();
+		sendIntent.setAction(
+				"at.fhj.itm10.mobcomp.drivebyreminder.intents.LOCATION_CHANGED");
+		sendIntent.putExtra("location", location);
+
+		sendBroadcast(sendIntent);
+	}
+	
 	@Override
 	public void onLocationChanged(Location location) {
 		Log.d(getClass().getSimpleName(), "onLocationChanged: latitude = "
 				+ location.getLatitude() + ", longitude = " + location.getLongitude());
 
+		currentUserLocation = location;
+
+		sendLocationToActivities(location);
 		checkLocationMatchInDatabase(location);
 	}
 
