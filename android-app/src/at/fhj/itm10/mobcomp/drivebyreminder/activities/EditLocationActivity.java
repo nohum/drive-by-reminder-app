@@ -15,8 +15,10 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnKeyListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -43,7 +45,7 @@ import com.google.inject.Inject;
  */
 @ContentView(R.layout.activity_editlocation)
 public class EditLocationActivity extends RoboSherlockActivity
-		implements OnClickListener {
+		implements OnClickListener, OnKeyListener {
 
 	@InjectView(R.id.txtLocationName)
 	private EditText txtLocationName;
@@ -204,6 +206,7 @@ public class EditLocationActivity extends RoboSherlockActivity
 	 */
 	private void initViewEvents() {
 		btnLocationSearch.setOnClickListener(this);
+		txtLocationName.setOnKeyListener(this);
 	}
 
 	/**
@@ -286,6 +289,22 @@ public class EditLocationActivity extends RoboSherlockActivity
 					+ " entered default case, this should not happen!");
 			break;
 		}
+	}
+
+	/**
+	 * Listen for the done button in the text field.
+	 * 
+	 * @see http://stackoverflow.com/questions/5677563/listener-for-done-button-on-edittext
+	 */
+	@Override
+	public boolean onKey(View v, int keyCode, KeyEvent event) {
+		if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+			// fake button press
+			this.onClick(btnLocationSearch);
+			return true;
+		}
+
+		return false;
 	}
 
 //	@Override

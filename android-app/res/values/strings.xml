@@ -22,6 +22,7 @@
     <string name="fragment_alltasks_emptylist">There are no tasks at the moment. Add one using the add symbol located in the upper-right corner.</string>
     
     <string name="fragment_alltasks_task_nodate">No date given</string>
+    <string name="fragment_alltasks_task_snoozed">(Snoozed)</string>
     
     <!-- Nearby tasks fragment -->
     <string name="fragment_nearbytasks_emptylist">There are no nearby tasks at the moment.</string>

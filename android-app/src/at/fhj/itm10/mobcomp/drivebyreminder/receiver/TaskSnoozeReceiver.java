@@ -20,8 +20,6 @@ public class TaskSnoozeReceiver extends RoboBroadcastReceiver {
 
 	@Override
 	protected void handleReceive(Context context, Intent intent) {
-		Log.v(getClass().getSimpleName(), "got snooze event");
-		
 		if (intent == null || intent.getLongExtra("taskId", 0) == 0) {
 			return;
 		}
@@ -47,8 +45,7 @@ public class TaskSnoozeReceiver extends RoboBroadcastReceiver {
 		Calendar snoozeDate = Calendar.getInstance();
 		Log.v(getClass().getSimpleName(), "snooze now = " + snoozeDate.getTime());
 		// The easiest way to add minutes regarding not taking care of hour boundaries
-		snoozeDate.setTimeInMillis(snoozeDate.getTimeInMillis()
-				+ snoozeTime * 60 * 60 * 10);
+		snoozeDate.roll(Calendar.MINUTE, snoozeTime);
 		Log.v(getClass().getSimpleName(), "snooze future = " + snoozeDate.getTime());
 
 		task.setSnoozeDate(snoozeDate);

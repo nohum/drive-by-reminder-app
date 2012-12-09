@@ -56,8 +56,7 @@ public class TaskDataDAO {
 		Log.d(this.getClass().getSimpleName(),
 				"findAllTasksForFragmentCursor db = " + db);
 
-		return db.rawQuery("SELECT `id` as _id, `id`, `title`, `startDate`, `endDate`,"
-				+ " `noDate`, `done`, `sorting` FROM "
+		return db.rawQuery("SELECT `id` as _id, * FROM "
 				+ TaskStorageHelper.TABLE_TASKS_NAME
 				+ " ORDER BY `sorting` ASC, `noDate` DESC", null);
 	}
@@ -263,23 +262,28 @@ public class TaskDataDAO {
 	private Task fillTaskByCursor(Cursor cursor) {
 		Task task = new Task();
 
-		task.setId(cursor.getLong(0));
-		task.setTitle(cursor.getString(1));
-		task.setDescription(cursor.getString(2));
-		task.setCustomProximitry(cursor.getInt(3));
+		task.setId(cursor.getLong(cursor.getColumnIndex("id")));
+		task.setTitle(cursor.getString(cursor.getColumnIndex("title")));
+		task.setDescription(cursor.getString(
+				cursor.getColumnIndex("description")));
+		task.setCustomProximitry(cursor.getInt(
+				cursor.getColumnIndex("customProximitry")));
 
 		Calendar start = Calendar.getInstance();
-		start.setTimeInMillis(cursor.getLong(4));
+		start.setTimeInMillis(cursor.getLong(
+				cursor.getColumnIndex("startDate")));
 		task.setStartDate(start);
 
 		Calendar end = Calendar.getInstance();
-		end.setTimeInMillis(cursor.getLong(5));
+		end.setTimeInMillis(cursor.getLong(cursor.getColumnIndex("endDate")));
 
 		task.setEndDate(end);
-		task.setNoDate(cursor.getInt(6) == 0 ? false : true);
-		task.setDone(cursor.getInt(7) == 0 ? false : true);
+		task.setNoDate(cursor.getInt(
+				cursor.getColumnIndex("noDate")) == 0 ? false : true);
+		task.setDone(cursor.getInt(
+				cursor.getColumnIndex("done")) == 0 ? false : true);
 
-		long snoozeData = cursor.getLong(8);
+		long snoozeData = cursor.getLong(cursor.getColumnIndex("snoozeDate"));
 		if (snoozeData == 0) {
 			task.setSnoozeDate(null);
 		} else {
@@ -288,7 +292,7 @@ public class TaskDataDAO {
 			task.setSnoozeDate(snooze);
 		}
 
-		task.setSorting(cursor.getLong(9));
+		task.setSorting(cursor.getLong(cursor.getColumnIndex("sorting")));
 
 		return task;
 	}
@@ -333,12 +337,12 @@ public class TaskDataDAO {
 	private Location fillLocationByCursor(Cursor cursor) {
 		Location location = new Location();
 		
-		location.setId(cursor.getLong(0));
-		location.setTaskId(cursor.getLong(1));
-		location.setName(cursor.getString(2));
-		location.setAddress(cursor.getString(3));
-		location.setLatitude(cursor.getDouble(4));
-		location.setLongitude(cursor.getDouble(5));
+		location.setId(cursor.getLong(cursor.getColumnIndex("id")));
+		location.setTaskId(cursor.getLong(cursor.getColumnIndex("taskId")));
+		location.setName(cursor.getString(cursor.getColumnIndex("title")));
+		location.setAddress(cursor.getString(cursor.getColumnIndex("address")));
+		location.setLatitude(cursor.getDouble(cursor.getColumnIndex("latitude")));
+		location.setLongitude(cursor.getDouble(cursor.getColumnIndex("longitude")));
 
 		return location;
 	}

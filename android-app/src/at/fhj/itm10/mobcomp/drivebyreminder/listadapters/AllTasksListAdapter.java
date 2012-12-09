@@ -3,7 +3,6 @@ package at.fhj.itm10.mobcomp.drivebyreminder.listadapters;
 import java.text.DateFormat;
 import java.util.Calendar;
 
-import roboguice.inject.InjectResource;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Paint;
@@ -21,8 +20,9 @@ public class AllTasksListAdapter extends SimpleCursorAdapter {
 
 	private Context context;
 	
-	@InjectResource(R.string.fragment_alltasks_task_nodate)
 	private String strTaskItemNoDate;
+	
+	private String strSnoozeMarker;
 	
 	/**
 	 * Create an instance by context and cursor.
@@ -33,10 +33,10 @@ public class AllTasksListAdapter extends SimpleCursorAdapter {
 	 */
 	public static AllTasksListAdapter newInstance(Context context, Cursor cursor) {
 		return new AllTasksListAdapter(context, R.layout.listitem_task, cursor,
-				new String[] { "title", "startDate", "endDate", "noDate", "done" },
-				new int[] { R.id.lblTaskTitle, R.id.lblTaskDate });
-		
-		/*`id`, `title`, `startDate`, `endDate`, `noDate`, `done` */
+				new String[] { "title", "startDate", "endDate", "noDate",
+						"snoozeDate", "description", "done" },
+				new int[] { R.id.lblTaskTitle, R.id.lblTaskDate,
+						R.id.lblTaskDescription, R.id.lblTaskSnoozed });
 	}
 
 	public AllTasksListAdapter(Context context, int layout, Cursor c,
@@ -44,36 +44,59 @@ public class AllTasksListAdapter extends SimpleCursorAdapter {
 		super(context, layout, c, from, to, 0);
 		setViewBinder(new TaskItemViewBinder());
 		
+		strTaskItemNoDate = context.getString(R.string.fragment_alltasks_task_nodate);
+		strSnoozeMarker = context.getString(R.string.fragment_alltasks_task_snoozed);
+
 		this.context = context;
 	}
 
-//	@Override
-//	public View getView(int position, View convertView, ViewGroup parent) {
-//		return super.getView(position, convertView, parent);
-//	}
-	
 	private class TaskItemViewBinder implements ViewBinder {
+
 		@Override
 		public boolean setViewValue(View view, Cursor cursor, int index) {
 			// Save the id to the list element using the tag property
 			((View) view.getParent()).setTag(cursor.getLong(
 					cursor.getColumnIndex("id")));
+			
+			// Putting the DateFormat's up as object variables somehow produces
+			// NullPointerExceptions...
+			DateFormat formatterDate
+					= android.text.format.DateFormat.getLongDateFormat(context);
+			DateFormat formatterTime
+					= android.text.format.DateFormat.getTimeFormat(context);
 
 			switch (view.getId()) {
 			case R.id.lblTaskTitle:
 				TextView taskTitle = (TextView) view;
 				taskTitle.setText(cursor.getString(
 						cursor.getColumnIndex("title")));
+
 				if (cursor.getInt(cursor.getColumnIndex("done")) != 0) {
 					// Strike trough for tasks with "done" flag
 					taskTitle.setPaintFlags(taskTitle.getPaintFlags()
 							| Paint.STRIKE_THRU_TEXT_FLAG);
 				}
+
+				return true;
+			case R.id.lblTaskSnoozed:
+				long now = Calendar.getInstance().getTimeInMillis();
+				long snooze = cursor.getLong(cursor.getColumnIndex("snoozeDate"));
+				TextView taskSnoozed = (TextView) view;
+				
+				if (snooze != 0 && snooze > now) {
+					taskSnoozed.setText(" " + strSnoozeMarker);
+				} else {
+					taskSnoozed.setText(""); // remove default layout text
+				}
+
 				return true;
 			case R.id.lblTaskDate:
 				TextView taskDate = (TextView) view;
 				taskDate.setText(strTaskItemNoDate);
+				
+				// No date = 0? *Care* about saved dates...
 				if (cursor.getInt(cursor.getColumnIndex("noDate")) == 0) {
+					// Get timestamps and convert them
 					long startTimestamp = cursor.getLong(
 							cursor.getColumnIndex("startDate"));
 					long endTimestamp = cursor.getLong(
@@ -81,31 +104,55 @@ public class AllTasksListAdapter extends SimpleCursorAdapter {
 					
 					Calendar startDate = Calendar.getInstance();
 					Calendar endDate = Calendar.getInstance();
-					
 					startDate.setTimeInMillis(startTimestamp);
 					endDate.setTimeInMillis(endTimestamp);
-					
-					DateFormat formatter = null;
-					if (startTimestamp == endTimestamp) {
-						formatter = android.text.format.DateFormat
-								.getLongDateFormat(context);
 
-						taskDate.setText(formatter.format(startDate.getTime()));
+					if (isOneDay(startDate, endDate)) {
+						// Same day, treat as all day - though it should not happen...
+						taskDate.setText(formatterDate.format(startDate.getTime()));
 					} else {
-						formatter = android.text.format.DateFormat
-								.getMediumDateFormat(context);
 						StringBuilder sb = new StringBuilder();
-						sb.append(formatter.format(startDate.getTime()))
+						sb.append(formatterDate.format(startDate.getTime()))
+							.append(", ")
+							.append(formatterTime.format(startDate.getTime()))
 							.append(" - ")
-							.append(formatter.format(endDate.getTime()));
-						
+							.append(formatterDate.format(endDate.getTime()))
+							.append(", ")
+							.append(formatterTime.format(endDate.getTime()));
+
 						taskDate.setText(sb.toString());
 					}
 				}
+
+				return true;
+			case R.id.lblTaskDescription:
+				TextView taskDescription = (TextView) view;
+				taskDescription.setText(cursor.getString(
+						cursor.getColumnIndex("description")));
+
 				return true;
 			default:
 				return false;
 			}
+		}
+
+		private boolean isOneDay(Calendar startDate, Calendar endDate) {
+			if (startDate.compareTo(endDate) == 0) {
+				return true;
+			}
+			
+			// See add task and modify task... this is the way an all-day task is saved
+			if (startDate.get(Calendar.DAY_OF_MONTH) == endDate.get(Calendar.DAY_OF_MONTH)
+					|| startDate.get(Calendar.MONTH) == endDate.get(Calendar.MONTH)
+					|| startDate.get(Calendar.YEAR) == endDate.get(Calendar.YEAR)
+					|| startDate.get(Calendar.HOUR_OF_DAY) == 0
+					|| startDate.get(Calendar.MINUTE) == 0
+					|| endDate.get(Calendar.HOUR_OF_DAY) == 23
+					|| endDate.get(Calendar.MINUTE) == 59) {
+				return true;
+			}
+			
+			return false;
 		}
 	}
 

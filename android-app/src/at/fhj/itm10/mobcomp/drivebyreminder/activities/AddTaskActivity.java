@@ -474,6 +474,16 @@ public class AddTaskActivity extends RoboSherlockActivity
 			startDateTime = endDateTime;
 			endDateTime = temp;
 		}
+
+		// If startDate and endDate do have the same timestamp, treat
+		// it as all-day
+		if (startDateTime.compareTo(endDateTime) == 0) {
+			startDateTime.set(Calendar.HOUR_OF_DAY, 0);
+			startDateTime.set(Calendar.MINUTE, 0);
+			
+			endDateTime.set(Calendar.HOUR_OF_DAY, 23);
+			endDateTime.set(Calendar.MINUTE, 59);
+		}
 		
 		return true;
 	}
@@ -498,7 +508,7 @@ public class AddTaskActivity extends RoboSherlockActivity
 		task.setCustomProximitry(selCustomProximitry.getSelectedItemPosition());
 
 		long sorting = taskDataDAO.findTaskHighestSortingNumber() + 1;
-		Log.d("AddTaskActivity", "new task: sorting number = " + sorting);
+		Log.v("AddTaskActivity", "new task: sorting number = " + sorting);
 		task.setSorting(sorting);
 
 		long insertId = taskDataDAO.insert(task);

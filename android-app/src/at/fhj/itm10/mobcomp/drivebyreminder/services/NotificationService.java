@@ -5,7 +5,6 @@ import java.util.List;
 
 import roboguice.inject.InjectResource;
 import roboguice.service.RoboService;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -134,13 +133,6 @@ public class NotificationService extends RoboService
 		}
 
 		notificationVibrate = preferences.getBoolean("notificationVibrate", true);
-		
-		Log.v(getClass().getSimpleName(), "initService: settingTemp for ringtone = "
-				+ settingTemp);
-		Log.v(getClass().getSimpleName(), "initService: notificationRingtoneResource = "
-				+ notificationRingtoneResource);
-		Log.v(getClass().getSimpleName(), "initService: notificationVibrate = "
-				+ notificationVibrate);
 	}
 
 	@Override
@@ -152,7 +144,7 @@ public class NotificationService extends RoboService
 		
 		Log.i(getClass().getSimpleName(), "notification service is shutting down");
 	}
-	
+
 	private void checkLocationMatchInDatabase(Location userLocation) {
 		if (userLocation == null) {
 			return;
@@ -180,7 +172,6 @@ public class NotificationService extends RoboService
 
 		// Get out of here fast if there are no matches
 		if (locations.size() == 0) {
-			Log.v(getClass().getSimpleName(), "checkLocationMatchInDatabase: no locations");
 			return;
 		}
 
@@ -218,9 +209,6 @@ public class NotificationService extends RoboService
 	 */
 	private void testFoundTaskProximitry(Location userLocation,
 			TaskLocationResult foundLocation, int proximitry) {
-		Log.d(getClass().getSimpleName(), "testFoundTaskProximitry: checking against"
-				+ " proximitry = " + proximitry + ": " + foundLocation.toString());
-
 		float[] results = new float[3];
 		Location.distanceBetween(userLocation.getLatitude(), userLocation.getLongitude(),
 				foundLocation.getLatitude(), foundLocation.getLongitude(), results);
@@ -283,9 +271,9 @@ public class NotificationService extends RoboService
 			builder.setLights(0xff00ff00, 300, 1000);
 		}
 
-		Notification taskNotification = builder.getNotification();
 		// Show a notification for this task only once... id here also unique
-		notificationManager.notify((int) foundLocation.getTaskId(), taskNotification);
+		notificationManager.notify((int) foundLocation.getTaskId(),
+				builder.getNotification());
 	}
 
 	@Override

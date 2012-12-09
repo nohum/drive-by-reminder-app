@@ -20,9 +20,6 @@ import at.fhj.itm10.mobcomp.drivebyreminder.helper.MainFragmentPagerAdapter;
 import at.fhj.itm10.mobcomp.drivebyreminder.listadapters.AllTasksListAdapter;
 
 import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.ActionMode.Callback;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.fragment.RoboSherlockListFragment;
 
 /**
@@ -113,12 +110,6 @@ public class AllTasksFragment extends RoboSherlockListFragment
         setListAdapter(listAdapter);
     }
     
-//    public void finishActionModes() {
-//    	if (actionMode != null) {
-//    		actionMode.finish();
-//    	}
-//    }
-    
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -184,70 +175,5 @@ public class AllTasksFragment extends RoboSherlockListFragment
     		this.startActivityForResult(edit, 200);
     	}
 	}
-	
-	/**
-	 * Action mode (action bar icons) for add/modify task activities.
-	 *
-	 * @author Wolfgang Gaar
-	 */
-	public class ModifyTaskListActionMode implements Callback {
 
-		private ListView listView;
-		
-		public ModifyTaskListActionMode(ListView lv) {
-			this.listView = lv;
-		}
-		
-		@Override
-		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-			getSherlockActivity().getSupportMenuInflater()
-					.inflate(R.menu.menu_cab_alltasks, menu);
-
-	        return true;
-		}
-
-		@Override
-		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-			mode.setTitle("wtf?");
-			
-			
-			
-			// TODO Auto-generated method stub
-			return false;
-		}
-
-		@Override
-		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			Log.v("ModifyTaskListActionMode", "clicked item = " + item);
-
-			switch (item.getItemId()) {
-			case R.id.menu_cab_alltasks_delete:
-	            long[] selected = listView.getCheckedItemIds();
-	            if (selected.length > 0) {
-	                for (long id : selected) {
-	                	Log.v("ModifyTaskListActionMode", "selected id = " + id);
-	                }
-	            }
-
-	            mode.finish();
-				return true;
-			default:
-				return false;
-			}
-		}
-
-		@Override
-		public void onDestroyActionMode(ActionMode mode) {
-			Log.v("ModifyTaskListActionMode", "onDestroyActionMode");
-
-			// Destroying action mode, let's unselect all items
-            for (int i = 0; i < listView.getAdapter().getCount(); i++)
-            	listView.setItemChecked(i, false);
- 
-            if (mode == actionMode) {
-            	actionMode = null;
-            }
-		}
-
-	}
 }
