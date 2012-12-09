@@ -9,7 +9,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.text.TextUtils;
 import android.util.Log;
-import at.fhj.itm10.mobcomp.drivebyreminder.R.id;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.Location;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.Task;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.TaskLocationResult;
