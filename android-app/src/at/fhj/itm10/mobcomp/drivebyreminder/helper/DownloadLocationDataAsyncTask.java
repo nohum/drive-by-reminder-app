@@ -105,9 +105,9 @@ public class DownloadLocationDataAsyncTask extends
 			for (int i = 0; i < entries.length(); i++) {
 				JSONObject entry = entries.getJSONObject(i);
 
-				results.add(new Location(entry.getString("name"),
-						entry.getString("address"), entry.getDouble("latitude"),
-						entry.getDouble("longitude")));
+				results.add(new Location(entry.getString("name").trim(),
+						entry.getString("address").trim(),
+						entry.getDouble("latitude"), entry.getDouble("longitude")));
 			}
 		} catch (JSONException e) {
 			Log.d("DownloadLocationDataAsyncTask",

@@ -2,10 +2,10 @@ package at.fhj.itm10.mobcomp.drivebyreminder.receiver;
 
 import java.util.Calendar;
 
-import roboguice.inject.InjectPreference;
 import roboguice.receiver.RoboBroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskDataDAO;
 import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskStorageHelper;
@@ -17,9 +17,6 @@ import at.fhj.itm10.mobcomp.drivebyreminder.models.Task;
  * @author Wolfgang Gaar
  */
 public class TaskSnoozeReceiver extends RoboBroadcastReceiver {
-	
-	@InjectPreference("snoozeTime")
-	private String snoozeTime;
 
 	@Override
 	protected void handleReceive(Context context, Intent intent) {
@@ -41,16 +38,18 @@ public class TaskSnoozeReceiver extends RoboBroadcastReceiver {
 			return;
 		}
 		
-		int snoozeTimeConverted = Integer.parseInt(snoozeTime);
-		Log.d(getClass().getSimpleName(), "given converted snooze time: "
-				+ snoozeTimeConverted);
+		int snoozeTime = Integer.parseInt(PreferenceManager
+				// 20 = see res/arrays.xml
+				.getDefaultSharedPreferences(context).getString("snoozeTime", "20"));
+		Log.v(getClass().getSimpleName(), "given converted snooze time: "
+				+ snoozeTime);
 
 		Calendar snoozeDate = Calendar.getInstance();
-		Log.d(getClass().getSimpleName(), "snooze now = " + snoozeDate.getTime());
-		// The easiest way to add regarding not taking care of hour boundaries
+		Log.v(getClass().getSimpleName(), "snooze now = " + snoozeDate.getTime());
+		// The easiest way to add minutes regarding not taking care of hour boundaries
 		snoozeDate.setTimeInMillis(snoozeDate.getTimeInMillis()
-				+ snoozeTimeConverted * 60 * 10);
-		Log.d(getClass().getSimpleName(), "snooze future = " + snoozeDate.getTime());
+				+ snoozeTime * 60 * 60 * 10);
+		Log.v(getClass().getSimpleName(), "snooze future = " + snoozeDate.getTime());
 
 		task.setSnoozeDate(snoozeDate);
 

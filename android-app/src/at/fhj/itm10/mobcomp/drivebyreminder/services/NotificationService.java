@@ -24,7 +24,6 @@ import at.fhj.itm10.mobcomp.drivebyreminder.activities.MainActivity;
 import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskDataDAO;
 import at.fhj.itm10.mobcomp.drivebyreminder.database.TaskStorageHelper;
 import at.fhj.itm10.mobcomp.drivebyreminder.models.TaskLocationResult;
-import at.fhj.itm10.mobcomp.drivebyreminder.receiver.TaskSnoozeReceiver;
 
 import com.google.inject.Inject;
 
@@ -241,11 +240,14 @@ public class NotificationService extends RoboService
 	private void notifyUserAboutTask(TaskLocationResult foundLocation) {
 		Log.v(getClass().getSimpleName(), "notifyUserAboutTask: foundLocation = "
 				+ foundLocation);
-		
+
 		// If there is a snooze time set and it is in the future, skip this notification...
 		if (foundLocation.getSnoozeDate() != null
-				&& foundLocation.getSnoozeDate().compareTo(Calendar.getInstance()) < 0) {
+				&& foundLocation.getSnoozeDate().compareTo(Calendar.getInstance()) == 1) {
 			Log.i(getClass().getSimpleName(), "notifyUserAboutTask: skipping because of snooze");
+			Log.v(getClass().getSimpleName(), "snooze date = " + foundLocation.getSnoozeDate()
+					.getTime());
+			Log.v(getClass().getSimpleName(), "now = " + Calendar.getInstance().getTime());
 			return;
 		}
 
@@ -255,6 +257,7 @@ public class NotificationService extends RoboService
 		builder.setContentText(foundLocation.getTitle());
 		builder.setTicker(foundLocation.getTitle());
 		builder.setOnlyAlertOnce(true);
+		builder.setAutoCancel(true); // cancel notification on click automatically
 
 		// On dismiss of notification: snooze that task
 		Intent snoozeTaskIntent = new Intent();
@@ -266,7 +269,7 @@ public class NotificationService extends RoboService
 
 		// Show nearby tasks on click
 		Intent showNearbyTasksIntent = new Intent(this, MainActivity.class);
-		showNearbyTasksIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		showNearbyTasksIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		showNearbyTasksIntent.putExtra("openedFragment", 2);
 		builder.setContentIntent(PendingIntent.getActivity(getApplicationContext(),
 				0, showNearbyTasksIntent, 0));

@@ -132,6 +132,8 @@ public class MainActivity extends RoboSherlockFragmentActivity
 
 	@Override
 	protected void onNewIntent(Intent intent) {
+		Log.v(getClass().getSimpleName(), "onNewIntent called");
+		
         // Used by notifications
         if (intent != null) {
         	int openedFragment = intent.getIntExtra("openedFragment", -1);

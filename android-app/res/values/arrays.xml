@@ -54,7 +54,7 @@
 
     <string-array name="snoozeTimeEntries">
         <item>10</item>
-        <item>20</item> <!-- referenced in xml/preferences.xml -->
+        <item>20</item> <!-- referenced in xml/preferences.xml and .receivers.TaskSnoozeReceiver -->
         <item>30</item>
         <item>60</item>
         <item>120</item>

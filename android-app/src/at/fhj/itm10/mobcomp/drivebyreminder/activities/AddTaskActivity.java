@@ -489,12 +489,12 @@ public class AddTaskActivity extends RoboSherlockActivity
 		}
 
 		Task task = new Task();
-		task.setTitle(txtTitle.getText().toString());
+		task.setTitle(txtTitle.getText().toString().trim());
 		task.setNoDate(!chbDateBoundaries.isChecked());
 		task.setStartDate(startDateTime);
 		task.setEndDate(endDateTime);
 		task.setDone(false);
-		task.setDescription(txtDescription.getText().toString());
+		task.setDescription(txtDescription.getText().toString().trim());
 		task.setCustomProximitry(selCustomProximitry.getSelectedItemPosition());
 
 		long sorting = taskDataDAO.findTaskHighestSortingNumber() + 1;

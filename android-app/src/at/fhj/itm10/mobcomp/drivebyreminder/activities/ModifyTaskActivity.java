@@ -144,12 +144,12 @@ public class ModifyTaskActivity extends AddTaskActivity {
 
 		Task task = new Task();
 		task.setId(dataId);
-		task.setTitle(txtTitle.getText().toString());
+		task.setTitle(txtTitle.getText().toString().trim());
 		task.setNoDate(!chbDateBoundaries.isChecked());
 		task.setStartDate(startDateTime);
 		task.setEndDate(endDateTime);
 		task.setDone(chbDone.isChecked());
-		task.setDescription(txtDescription.getText().toString());
+		task.setDescription(txtDescription.getText().toString().trim());
 		task.setCustomProximitry(selCustomProximitry.getSelectedItemPosition());
 		task.setSorting(sorting);
 
