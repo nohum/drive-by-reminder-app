@@ -1,6 +1,7 @@
 package at.fhj.itm10.mobcomp.drivebyreminder.fragments;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -99,7 +100,14 @@ public class AllTasksFragment extends RoboSherlockListFragment
 
     public void reloadViewData() {
     	usedCursor = dbDao.findAllTasksForFragmentCursor();
-        listAdapter = TasksListAdapter.newInstance(getActivity(), 
+    	
+    	// Sometimes the context is null...
+    	Context context = getActivity();
+    	if (context == null) {
+    		context = getSherlockActivity();
+    	}
+    	
+        listAdapter = TasksListAdapter.newInstance(context, 
         		usedCursor);
 
         setListAdapter(listAdapter);

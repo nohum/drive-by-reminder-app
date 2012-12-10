@@ -141,6 +141,12 @@ public class NearbyTasksFragment extends AllTasksFragment {
 
     	// Get a query using the already determined task ids
     	usedCursor = dbDao.constructFindTasksCursorByIdList(taskIds);
+    	
+    	// Sometimes the context is null...
+    	if (context == null) {
+    		context = getSherlockActivity();
+    	}
+    	
         listAdapter = TasksListAdapter.newInstance(context, 
         		usedCursor);
 
