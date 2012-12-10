@@ -76,11 +76,19 @@ public class NearbyTasksFragment extends AllTasksFragment {
        		false);
     }
 
+    /**
+     * Reload the view.
+     */
     @Override
     public void reloadViewData() {
     	reloadViewData(getActivity());
     }
 
+    /**
+     * Reload the view
+     * 
+     * @param context
+     */
     public void reloadViewData(Context context) {
     	if (currentUserLocation == null) {
     		Log.w(getClass().getSimpleName(),
@@ -139,6 +147,12 @@ public class NearbyTasksFragment extends AllTasksFragment {
         setListAdapter(listAdapter);
     }
 
+    /**
+     * Update the location data and reload the view.
+     * 
+     * @param location
+     * @param context
+     */
 	public void updateUserLocation(Location location, Context context) {
 		currentUserLocation = location;
 		reloadViewData(context);

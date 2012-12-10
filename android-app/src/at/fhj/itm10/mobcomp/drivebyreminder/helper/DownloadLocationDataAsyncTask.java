@@ -143,9 +143,8 @@ public class DownloadLocationDataAsyncTask extends
 	protected void onPostExecute(List<Location> result) {
 		Log.d("DownloadLocationDataAsyncTask", "result code = "
 				+ this.occuredError);
-	
+
 		activity.setSupportProgressBarIndeterminateVisibility(false);
-		Log.d("DownloadLocationDataAsyncTask", "calling activity.processFoundLocations()");
 		activity.processFoundLocations(this.occuredError, result);
     }
 	
@@ -168,9 +167,9 @@ public class DownloadLocationDataAsyncTask extends
 		if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
 			inreader = new BufferedReader(new InputStreamReader(
 					conn.getInputStream()));
+
 			String line;
 			while ((line = inreader.readLine()) != null) {
-				Log.d("DownloadLocationDataAsyncTask", "CONN-LINE: " + line);
 				sb.append(line);
 			}
 			inreader.close();
@@ -179,7 +178,7 @@ public class DownloadLocationDataAsyncTask extends
 
 		Log.d("DownloadLocationDataAsyncTask", "retrieved data: "
 				+ sb.toString());
-		
+
 		return new JSONObject(sb.toString());
 	}
 

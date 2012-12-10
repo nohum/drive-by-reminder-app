@@ -52,6 +52,11 @@ public class TaskDataDAO {
 		db.close();
 	}
 	
+	/**
+	 * Find all tasks.
+	 * 
+	 * @return Cursor
+	 */
 	public Cursor findAllTasksForFragmentCursor() {
 		open();
 
@@ -60,6 +65,13 @@ public class TaskDataDAO {
 				+ " ORDER BY `sorting` ASC, `noDate` DESC", null);
 	}
 
+	/**
+	 * Construct a task cursor using an id-list. The cursor returns
+	 * exactly the tasks found using the supplied ids.
+	 * 
+	 * @param ids List<Long>
+	 * @return Cursor
+	 */
 	public Cursor constructFindTasksCursorByIdList(List<Long> ids) {
 		String baseSQL = "SELECT `id` as _id, * FROM "
 				+ TaskStorageHelper.TABLE_TASKS_NAME + " WHERE id IN (%s)"
@@ -78,6 +90,11 @@ public class TaskDataDAO {
 		return c;
 	}
 
+	/**
+	 * Get all tasks.
+	 * 
+	 * @return List<Task>
+	 */
 	public List<Task> findAllTasks() {
 		open();
 
@@ -97,6 +114,12 @@ public class TaskDataDAO {
 		return foundTasks;
 	}
 	
+	/**
+	 * Find one specific task.
+	 * 
+	 * @param id
+	 * @return
+	 */
 	public Task findTaskById(long id) {
 		open();
 
@@ -115,6 +138,11 @@ public class TaskDataDAO {
 		return result;
 	}
 	
+	/**
+	 * Find the highest task sorting number.
+	 * 
+	 * @return long
+	 */
 	public long findTaskHighestSortingNumber() {
 		open();
 
@@ -152,6 +180,12 @@ public class TaskDataDAO {
 				new String[] { String.valueOf(task.getId()) });
 	}
 
+	/**
+	 * Find locations of a specific task.
+	 * 
+	 * @param task
+	 * @return List<Location>
+	 */
 	public List<Location> findAllLocationsByTask(Task task) {
 		open();
 
@@ -171,16 +205,6 @@ public class TaskDataDAO {
 		
 		cursor.close();
 		return foundLocations;
-	}
-
-	public Cursor findLocationsByBoundariesForFragmentCursor(Calendar date,
-			double minLatitude, double minLongitude, double maxLatitude,
-			double maxLongitude) {
-		open();
-
-		return db.rawQuery("SELECT `id` as _id, * FROM "
-				+ TaskStorageHelper.TABLE_TASKS_NAME
-				+ " ORDER BY `sorting` ASC, `noDate` DESC", null);
 	}
 	
 	/**
@@ -219,14 +243,14 @@ public class TaskDataDAO {
 						String.valueOf(minLongitude), String.valueOf(maxLongitude)});
 		cursor.moveToFirst();
 		
-		String debugSql = "SELECT l.taskId, t.customProximitry, t.title, t.description, t.snoozeDate,"
-		+ " l.latitude, l.longitude FROM locations l INNER JOIN tasks t ON l.taskId = t.id"
-		+ " WHERE t.done = 0 AND (t.noDate = 1 OR (t.noDate = 0 AND " + String.valueOf(
-				date.getTimeInMillis())
-		+ " BETWEEN t.startDate AND t.endDate)) AND l.latitude BETWEEN " + String.valueOf(minLatitude)
-		+ " AND " + String.valueOf(maxLatitude) + " AND l.longitude BETWEEN "
-		+ String.valueOf(minLongitude) + " AND " + String.valueOf(maxLongitude);
-		Log.v(getClass().getSimpleName(), "findLocationsByBoundaries sql = " + debugSql);
+//		String debugSql = "SELECT l.taskId, t.customProximitry, t.title, t.description, t.snoozeDate,"
+//		+ " l.latitude, l.longitude FROM locations l INNER JOIN tasks t ON l.taskId = t.id"
+//		+ " WHERE t.done = 0 AND (t.noDate = 1 OR (t.noDate = 0 AND " + String.valueOf(
+//				date.getTimeInMillis())
+//		+ " BETWEEN t.startDate AND t.endDate)) AND l.latitude BETWEEN " + String.valueOf(minLatitude)
+//		+ " AND " + String.valueOf(maxLatitude) + " AND l.longitude BETWEEN "
+//		+ String.valueOf(minLongitude) + " AND " + String.valueOf(maxLongitude);
+//		Log.v(getClass().getSimpleName(), "findLocationsByBoundaries sql = " + debugSql);
 
 		List<TaskLocationResult> foundLocations =
 				new ArrayList<TaskLocationResult>(cursor.getCount());

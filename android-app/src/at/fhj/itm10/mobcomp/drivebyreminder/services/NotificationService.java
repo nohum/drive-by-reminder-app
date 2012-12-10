@@ -139,6 +139,11 @@ public class NotificationService extends RoboService implements LocationListener
 		Log.i(getClass().getSimpleName(), "notification service is shutting down");
 	}
 
+	/**
+	 * Checks for location matches in the database.
+	 * 
+	 * @param userLocation
+	 */
 	private void checkLocationMatchInDatabase(Location userLocation) {
 		if (userLocation == null) {
 			return;

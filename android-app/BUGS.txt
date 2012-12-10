@@ -1,1 +1,0 @@
-- location chooser: beim scrollen werden bereits markierte einträge "vergessen"

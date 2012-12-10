@@ -28,7 +28,14 @@ public class Location {
 		setLatitude(latitude);
 		setLongitude(longitude);
 	}
-	
+
+	@Override
+	public String toString() {
+		return "Location [id=" + id + ", latitude=" + latitude + ", longitude="
+				+ longitude + ", locationChooserSelected="
+				+ locationChooserSelected + "]";
+	}
+
 	public Location() {
 		
 	}

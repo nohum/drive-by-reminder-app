@@ -159,15 +159,13 @@ public class EditLocationActivity extends RoboSherlockActivity
         		}
         	}
         	
+        	// If no locations have been selected
         	if (selectedLocations.size() == 0) {
         		Toast.makeText(this, strNoLocationsSelected, Toast.LENGTH_LONG)
         				.show();
         		return false;
         	}
 
-        	Log.d("EditLocationActivity", "dataStorage = " + dataStorage);
-        	Log.d("EditLocationActivity", "locationsToSave = "
-        			+ selectedLocations);
         	dataStorage.setData("locationsToSave", selectedLocations);
 
         	this.setResult(Activity.RESULT_OK, new Intent());
@@ -191,14 +189,7 @@ public class EditLocationActivity extends RoboSherlockActivity
         String language = Locale.getDefault().getDisplayLanguage();
         this.currentLanguageCode = languageCodeMap.get(language);
         this.currentRegionBiasCode =
-        		preferences.getString("locationBias", "at");
-
-        Log.d("EditLocationActivity", "language = " + language);
-        Log.d("EditLocationActivity", "language code = "
-        		+ this.currentLanguageCode);
-        Log.d("EditLocationActivity", "location bias pref = "
-        		+ this.currentRegionBiasCode);
-        
+        		preferences.getString("locationBias", "at");        
 	}
 
 	/**
@@ -271,18 +262,22 @@ public class EditLocationActivity extends RoboSherlockActivity
 			lstFoundLocations.setAdapter(new LocationSearchListAdapter(this,
 					// android.R.layout.simple_list_item_multiple_choice
 					R.layout.listitem_location, locations));
+
 			break;
 		case DOWNLOAD_ERROR:
 			lblResult.setText(strResultNetworkError);
 			lblResult.setVisibility(View.VISIBLE);
 			lstFoundLocations.setVisibility(View.GONE);
+
 			break;
 		case INVALID_NAME:
 		case OTHER_ERROR:
 		case STATUS_ERROR:
+			// just show an simple error message
 			lblResult.setText(strResultUnknownError);
 			lblResult.setVisibility(View.VISIBLE);
 			lstFoundLocations.setVisibility(View.GONE);
+
 			break;
 		default:
 			Log.w("EditLocationActivity", "processFoundLocations: switch"
@@ -298,9 +293,11 @@ public class EditLocationActivity extends RoboSherlockActivity
 	 */
 	@Override
 	public boolean onKey(View v, int keyCode, KeyEvent event) {
-		if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+		if (event.getAction() == KeyEvent.ACTION_DOWN
+				&& keyCode == KeyEvent.KEYCODE_ENTER) {
 			// fake button press
 			this.onClick(btnLocationSearch);
+
 			return true;
 		}
 

@@ -23,15 +23,17 @@
             android:layout_height="wrap_content"
             android:inputType="textCapSentences"
             android:singleLine="true"
-            android:hint="@string/activity_editlocation_searchfor_hint" />
+            android:hint="@string/activity_editlocation_searchfor_hint">
+        
+        	<requestFocus />
+
+        </EditText>
 
         <Button
             android:id="@+id/btnLocationSearch"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/activity_editlocation_searchfor_button" />
-
-        <requestFocus />
 
     </LinearLayout>
 
@@ -65,11 +67,11 @@
             android:id="@+id/lstFoundLocations"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
-            android:choiceMode="multipleChoice"
-            android:longClickable="true" >
+            android:choiceMode="multipleChoice" >
 
         </ListView>
 
 
     </LinearLayout>
+
 </LinearLayout>
