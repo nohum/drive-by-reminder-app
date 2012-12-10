@@ -53,6 +53,9 @@ public class LocationBoundariesCalculator {
 		calcDistanceFor(distanceInMeters * -1, minBoundary);
 		calcDistanceFor(distanceInMeters, maxBoundary);
 		
+		// correction to +100 meters
+		maxBoundary.setLatitude(maxBoundary.getLatitude() + 0.015);
+		
 		float[] minResults = new float[3];
 		float[] maxResults = new float[3];
 
@@ -61,7 +64,9 @@ public class LocationBoundariesCalculator {
 		Location.distanceBetween(location.getLatitude(), location.getLongitude(),
 				maxBoundary.getLatitude(), maxBoundary.getLongitude(), maxResults);
 
+		Log.v(getClass().getSimpleName(), "calculate: min location = " + minBoundary);
 		Log.v(getClass().getSimpleName(), "calculate: min meters = " + minResults[0]);
+		Log.v(getClass().getSimpleName(), "calculate: max location = " + maxBoundary);
 		Log.v(getClass().getSimpleName(), "calculate: max meters = " + maxResults[0]);
 	}
 	
