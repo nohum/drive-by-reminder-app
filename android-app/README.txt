@@ -3,7 +3,7 @@
 Features:
     - Erinnern des Benutzers an Aufgaben, wenn er an einem Ort ist, der mit der
       Aufgabe verknüpft ist
-    - Hinzufügen, Änderen und Löschen von Aufgaben
+    - Hinzufügen, Ändern und Löschen von Aufgaben
     - Eigene Umgebungsradius-Einstellung pro Aufgabe (z.B.: für Städte nützlich)
     - Mehr als ein Ort pro Aufgabe - z.B.: alle Supermärkte in einer Region
     - Aufgaben können auf ein Datum beschränkt werden
