@@ -13,99 +13,99 @@
     <string name="menu_discard">Verwerfen</string>
     
     <!-- Service -->
-    <string name="service_notification_title">Tasks nearby have been found</string>
+    <string name="service_notification_title">Es befinden Aufgaben in der Nähe</string>
     
     <!-- Home fragment -->
-    <string name="fragment_home_intro">Welcome to Drive-by Reminder\n\nUse this brand new android app to remind yourself about e.g. tasks when you visit certain locations.\n\nSwipe to the right or use the upper menu to get directly to the task list.</string>
+    <string name="fragment_home_intro">Willkommen beim Drive-by Reminder\n\nMit dieser neuen App können Sie ortsgebundene Erinnerungen und Aufgaben erstellen.\n\nWischen Sie mit dem Finger nach rechts oder benutzen Sie das obige Menü um die Aufgabenliste zu öffnen.</string>
     
     <!-- All tasks fragment -->
-    <string name="fragment_alltasks_emptylist">Create a new task using the add symbol located in the upper-right corner.</string>
+    <string name="fragment_alltasks_emptylist">Erstellen Sie eine neue Aufgabe mittels dem Plus-Symbol rechts oben.</string>
     
-    <string name="fragment_alltasks_task_nodate">No date given</string>
-    <string name="fragment_alltasks_task_snoozed">(Snoozed)</string>
+    <string name="fragment_alltasks_task_nodate">Kein Datum angegeben</string>
+    <string name="fragment_alltasks_task_snoozed">(Verschoben)</string>
     
     <!-- Nearby tasks fragment -->
-    <string name="fragment_nearbytasks_emptylist">There are no nearby tasks at the moment.</string>
+    <string name="fragment_nearbytasks_emptylist">Es befinden sich gerade keine Aufgaben in der Nähe.</string>
     
     <!-- Add task activity -->
-    <string name="activity_addtask_form_what">What</string>
-    <string name="activity_addtask_form_what_hint">What&#8230;</string>
+    <string name="activity_addtask_form_what">Was</string>
+    <string name="activity_addtask_form_what_hint">Was soll gemacht werden&#8230;</string>
    
-    <string name="activity_addtask_form_location_where">Location trigger</string>
-    <string name="activity_addtask_form_location_button">Choose location</string>
-    <string name="activity_addtask_form_location_button_multiple_prefix">(Multiple)</string>
+    <string name="activity_addtask_form_location_where">Ort</string>
+    <string name="activity_addtask_form_location_button">Ort auswählen</string>
+    <string name="activity_addtask_form_location_button_multiple_prefix">(Mehrere)</string>
     
-    <string name="activity_addtask_form_done_header">Task status</string>
-    <string name="activity_addtask_form_done_explain">Task is done</string>
+    <string name="activity_addtask_form_done_header">Aufgabenstatus</string>
+    <string name="activity_addtask_form_done_explain">Aufgabe ist erledigt</string>
     
-    <string name="activity_addtask_form_alert_nodate">Alert on date</string>
-    <string name="activity_addtask_form_alert_startdate">Alert from date</string>
-    <string name="activity_addtask_form_alert_enddate">Alert to date</string>
+    <string name="activity_addtask_form_alert_nodate">Datumsbegrenzung</string>
+    <string name="activity_addtask_form_alert_startdate">Von Datum</string>
+    <string name="activity_addtask_form_alert_enddate">Bis Datum</string>
     
-    <string name="activity_addtask_form_description">Description</string>
-    <string name="activity_addtask_form_description_hint">Description&#8230;</string>
+    <string name="activity_addtask_form_description">Beschreibung</string>
+    <string name="activity_addtask_form_description_hint">Beschreibung&#8230;</string>
     
-    <string name="activity_addtask_form_proximitry">Proximitry trigger</string>
-    <string name="activity_addtask_form_proximitry_spinner">Set custom proximitry</string>
+    <string name="activity_addtask_form_proximitry">Umgebungsradius ändern</string>
+    <string name="activity_addtask_form_proximitry_spinner">Umgebungsradius wählen</string>
     
-    <string name="activity_addtask_save_validation_notitle">You have to enter a title for your new task</string>
-    <string name="activity_addtask_save_validation_nolocations">You have to select at least one task location</string>
+    <string name="activity_addtask_save_validation_notitle">Sie müssen einen Titel für die Aufgabe eingeben</string>
+    <string name="activity_addtask_save_validation_nolocations">Sie müssen zumindest einen Ort für die Aufgabe auswählen</string>
     
     <!-- Edit location activity -->
-    <string name="activity_editlocation_searchfor">Search for location</string>
-    <string name="activity_editlocation_searchfor_hint">Location name</string>
-    <string name="activity_editlocation_searchfor_button">Start search</string>
+    <string name="activity_editlocation_searchfor">Nach Ort suchen</string>
+    <string name="activity_editlocation_searchfor_hint">Ortsangabe</string>
+    <string name="activity_editlocation_searchfor_button">Suche starten</string>
 
-    <string name="activity_editlocation_locationlist">Found locations</string>
+    <string name="activity_editlocation_locationlist">Gefundene Orte</string>
     
-    <string name="activity_editlocation_result_nosearch">Please enter a location name and tap the search button.\nTry to be as specific as possible about the location address.</string>
-    <string name="activity_editlocation_result_noresults">No results have been found.</string>
-    <string name="activity_editlocation_result_nonetwork">Network error. Do you have a working internet connection?</string>
-    <string name="activity_editlocation_result_unknownerror">An unknown error occurred. Please try again later.</string>
+    <string name="activity_editlocation_result_nosearch">Bitte geben Sie eine Adresse ein drücken Sie auf "Suche starten".\nVersuchen Sie bitte, bei der Adresse so exakt wie möglich zu sein.</string>
+    <string name="activity_editlocation_result_noresults">Es wurden keine Adressen gefunden.</string>
+    <string name="activity_editlocation_result_nonetwork">Netzwerkfehler. Haben Sie eine funktionierende Internetverbindung?</string>
+    <string name="activity_editlocation_result_unknownerror">Es ist ein unbekannter Fehler aufgetreten. Bitte versuchen Sie es später erneut</string>
 
-    <string name="activity_editlocation_location_downloaderror">An error occurred while retrieving locations. Is your internet connection working?</string>
+    <string name="activity_editlocation_location_downloaderror">Beim Download der Ortsdaten ist ein Fehler aufgetreten. Haben Sie eine funktionierende Internetverbindung?</string>
     
-    <string name="activity_editlocation_save_nolocations">You have to select at least one location to continue</string>
+    <string name="activity_editlocation_save_nolocations">Sie müssen mindestens einen Ort auswählen</string>
     
     <!-- Modify task activity -->
-    <string name="activity_modifytask_task_deletesuccessful">The task has been deleted successfully</string>
+    <string name="activity_modifytask_task_deletesuccessful">Die Aufgabe wurde gelöscht</string>
     
     <!-- Delete task dialog -->
-    <string name="dialog_delete_task_question">Do you really want to delete this task?</string>
-    <string name="dialog_delete_task_question_multiple">Do you really want to delete these tasks?</string>
+    <string name="dialog_delete_task_question">Wollen Sie diese Aufgabe wirklich löschen?</string>
+    <string name="dialog_delete_task_question_multiple">Wollen Sie diese Aufgaben wirklich löschen?</string>
 
-    <string name="dialog_delete_task_positive">Delete</string>
-    <string name="dialog_delete_task_negative">Cancel</string>
+    <string name="dialog_delete_task_positive">Löschen</string>
+    <string name="dialog_delete_task_negative">Abbrechen</string>
     
     <!-- Preferences -->
-    <string name="settings_title_general">General</string>
+    <string name="settings_title_general">Allgemein</string>
     
-    <string name="settings_title_appenabled">Enable app</string>
- 	<string name="settings_summaryon_appenabled">Alert when hitting task locations</string>
-	<string name="settings_summaryoff_appenabled">App does not report location matches</string>
+    <string name="settings_title_appenabled">App ist aktiviert</string>
+ 	<string name="settings_summaryon_appenabled">Anzeigen von Standortmeldungen ist aktiviert</string>
+	<string name="settings_summaryoff_appenabled">Anzeigen von Standortmeldungen ist deaktiviert</string>
 
-	<string name="settings_title_defaultproximitry">Default proximitry</string>
-	<string name="settings_summary_defaultproximitry">Default notification proximitry</string>
+	<string name="settings_title_defaultproximitry">Standard-Umgebungsradius</string>
+	<string name="settings_summary_defaultproximitry">Standardmäßiger Umgebungsradius für Aufgaben</string>
 	
-	<string name="settings_summary_snoozetime">Time before showing tasks again whose notifications have been cleared</string>
-	<string name="settings_title_snoozetime">Notification snooze time</string>
+	<string name="settings_summary_snoozetime">Zeit, welche bereits angezeigte Benachrichtigungen verborgen bleiben sollen</string>
+	<string name="settings_title_snoozetime">Aufgaben-Schlummerzeit</string>
     
-    <string name="settings_title_eventcreationedit">Event creation and edit</string>
+    <string name="settings_title_eventcreationedit">Aufgaben erstellen und bearbeiten</string>
 
-    <string name="settings_title_confirmdelete">Confirm deletion</string>
-    <string name="settings_summaryon_confirmdelete">Ask before deleting tasks</string>
-    <string name="settings_summaryoff_confirmdelete">Do not ask before deleting tasks</string>
+    <string name="settings_title_confirmdelete">Löschen bestätigen</string>
+    <string name="settings_summaryon_confirmdelete">Vor dem Löschen von Aufgaben nachfragen</string>
+    <string name="settings_summaryoff_confirmdelete">Beim Löschen von Aufgaben nicht nachfragen</string>
 
-    <string name="settings_title_locationbias">Region bias</string>
-    <string name="settings_summary_locationbias">Prefer locations from selected region</string>
+    <string name="settings_title_locationbias">Bevorzugtes Land</string>
+    <string name="settings_summary_locationbias">Orte vom ausgewählten Land werden bevorzugt</string>
 
-    <string name="settings_title_notification">Notification settings</string>
+    <string name="settings_title_notification">Benachrichtigungseinstellungen</string>
     
-    <string name="settings_title_ringtone">Ringtone</string>
+    <string name="settings_title_ringtone">Klingelton</string>
     
-    <string name="settings_title_vibrate">Vibrate mobile phone</string>
+    <string name="settings_title_vibrate">Handy vibrieren lassen</string>
 
-    <string name="settings_title_about">About</string>
-    <string name="settings_title_createdby">Created by Wolfgang Gaar</string>
+    <string name="settings_title_about">Über</string>
+    <string name="settings_title_createdby">Erstellt von Wolfgang Gaar</string>
 
 </resources>

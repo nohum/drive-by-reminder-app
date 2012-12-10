@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>    
+    <string-array name="locations">
+        <item>Start</item>
+        <item>Alle Aufgaben</item>
+        <item>Aufgaben in der Nähe</item>
+    </string-array>
+    
+    <string-array name="proximitryEntriesHuman">
+        <item>500 Meter</item>
+        <item>1 Kilometer</item>
+        <item>3 Kilometer</item>
+        <item>5 Kilometer</item>
+        <item>10 Kilometer</item>
+        <item>15 Kilometer</item>
+    </string-array>
+    
+    <string-array name="proximitryEntriesHumanWithDefault">
+        <item>Standard</item>
+        <item>500 Meter</item>
+        <item>1 Kilometer</item>
+        <item>3 Kilometer</item>
+        <item>5 Kilometer</item>
+        <item>10 Kilometer</item>
+        <item>15 Kilometer</item>
+    </string-array>
+    
+    <string-array name="proximitryEntries">
+        <item>500</item>
+        <item>1000</item>
+        <item>3000</item> <!-- referenced in xml/preferences.xml, .services.NotificationService and .fragments.NearbyTasksFragment -->
+        <item>5000</item>
+        <item>10000</item>
+        <item>15000</item>
+    </string-array>
+    
+    <string-array name="proximitryEntriesWithDefault">
+        <item>0</item>
+        <item>500</item>
+        <item>1000</item>
+        <item>3000</item>
+        <item>5000</item>
+        <item>10000</item>
+        <item>15000</item> <!-- referenced in .services.NotificationService and .fragments.NearbyTasksFragment -->
+    </string-array>
+    
+    <string-array name="snoozeTimeEntriesHuman">
+        <item>10 Minuten</item>
+        <item>20 Minuten</item>
+        <item>30 Minuten</item>
+        <item>1 Stunde</item>
+        <item>2 Stunden</item>
+    </string-array>
+
+    <string-array name="snoozeTimeEntries">
+        <item>10</item>
+        <item>20</item> <!-- referenced in xml/preferences.xml and .receivers.TaskSnoozeReceiver -->
+        <item>30</item>
+        <item>60</item>
+        <item>120</item>
+    </string-array>
+
+    <string-array name="locationBiasEntriesHuman">
+        <item>Österreich</item>
+        <item>Deutschland</item>
+    </string-array>
+    
+    <string-array name="locationBiasEntries">
+        <item>at</item>
+        <item>de</item>
+    </string-array>
+</resources>

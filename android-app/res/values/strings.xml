@@ -45,8 +45,8 @@
     <string name="activity_addtask_form_description">Description</string>
     <string name="activity_addtask_form_description_hint">Description&#8230;</string>
     
-    <string name="activity_addtask_form_proximitry">Proximitry trigger</string>
-    <string name="activity_addtask_form_proximitry_spinner">Set custom proximitry</string>
+    <string name="activity_addtask_form_proximitry">Proximity trigger</string>
+    <string name="activity_addtask_form_proximitry_spinner">Set custom proximity</string>
     
     <string name="activity_addtask_save_validation_notitle">You have to enter a title for your new task</string>
     <string name="activity_addtask_save_validation_nolocations">You have to select at least one task location</string>
@@ -84,13 +84,13 @@
  	<string name="settings_summaryon_appenabled">Alert when hitting task locations</string>
 	<string name="settings_summaryoff_appenabled">App does not report location matches</string>
 
-	<string name="settings_title_defaultproximitry">Default proximitry</string>
-	<string name="settings_summary_defaultproximitry">Default notification proximitry</string>
+	<string name="settings_title_defaultproximitry">Default proximity</string>
+	<string name="settings_summary_defaultproximitry">Default notification proximity</string>
 	
 	<string name="settings_summary_snoozetime">Time before showing tasks again whose notifications have been cleared</string>
 	<string name="settings_title_snoozetime">Notification snooze time</string>
     
-    <string name="settings_title_eventcreationedit">Event creation and edit</string>
+    <string name="settings_title_eventcreationedit">Task creation and edit</string>
 
     <string name="settings_title_confirmdelete">Confirm deletion</string>
     <string name="settings_summaryon_confirmdelete">Ask before deleting tasks</string>
