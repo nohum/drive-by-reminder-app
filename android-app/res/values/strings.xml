@@ -15,6 +15,11 @@
     <!-- Service -->
     <string name="service_notification_title">Tasks nearby have been found</string>
     
+    <!-- Network alert -->
+    <string name="network_alert_title">No network location</string>
+    <string name="network_alert_text">Please enable your network provider as this will be used to get your location!</string>
+    <string name="network_alert_ok">OK</string>
+    
     <!-- Home fragment -->
     <string name="fragment_home_intro">Welcome to Drive-by Reminder\n\nUse this brand new android app to remind yourself about e.g. tasks when you visit certain locations.\n\nSwipe to the right or use the upper menu to get directly to the task list.</string>
     

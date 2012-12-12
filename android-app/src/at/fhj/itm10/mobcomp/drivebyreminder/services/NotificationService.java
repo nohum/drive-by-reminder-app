@@ -85,6 +85,13 @@ public class NotificationService extends RoboService implements LocationListener
 		initServiceVars();
 		initService();
 
+		if (!locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+			Log.i(getClass().getSimpleName(), "no network location, shutting down");
+			stopSelf();
+
+			return;
+		}
+		
 		Log.i(getClass().getSimpleName(), "notification service is up and running");
 		
 		Location lastLocation = locationManager.getLastKnownLocation(

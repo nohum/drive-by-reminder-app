@@ -15,6 +15,11 @@
     <!-- Service -->
     <string name="service_notification_title">Es befinden Aufgaben in der Nähe</string>
     
+    <!-- Network alert -->
+    <string name="network_alert_title">Netzwerkstandort nicht verfügbar</string>
+    <string name="network_alert_text">Sie scheinen keinen Mobilfunkempfang aktiviert zu haben. Für diese App wird dieser aber benötigt!</string>
+    <string name="network_alert_ok">OK</string>
+    
     <!-- Home fragment -->
     <string name="fragment_home_intro">Willkommen beim Drive-by Reminder\n\nMit dieser neuen App können Sie ortsgebundene Erinnerungen und Aufgaben erstellen.\n\nWischen Sie mit dem Finger nach rechts oder benutzen Sie das obige Menü um die Aufgabenliste zu öffnen.</string>
     

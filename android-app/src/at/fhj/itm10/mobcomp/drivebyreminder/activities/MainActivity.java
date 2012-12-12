@@ -1,15 +1,19 @@
 package at.fhj.itm10.mobcomp.drivebyreminder.activities;
 
 import roboguice.inject.ContentView;
+import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 import roboguice.receiver.RoboBroadcastReceiver;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NavUtils;
@@ -29,6 +33,7 @@ import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.github.rtyley.android.sherlock.roboguice.activity.RoboSherlockFragmentActivity;
+import com.google.inject.Inject;
 
 /**
  * Main activity.
@@ -44,6 +49,18 @@ public class MainActivity extends RoboSherlockFragmentActivity
 	
 	@InjectView(R.id.pgrMainView)
 	private ViewPager pagerMainView;
+	
+	@Inject
+	private LocationManager locationManager;
+
+    @InjectResource(R.string.network_alert_title)
+    private String strNetworkAlertTitle;
+	
+    @InjectResource(R.string.network_alert_text)
+    private String strNetworkAlertText;
+	
+    @InjectResource(R.string.network_alert_ok)
+	private String strNetworkAlertButton;
 
 	/**
 	 * Database DAO.
@@ -89,8 +106,24 @@ public class MainActivity extends RoboSherlockFragmentActivity
 		SharedPreferences preferences = PreferenceManager
         		.getDefaultSharedPreferences(getApplicationContext());
 
+		boolean networkLocEnabled = locationManager.isProviderEnabled(
+				LocationManager.NETWORK_PROVIDER);
+
+		if (!networkLocEnabled) {
+			new AlertDialog.Builder(this)
+		    .setTitle(strNetworkAlertTitle)
+		    .setMessage(strNetworkAlertText)
+		    .setPositiveButton(strNetworkAlertButton,
+		    		new DialogInterface.OnClickListener() {
+		        public void onClick(DialogInterface dialog, int which) { 
+		            dialog.cancel();
+		        }
+		     })
+		     .show();
+		}
+		
 		// Start the service if requested by the user
-		if (preferences.getBoolean("appEnabled", true)) {
+		if (preferences.getBoolean("appEnabled", true) && networkLocEnabled) {
 			Log.v(getClass().getSimpleName(),
 					"onStart: appEnabled set to true, starting service...");
 
