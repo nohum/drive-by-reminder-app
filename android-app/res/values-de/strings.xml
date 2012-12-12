@@ -34,7 +34,7 @@
     
     <!-- Add task activity -->
     <string name="activity_addtask_form_what">Was</string>
-    <string name="activity_addtask_form_what_hint">Was soll gemacht werden&#8230;</string>
+    <string name="activity_addtask_form_what_hint">Welche Aufgabe soll erledigt werden&#8230;</string>
    
     <string name="activity_addtask_form_location_where">Ort</string>
     <string name="activity_addtask_form_location_button">Ort auswählen</string>
@@ -50,7 +50,7 @@
     <string name="activity_addtask_form_description">Beschreibung</string>
     <string name="activity_addtask_form_description_hint">Beschreibung&#8230;</string>
     
-    <string name="activity_addtask_form_proximitry">Umgebungsradius ändern</string>
+    <string name="activity_addtask_form_proximitry">Anzeigen ab Entfernung zum Ort</string>
     <string name="activity_addtask_form_proximitry_spinner">Umgebungsradius wählen</string>
     
     <string name="activity_addtask_save_validation_notitle">Sie müssen einen Titel für die Aufgabe eingeben</string>
@@ -90,9 +90,9 @@
 	<string name="settings_summaryoff_appenabled">Anzeigen von Standortmeldungen ist deaktiviert</string>
 
 	<string name="settings_title_defaultproximitry">Standard-Umgebungsradius</string>
-	<string name="settings_summary_defaultproximitry">Standardmäßiger Umgebungsradius für Aufgaben</string>
+	<string name="settings_summary_defaultproximitry">Standardmäßiger Umgebungsradius für Aufgaben in dem Benachrichtigungen angezeigt werden sollen</string>
 	
-	<string name="settings_summary_snoozetime">Zeit, welche bereits angezeigte Benachrichtigungen verborgen bleiben sollen</string>
+	<string name="settings_summary_snoozetime">Vom Benutzer gelöschte Benachrichtigungen bleiben solange verborgen, bevor sie erneut angezeigt werden</string>
 	<string name="settings_title_snoozetime">Aufgaben-Schlummerzeit</string>
     
     <string name="settings_title_eventcreationedit">Aufgaben erstellen und bearbeiten</string>

@@ -9,6 +9,7 @@ import roboguice.inject.ContentView;
 import roboguice.inject.InjectResource;
 import roboguice.inject.InjectView;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -216,6 +218,11 @@ public class EditLocationActivity extends RoboSherlockActivity
 			this.locations = null;
 			// Remove focus from location text field
 			this.btnLocationSearch.requestFocus();
+			
+			// Close keyboard
+			InputMethodManager imm = (InputMethodManager) getSystemService(
+					Context.INPUT_METHOD_SERVICE);
+		    imm.hideSoftInputFromWindow(txtLocationName.getWindowToken(), 0);
 
 			if (TextUtils.isEmpty(txtLocationName.getText().toString())) {
 				lblResult.setText(strResultNoSearch);
