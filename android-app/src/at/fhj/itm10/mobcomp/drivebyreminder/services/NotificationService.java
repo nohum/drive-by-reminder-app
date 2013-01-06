@@ -53,7 +53,7 @@ public class NotificationService extends RoboService implements LocationListener
 	
 	private static final int LOCATION_UPDATE_INTERVAL = 1000 * 60 * 5;
 	
-	private static final int METERS_UPDATE_THRESHOLD = 300;
+	private static final int METERS_UPDATE_THRESHOLD = 200;
 
 	/**
 	 * Describes the maximum distance of a point of interest from a user's view.
@@ -119,6 +119,7 @@ public class NotificationService extends RoboService implements LocationListener
 		// Register also an passive provider to get locations if other apps need them
 		locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER,
 				LOCATION_UPDATE_INTERVAL, METERS_UPDATE_THRESHOLD, this);
+		
 		updateRequestReceiver = new LocationUpdateRequestReceiver();
 		registerReceiver(updateRequestReceiver, new IntentFilter(
 				"at.fhj.itm10.mobcomp.drivebyreminder.intents.REQUEST_LOCATION"));
@@ -204,13 +205,10 @@ public class NotificationService extends RoboService implements LocationListener
 	 */
 	private void testFoundTaskProximitry(Location userLocation,
 			TaskLocationResult foundLocation, int proximitry) {
-		float[] results = new float[3];
-		Location.distanceBetween(userLocation.getLatitude(), userLocation.getLongitude(),
-				foundLocation.getLatitude(), foundLocation.getLongitude(), results);
-
-		Log.v(getClass().getSimpleName(), "testFoundTaskProximitry: proximitry result = "
-				+ results[0]);
-		if (results[0] <= proximitry) {
+		boolean result = LocationBoundariesCalculator.testTaskProximitry(userLocation,
+				foundLocation, proximitry);
+		
+		if (result) {
 			notifyUserAboutTask(foundLocation);
 		}
 	}

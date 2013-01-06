@@ -2,6 +2,7 @@ package at.fhj.itm10.mobcomp.drivebyreminder.helper;
 
 import android.location.Location;
 import android.util.Log;
+import at.fhj.itm10.mobcomp.drivebyreminder.models.TaskLocationResult;
 
 /**
  * Geo location boundaries calculator.
@@ -79,5 +80,33 @@ public class LocationBoundariesCalculator {
 		
 		field.setLatitude(currentLat + dLat * 180 / Math.PI);
 		field.setLongitude(currentLon + dLon * 180 / Math.PI);
+	}
+
+	/**
+	 * Test found location for a custom proximitry.
+	 * 
+	 * @param userLocation
+	 * @param foundLocation
+	 * @param proximitry task proximitry in meters
+	 * @return boolean
+	 */
+	public static boolean testTaskProximitry(Location userLocation,
+			TaskLocationResult foundLocation, int proximitry) {
+		float[] results = new float[3];
+		Location.distanceBetween(userLocation.getLatitude(), userLocation.getLongitude(),
+				foundLocation.getLatitude(), foundLocation.getLongitude(), results);
+
+		float accuracyDiff = 0;
+		if (userLocation.hasAccuracy()) {
+			// http://stackoverflow.com/questions/3052517/how-is-location-accuracy-measured-in-android
+			accuracyDiff = userLocation.getAccuracy();
+			
+			Log.v(LocationBoundariesCalculator.class.getSimpleName(),
+					"testTaskProximitry: accuracy difference = " + accuracyDiff);
+		}
+		
+		Log.v(LocationBoundariesCalculator.class.getSimpleName(),
+				"testTaskProximitry: proximitry result = " + results[0]);
+		return results[0] <= (proximitry + accuracyDiff);
 	}
 }

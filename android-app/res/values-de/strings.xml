@@ -58,7 +58,7 @@
     
     <!-- Edit location activity -->
     <string name="activity_editlocation_searchfor">Nach Ort suchen</string>
-    <string name="activity_editlocation_searchfor_hint">Ortsangabe</string>
+    <string name="activity_editlocation_searchfor_hint">Straße, Hausnummer, PLZ</string>
     <string name="activity_editlocation_searchfor_button">Suche starten</string>
 
     <string name="activity_editlocation_locationlist">Gefundene Orte</string>

@@ -36,15 +36,15 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 		case 0:
 			return HomeFragment.newInstance();
 		case ALL_TASKS_FRAGMENT:
-			if (allTasks == null) {
+//			if (allTasks == null) {
 				allTasks = AllTasksFragment.newInstance(dbDao, this);
-			}
+//			}
 
 			return allTasks;
 		case 2:
-			if (nearbyTasks == null) {
+//			if (nearbyTasks == null) {
 				nearbyTasks = NearbyTasksFragment.newInstance(dbDao, this);
-			}
+//			}
 
 			return nearbyTasks;
 		default:

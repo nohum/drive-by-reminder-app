@@ -65,9 +65,20 @@ public class NearbyTasksFragment extends AllTasksFragment {
 				.getDefaultSharedPreferences(getActivity()).getString(
 				// 3000 = see res/values/arrays.xml - proximitryEntries
 				"defaultProximitry", "3000"));
-
+		Log.v(getClass().getSimpleName(), "onCreate: proximitryEntries = "
+				+ proximitryEntries);
+		proximitryEntries = getResources().getStringArray(R.array.proximitryEntriesWithDefault);
+		Log.v(getClass().getSimpleName(), "onCreate after: proximitryEntries = "
+				+ proximitryEntries);
+		
 		super.onCreate(savedInstanceState);
 	}
+	
+//	@Override
+//	protected void onPostExecute() {
+//		proximitryEntries = getResources().getStringArray(R.array.proximitryEntriesWithDefault);
+//		super.onResume();
+//	}
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -114,6 +125,8 @@ public class NearbyTasksFragment extends AllTasksFragment {
     	for (TaskLocationResult foundLocation : taskLocations) {
 			Log.v(getClass().getSimpleName(), "reloadViewData: found: "
 					+ foundLocation.toString());
+			proximitryEntries = getResources().getStringArray(R.array.proximitryEntriesWithDefault);
+			Log.v(getClass().getSimpleName(), "proximitryEntries = " + proximitryEntries);
 
 			// The custom proximitry is zero, check for the
 			// defaultMaximumMetersDistance
@@ -126,6 +139,7 @@ public class NearbyTasksFragment extends AllTasksFragment {
 			// If the custom proximitry equals the highest possible proximitry, this
 			// is going to be true. We already checked for MAXIMUM_USER_DISTANCE using
 			// the supplied dao query, so we just report this task and all work is done.
+			// FIXME: NPE
 			else if (foundLocation.getCustomProximitry() == proximitryEntries.length - 1) {
 				taskIds.add(foundLocation.getTaskId());
 			}
@@ -174,12 +188,7 @@ public class NearbyTasksFragment extends AllTasksFragment {
 	 */
 	private boolean isFoundTaskNearEnough(Location userLocation,
 			TaskLocationResult foundLocation, int proximitry) {
-		float[] results = new float[3];
-		Location.distanceBetween(userLocation.getLatitude(), userLocation.getLongitude(),
-				foundLocation.getLatitude(), foundLocation.getLongitude(), results);
-
-		Log.v(getClass().getSimpleName(), "testFoundTaskProximitry: proximitry result = "
-				+ results[0]);
-		return results[0] <= proximitry;
+		return LocationBoundariesCalculator.testTaskProximitry(userLocation,
+				foundLocation, proximitry);
 	}
 }

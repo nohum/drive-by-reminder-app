@@ -17,7 +17,7 @@
     
     <!-- Network alert -->
     <string name="network_alert_title">No network location</string>
-    <string name="network_alert_text">Please enable your network provider as this will be used to get your location!</string>
+    <string name="network_alert_text">Please enable your mobile network connectivity as this will be used to get your location!</string>
     <string name="network_alert_ok">OK</string>
     
     <!-- Home fragment -->
@@ -58,7 +58,7 @@
     
     <!-- Edit location activity -->
     <string name="activity_editlocation_searchfor">Search for location</string>
-    <string name="activity_editlocation_searchfor_hint">Location name</string>
+    <string name="activity_editlocation_searchfor_hint">Street address, ZIP code</string>
     <string name="activity_editlocation_searchfor_button">Start search</string>
 
     <string name="activity_editlocation_locationlist">Found locations</string>
