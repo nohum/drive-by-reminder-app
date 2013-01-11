@@ -55,16 +55,14 @@ public class MainFragmentPagerAdapter extends FragmentPagerAdapter {
 	}
 
 	public void refreshFragments() {
-		nullChecks();
+		if (allTasks != null) {
+			allTasks.reloadViewData();
+		}
 		
-		allTasks.reloadViewData();
-		nearbyTasks.reloadViewData();
-	}
-
-	private void nullChecks() {
 		if (nearbyTasks == null) {
 			getItem(NEARBY_TASKS_FRAGMENT);
 		}
-	}
-	
+
+		nearbyTasks.reloadViewData();
+	}	
 }
