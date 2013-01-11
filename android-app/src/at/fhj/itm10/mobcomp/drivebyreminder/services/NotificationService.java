@@ -269,7 +269,7 @@ public class NotificationService extends RoboService implements LocationListener
 			builder.setLights(0xff00ff00, 300, 1000);
 		}
 
-		// Show a notification for this task only once... id here also unique
+		// Show a notification for this task only once... id here is also unique
 		notificationManager.notify((int) foundLocation.getTaskId(),
 				builder.getNotification());
 	}
@@ -325,8 +325,7 @@ public class NotificationService extends RoboService implements LocationListener
 		@Override
 		protected void handleReceive(Context context, Intent intent) {
 			Log.d(getClass().getSimpleName(), "handleReceive called");
-			
-			// TODO: geht das einfach so?
+
 			sendLocationToActivities(currentUserLocation);
 			Log.v(getClass().getSimpleName(), "data sent");
 

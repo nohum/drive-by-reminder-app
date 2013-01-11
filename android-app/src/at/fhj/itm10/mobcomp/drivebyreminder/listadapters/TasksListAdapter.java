@@ -75,7 +75,11 @@ public class TasksListAdapter extends SimpleCursorAdapter {
 				taskTitle.setText(cursor.getString(
 						cursor.getColumnIndex("title")));
 
-				if (cursor.getInt(cursor.getColumnIndex("done")) != 0) {
+				int done = cursor.getInt(cursor.getColumnIndex("done"));
+				Log.v(getClass().getSimpleName(), "setViewValue(): index = " + index
+						+ ", done = " + done);
+				
+				if (done != 0) {
 					// Strike trough for tasks with "done" flag
 					taskTitle.setPaintFlags(taskTitle.getPaintFlags()
 							| Paint.STRIKE_THRU_TEXT_FLAG);

@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import roboguice.inject.InjectResource;
+import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
 import android.os.Bundle;
@@ -67,18 +68,28 @@ public class NearbyTasksFragment extends AllTasksFragment {
 				"defaultProximitry", "3000"));
 		Log.v(getClass().getSimpleName(), "onCreate: proximitryEntries = "
 				+ proximitryEntries);
-		proximitryEntries = getResources().getStringArray(R.array.proximitryEntriesWithDefault);
+		proximitryEntries = getResources().getStringArray(
+				R.array.proximitryEntriesWithDefault);
 		Log.v(getClass().getSimpleName(), "onCreate after: proximitryEntries = "
 				+ proximitryEntries);
 		
 		super.onCreate(savedInstanceState);
 	}
 	
-//	@Override
-//	protected void onPostExecute() {
-//		proximitryEntries = getResources().getStringArray(R.array.proximitryEntriesWithDefault);
-//		super.onResume();
-//	}
+	@Override
+	public void onAttach(Activity activity) {
+		Log.v(getClass().getSimpleName(), "------------ ONATTACH BEFORE");
+		super.onAttach(activity);
+		
+		Log.v(getClass().getSimpleName(), "------------ ONATTACH AFTER");
+	}
+	
+	@Override
+	public void onDetach() {
+		Log.v(getClass().getSimpleName(), "------------ ONDETACH BEFORE");
+		super.onDetach();
+		Log.v(getClass().getSimpleName(), "------------ ONDETACH AFTER");
+	}
 	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -87,20 +98,36 @@ public class NearbyTasksFragment extends AllTasksFragment {
        		false);
     }
 
+	@Override
+	public void onStart() {
+		Log.v(getClass().getSimpleName(), "------------ ONSTART BEFORE");
+		
+		super.onStart();
+		reloadViewData();
+	}
+	
+	@Override
+	public void onResume() {
+		Log.v(getClass().getSimpleName(), "------------ ONRESUME BEFORE");
+		
+		super.onStart();
+		reloadViewData();
+	}
+    
     /**
      * Reload the view.
      */
     @Override
     public void reloadViewData() {
-    	reloadViewData(getActivity());
-    }
+    	Log.v(getClass().getSimpleName(), "reloadViewData(): activity = "
+    			+ getActivity());
 
-    /**
-     * Reload the view
-     * 
-     * @param context
-     */
-    public void reloadViewData(Context context) {
+    	if (getActivity() == null) {
+    		Log.w(getClass().getSimpleName(),
+    				"RACECONDITION with reloadViewData() and attached activity!");
+    		return;
+    	}
+    	
     	if (currentUserLocation == null) {
     		Log.w(getClass().getSimpleName(),
     				"reloadViewData: currentUserLocation is null");
@@ -125,8 +152,10 @@ public class NearbyTasksFragment extends AllTasksFragment {
     	for (TaskLocationResult foundLocation : taskLocations) {
 			Log.v(getClass().getSimpleName(), "reloadViewData: found: "
 					+ foundLocation.toString());
-			proximitryEntries = getResources().getStringArray(R.array.proximitryEntriesWithDefault);
-			Log.v(getClass().getSimpleName(), "proximitryEntries = " + proximitryEntries);
+			proximitryEntries = getResources().getStringArray(
+					R.array.proximitryEntriesWithDefault);
+			Log.v(getClass().getSimpleName(), "proximitryEntries = "
+					+ proximitryEntries);
 
 			// The custom proximitry is zero, check for the
 			// defaultMaximumMetersDistance
@@ -157,6 +186,7 @@ public class NearbyTasksFragment extends AllTasksFragment {
     	usedCursor = dbDao.constructFindTasksCursorByIdList(taskIds);
     	
     	// Sometimes the context is null...
+    	Context context = getActivity();
     	if (context == null) {
     		context = getSherlockActivity();
     	}
@@ -173,9 +203,11 @@ public class NearbyTasksFragment extends AllTasksFragment {
      * @param location
      * @param context
      */
-	public void updateUserLocation(Location location, Context context) {
+	public void updateUserLocation(Location location) {
+		Log.v(getClass().getSimpleName(), "------------ updateUserLocation");
+
 		currentUserLocation = location;
-		reloadViewData(context);
+		reloadViewData();
 	}
     
 	/**

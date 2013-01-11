@@ -99,6 +99,8 @@ public class MainActivity extends RoboSherlockFragmentActivity
         if (savedInstanceState != null) {
 			restoreState(savedInstanceState);
 		}
+        
+        Log.v(getClass().getSimpleName(), "------------ ONCREATE AFTER");
 	}
 
 	@Override
@@ -137,8 +139,6 @@ public class MainActivity extends RoboSherlockFragmentActivity
 	
 	@Override
 	protected void onResume() {
-		Log.v(getClass().getSimpleName(), "onResume called");
-		
 		locationUpdateReceiver = new InternalLocationUpdateReceiver();
 		registerReceiver(locationUpdateReceiver, new IntentFilter(
 				"at.fhj.itm10.mobcomp.drivebyreminder.intents.LOCATION_CHANGED"));
@@ -159,8 +159,12 @@ public class MainActivity extends RoboSherlockFragmentActivity
 	
 	@Override
 	protected void onDestroy() {
+		Log.v(getClass().getSimpleName(), "------------ ONDESTROY BEFORE");
+
 		taskDataDAO.close();
 		super.onDestroy();
+		
+		Log.v(getClass().getSimpleName(), "------------ ONDESTROY AFTER");
 	}
 	
 	@Override
@@ -168,10 +172,14 @@ public class MainActivity extends RoboSherlockFragmentActivity
 		super.onSaveInstanceState(outState);
 
 		outState.putInt("currentFragment", pagerMainView.getCurrentItem());
+		
+		Log.v(getClass().getSimpleName(), "------------ ONSAVEINSTANCESTATE AFTER");
 	}
 
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		Log.v(getClass().getSimpleName(), "------------ ONRESTOREINSTANCESTATE CALLED");
+
 		super.onRestoreInstanceState(savedInstanceState);
 		
 		if (savedInstanceState != null) {
@@ -181,11 +189,14 @@ public class MainActivity extends RoboSherlockFragmentActivity
 
 	@Override
 	protected void onNewIntent(Intent intent) {
-		Log.v(getClass().getSimpleName(), "onNewIntent called");
+		Log.v(getClass().getSimpleName(), "------------ ONNEWINTENT CALLED");
 
         // Used by notifications
         if (intent != null) {
         	int openedFragment = intent.getIntExtra("openedFragment", -1);
+        	Log.v(getClass().getSimpleName(), "original intent openedFragment = "
+        			+ openedFragment);
+
         	if (openedFragment > -1) {
         		showFragmentWithNumber(openedFragment);
         	}
@@ -268,13 +279,13 @@ public class MainActivity extends RoboSherlockFragmentActivity
 
 	@Override
 	public void onPageScrollStateChanged(int state) {
-		// Empty by intention
+
 	}
 
 	@Override
 	public void onPageScrolled(int position, float positionOffset,
 			int positionOffsetPixels) {
-		// Empty by intention
+
 	}
 
 	/**
@@ -287,11 +298,6 @@ public class MainActivity extends RoboSherlockFragmentActivity
 		// Change the focused navigation list item if the viewed fragment has been changed.
 		// position = number of fragment, see MainFragmentPagerAdapter for numbering
 		getSupportActionBar().setSelectedNavigationItem(position);
-		
-		// Cancel action modes
-//		if (getActionMode() != null) {
-//			getActionMode().finish();
-//		}
 	}
 
 	@Override
@@ -331,7 +337,7 @@ public class MainActivity extends RoboSherlockFragmentActivity
 			Location location = (Location) intent.getParcelableExtra("location");
 
 			Log.d(getClass().getSimpleName(), "handleReceive: location = " + location);
-			fragment.updateUserLocation(location, context);
+			fragment.updateUserLocation(location);
 
 			super.handleReceive(context, intent);
 		}

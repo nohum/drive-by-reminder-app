@@ -103,10 +103,8 @@ public class AllTasksFragment extends RoboSherlockListFragment
     	
     	// Sometimes the context is null...
     	Context context = getActivity();
-    	Log.v(getClass().getSimpleName(), "reloadViewData: context = " + context);
-		if (context == null) {
+    	if (context == null) {
     		context = getSherlockActivity();
-    		Log.v(getClass().getSimpleName(), "reloadViewData: context2 = " + context);
     	}
     	
         listAdapter = TasksListAdapter.newInstance(context, 

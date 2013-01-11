@@ -1,10 +1,4 @@
 -- Drive-by Reminder - Bekannte Bugs --
 
-- Hinzufügen von neuen Tasks endet manchmal in einer NullPointerException
-  Dies kommt daher, dass der übergebene Context an die Fragments *manchmal*
-  Null ist.
-  
-- Beim Öffnen der App durch eine Task-Benachrichtigung wird die App von
-  Android aufgrund einer NullPointerException beendet. Grund siehe ersten
-  Bug.
-
+- Aufgaben in der Liste sind manchmal "willkürlich" durchgestrichen (ändert sich im
+  Betrieb einfach so)
