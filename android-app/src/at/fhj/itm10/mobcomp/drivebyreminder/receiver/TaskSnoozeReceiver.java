@@ -45,7 +45,7 @@ public class TaskSnoozeReceiver extends RoboBroadcastReceiver {
 		Calendar snoozeDate = Calendar.getInstance();
 		Log.v(getClass().getSimpleName(), "snooze now = " + snoozeDate.getTime());
 		// The easiest way to add minutes regarding not taking care of hour boundaries
-		snoozeDate.roll(Calendar.MINUTE, snoozeTime);
+		snoozeDate.add(Calendar.MINUTE, snoozeTime);
 		Log.v(getClass().getSimpleName(), "snooze future = " + snoozeDate.getTime());
 
 		task.setSnoozeDate(snoozeDate);
