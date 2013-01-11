@@ -151,6 +151,8 @@ public class MainActivity extends RoboSherlockFragmentActivity
 	
 	@Override
 	protected void onPause() {
+		Log.v(getClass().getSimpleName(), "------------ ONPAUSE BEFORE");
+		
 		unregisterReceiver(locationUpdateReceiver);
 		taskDataDAO.close();
 
@@ -163,8 +165,6 @@ public class MainActivity extends RoboSherlockFragmentActivity
 
 		taskDataDAO.close();
 		super.onDestroy();
-		
-		Log.v(getClass().getSimpleName(), "------------ ONDESTROY AFTER");
 	}
 	
 	@Override
@@ -199,6 +199,13 @@ public class MainActivity extends RoboSherlockFragmentActivity
 
         	if (openedFragment > -1) {
         		showFragmentWithNumber(openedFragment);
+        		
+        		if (openedFragment == 2) {
+        			// request update for task nearby
+        			NearbyTasksFragment fragment = (NearbyTasksFragment) pagerAdapter
+        					.getItem(MainFragmentPagerAdapter.NEARBY_TASKS_FRAGMENT);
+        			fragment.reloadViewData();
+        		}
         	}
         }
 

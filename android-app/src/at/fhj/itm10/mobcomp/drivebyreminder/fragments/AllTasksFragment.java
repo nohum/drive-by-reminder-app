@@ -90,9 +90,10 @@ public class AllTasksFragment extends RoboSherlockListFragment
     
     @Override
 	public void onDestroy() {
+    	Log.v(getClass().getSimpleName(), "------------ ONDESTROY BEFORE");
+    	
     	if (usedCursor != null) {
     		usedCursor.close();
-    		usedCursor = null;
     	}
     	
     	super.onDestroy();

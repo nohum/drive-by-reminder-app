@@ -1,4 +1,4 @@
 -- Drive-by Reminder - Bekannte Bugs --
 
-- Aufgaben in der Liste sind manchmal "willkürlich" durchgestrichen (ändert sich im
-  Betrieb einfach so)
+- Selten, aber doch hin und wieder crasht die App, da das SQLite-Handle anscheinend
+  nicht richtig geschlossen wird.

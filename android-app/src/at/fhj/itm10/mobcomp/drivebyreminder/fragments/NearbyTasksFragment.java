@@ -76,21 +76,6 @@ public class NearbyTasksFragment extends AllTasksFragment {
 		super.onCreate(savedInstanceState);
 	}
 	
-	@Override
-	public void onAttach(Activity activity) {
-		Log.v(getClass().getSimpleName(), "------------ ONATTACH BEFORE");
-		super.onAttach(activity);
-		
-		Log.v(getClass().getSimpleName(), "------------ ONATTACH AFTER");
-	}
-	
-	@Override
-	public void onDetach() {
-		Log.v(getClass().getSimpleName(), "------------ ONDETACH BEFORE");
-		super.onDetach();
-		Log.v(getClass().getSimpleName(), "------------ ONDETACH AFTER");
-	}
-	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState) {

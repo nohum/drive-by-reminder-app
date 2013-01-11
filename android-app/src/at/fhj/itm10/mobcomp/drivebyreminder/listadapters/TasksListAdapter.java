@@ -58,6 +58,8 @@ public class TasksListAdapter extends SimpleCursorAdapter {
 
 		@Override
 		public boolean setViewValue(View view, Cursor cursor, int index) {
+			Log.v(getClass().getSimpleName(), "setViewValue(): index = " + index);
+	
 			// Save the id to the list element using the tag property
 			((View) view.getParent()).setTag(cursor.getLong(
 					cursor.getColumnIndex("id")));
@@ -76,13 +78,16 @@ public class TasksListAdapter extends SimpleCursorAdapter {
 						cursor.getColumnIndex("title")));
 
 				int done = cursor.getInt(cursor.getColumnIndex("done"));
-				Log.v(getClass().getSimpleName(), "setViewValue(): index = " + index
-						+ ", done = " + done);
+//				Log.v(getClass().getSimpleName(), "setViewValue(): index = " + index
+//						+ ", done = " + done);
 				
 				if (done != 0) {
-					// Strike trough for tasks with "done" flag
+					// Strike through for tasks with "done" flag
 					taskTitle.setPaintFlags(taskTitle.getPaintFlags()
 							| Paint.STRIKE_THRU_TEXT_FLAG);
+				} else {
+					taskTitle.setPaintFlags(taskTitle.getPaintFlags()
+							& (~ Paint.STRIKE_THRU_TEXT_FLAG));
 				}
 
 				return true;
