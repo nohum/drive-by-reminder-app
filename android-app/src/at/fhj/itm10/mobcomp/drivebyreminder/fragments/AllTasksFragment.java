@@ -133,7 +133,8 @@ public class AllTasksFragment extends RoboSherlockListFragment
 		case 200: // Process modify task activity
 			if (resultCode == Activity.RESULT_OK) {
 				Log.d("MainActivity", "ModifyTaskActivity result = RESULT_OK");
-				pagerAdapter.refreshFragments();
+				reloadViewData();
+//				pagerAdapter.refreshFragments();
 			} else if (resultCode == Activity.RESULT_CANCELED) {
 				Log.d("MainActivity", "ModifyTaskActivity result = RESULT_CANCELED");
 			}
