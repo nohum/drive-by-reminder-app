@@ -45,7 +45,7 @@ public class DownloadLocationDataAsyncTask extends
 	};
 	
 	private final String API_LOCATION_MORE
-			= "http://drivebyreminder.truthfactory.tk/service/more/byname/%s"
+			= "http://localhost/service/more/byname/%s"
 					+ "/inlanguage/%s/inregion/%s";
 	
 	private EditLocationActivity activity;
