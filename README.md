@@ -15,3 +15,6 @@ Usage
 To use the server application inside of the Android application, open up the class 
 `at.fhj.itm10.mobcomp.drivebyreminder.helper.DownloadLocationDataAsyncTask` and change the 
 `API_LOCATION_MORE` constant.
+
+Also the Andorid project depends on the ActionBarSherlock in version 4.2.0. Find it on 
+http://actionbarsherlock.com/
